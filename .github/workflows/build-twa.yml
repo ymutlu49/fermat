@@ -24,18 +24,44 @@ jobs:
       - name: Install Bubblewrap CLI
         run: npm install -g @bubblewrap/cli
 
-      - name: Init TWA project
+      - name: Configure Bubblewrap
+        run: |
+          mkdir -p ~/.aspect
+          mkdir -p ~/.aspect/bubblewrap
+          cat > ~/.aspect/bubblewrap/config.json << 'EOF'
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "$ANDROID_HOME"
+          }
+          EOF
+          # Replace env vars
+          envsubst < ~/.aspect/bubblewrap/config.json > ~/.aspect/bubblewrap/config.tmp && mv ~/.aspect/bubblewrap/config.tmp ~/.aspect/bubblewrap/config.json
+          cat ~/.aspect/bubblewrap/config.json
+
+      - name: Init and Build TWA
         run: |
           mkdir -p twa-build && cd twa-build
-          printf "n\n$JAVA_HOME\n$ANDROID_HOME\n" | bubblewrap init --manifest="https://ymutlu49.github.io/fermat/manifest.json" 2>&1 || true
-          ls -la
 
-      - name: Build unsigned AAB
-        run: |
-          cd twa-build
-          printf "\n\n\n" | bubblewrap build --signingMode=none 2>&1 || true
+          # Provide all answers: No JDK install, JAVA_HOME path, No Android SDK install, ANDROID_HOME path, then accepts for all manifest questions
+          printf "n\n${JAVA_HOME}\nn\n${ANDROID_HOME}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" | bubblewrap init --manifest="https://ymutlu49.github.io/fermat/manifest.json" 2>&1 || true
+
+          echo "=== Files after init ==="
           ls -la
+          echo "=== Checking for gradle ==="
+          ls -la gradlew 2>/dev/null || echo "No gradlew found"
+
+          # Try build
+          if [ -f "gradlew" ]; then
+            echo "=== Running bubblewrap build ==="
+            printf "\n\n\n\n\n\n\n\n\n\n" | bubblewrap build --signingMode=none 2>&1 || true
+          else
+            echo "Init failed - no gradlew found"
+          fi
+
+          echo "=== Final file listing ==="
           find . -name "*.aab" -o -name "*.apk" 2>/dev/null
+          ls -la app/build/outputs/ 2>/dev/null || true
+          ls -la *.aab *.apk 2>/dev/null || echo "No AAB/APK in root"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
