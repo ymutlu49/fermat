@@ -1,0 +1,3316 @@
+// ─── Ferhenga Matematîkê — All 201 Concepts ─────────────────────────────────
+// KRİTİK: Bu veriyi manual olarak değiştirme — tek kaynak budur.
+/** @typedef {{ ku:string, tr:string, en:string, lv:string, df:string, ex:string, s:number, visual:Object }} Concept */
+export const ALL_CONCEPTS = [
+  {
+    "ku": "HEJMAR",
+    "tr": "sayı",
+    "en": "number",
+    "lv": "P-1",
+    "df": "Tiştekî ku mîqdarê tiştan diyar dike.",
+    "ex": "Di polê de bîst şagirt hene.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 5,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "JIMARE",
+    "tr": "rakam",
+    "en": "digit",
+    "lv": "1-2",
+    "df": "Deh sembolên (0, 1, 2, 3, 4, 5, 6, 7, 8, 9) ku hemû hejmaran pê tên nivîsandin.",
+    "ex": "Di hejmara 25 de du jimare hene: 2 û 5.",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 0,
+        "end": 9,
+        "highlight": [
+          3,
+          7
+        ]
+      }
+    }
+  },
+  {
+    "ku": "HEJMARA XWEZAYÎ",
+    "tr": "doğal sayı",
+    "en": "natural number",
+    "lv": "1-2",
+    "df": "Hejmarên 0, 1, 2, 3, 4... ku ji bo jimartinê tên bikar anîn.",
+    "ex": "Hejmarên xwezayî: 0, 1, 2, 3, 4, 5...",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 0,
+        "end": 5,
+        "natural": true
+      }
+    }
+  },
+  {
+    "ku": "HEJMARA XWEBEŞ",
+    "tr": "asal sayı",
+    "en": "prime number",
+    "lv": "4+",
+    "df": "Hejmara ku tenê bi 1 û bi xwe tê dabeşkirin.",
+    "ex": "Hejmarên xwebeş: 2, 3, 5, 7, 11, 13...",
+    "s": 1,
+    "visual": {
+      "type": "number_grid",
+      "params": {
+        "cols": 4,
+        "rows": 3,
+        "startAt": 1,
+        "highlight": [2, 3, 5, 7, 11]
+      }
+    }
+  },
+  {
+    "ku": "HEJMARA COT",
+    "tr": "çift sayı",
+    "en": "even number",
+    "lv": "2-3",
+    "df": "Hejmarên ku bi 2 bêyî bermayî tên dabeşkirin.",
+    "ex": "Hejmarên cot: 2, 4, 6, 8, 10...",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 6,
+        "groups": 2,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "HEJMARA FER",
+    "tr": "tek sayı",
+    "en": "odd number",
+    "lv": "2-3",
+    "df": "Hejmarên ku bi 2 tên dabeşkirin û bermayî dimîne.",
+    "ex": "Hejmarên fer: 1, 3, 5, 7, 9...",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 5,
+        "shape": "square",
+        "color": "accent"
+      }
+    }
+  },
+  {
+    "ku": "SIFIR",
+    "tr": "sıfır",
+    "en": "zero",
+    "lv": "P-1",
+    "df": "Hejmara ku tunebûnê diyar dike; bingeh û destpêka jimarxêzê.",
+    "ex": "Di çenteyê de sifir pirtûk hene, ew vala ye.",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": -2,
+        "end": 2,
+        "highlight": [
+          0
+        ]
+      }
+    }
+  },
+  {
+    "ku": "ZÊDETIR / KÊMTIR",
+    "tr": "daha fazla / daha az",
+    "en": "more / less",
+    "lv": "P-1",
+    "df": "Berhevdana du koman li gor mîqdarê.",
+    "ex": "5 sêv ji 3 portêqalan zêdetir e.",
+    "s": 1,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 7,
+        "b": 4,
+        "type": "greater"
+      }
+    }
+  },
+  {
+    "ku": "WEK HEV / NE WEK HEV",
+    "tr": "aynı / farklı",
+    "en": "same / different",
+    "lv": "P-1",
+    "df": "Berhevdana du tiştan li gor wekhevî an cudahîyê.",
+    "ex": "Du sêvên sor wek hev in.",
+    "s": 1,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 4,
+        "b": 4,
+        "type": "equal"
+      }
+    }
+  },
+  {
+    "ku": "DÛCAR",
+    "tr": "iki katı",
+    "en": "double",
+    "lv": "1-2",
+    "df": "Du carî mîqdara tiştekî; mîqdara ku du qat e.",
+    "ex": "Dûcarê 4 dike 8.",
+    "s": 1,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "mul",
+        "a": 3,
+        "b": 2
+      }
+    }
+  },
+  {
+    "ku": "NÎVCAR",
+    "tr": "yarısı",
+    "en": "half of",
+    "lv": "1-2",
+    "df": "Yek ji du parên wekhev; mîqdara ku nîv e.",
+    "ex": "Nîvcarê 10 dike 5.",
+    "s": 1,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 1,
+        "den": 2,
+        "visual": "bar"
+      }
+    }
+  },
+  {
+    "ku": "PERGALA BI BINGEHA DEHÎ",
+    "tr": "onluk sayı sistemi",
+    "en": "base-10 system",
+    "lv": "1-2",
+    "df": "Pergala hejmaran ku li ser bingeha dehê hatiye avakirin.",
+    "ex": "10 yekan dibin 1 dehane, 10 dehane dibin 1 sedane.",
+    "s": 1,
+    "visual": {
+      "type": "blocks",
+      "params": {
+        "ones": 3,
+        "tens": 2,
+        "hundreds": 1
+      }
+    }
+  },
+  {
+    "ku": "XANE",
+    "tr": "basamak",
+    "en": "place",
+    "lv": "2-3",
+    "df": "Cihê jimareyê di hejmarekê de.",
+    "ex": "Di hejmara 45 de, 4 li xaneya dehan e.",
+    "s": 1,
+    "visual": {
+      "type": "blocks",
+      "params": {
+        "ones": 1,
+        "tens": 0,
+        "hundreds": 0
+      }
+    }
+  },
+  {
+    "ku": "NIRXANE",
+    "tr": "basamak değeri",
+    "en": "place value",
+    "lv": "2-3",
+    "df": "Nirxa jimarekiyê li gor xaneya wê.",
+    "ex": "Di 45 de, nirxaneya 4ê 40 ye.",
+    "s": 1,
+    "visual": {
+      "type": "blocks",
+      "params": {
+        "ones": 4,
+        "tens": 1,
+        "hundreds": 0
+      }
+    }
+  },
+  {
+    "ku": "YEKANE",
+    "tr": "birlik",
+    "en": "ones place",
+    "lv": "1-2",
+    "df": "Xaneya yekanan di hejmarekê de.",
+    "ex": "Di 23 de, 3 li yekane ye.",
+    "s": 1,
+    "visual": {
+      "type": "blocks",
+      "params": {
+        "ones": 5,
+        "tens": 0,
+        "hundreds": 0
+      }
+    }
+  },
+  {
+    "ku": "DEHANE",
+    "tr": "onluk",
+    "en": "tens place",
+    "lv": "1-2",
+    "df": "Xaneya dehanan di hejmarekê de.",
+    "ex": "Di 23 de, 2 li dehane ye = 20.",
+    "s": 1,
+    "visual": {
+      "type": "blocks",
+      "params": {
+        "ones": 0,
+        "tens": 3,
+        "hundreds": 0
+      }
+    }
+  },
+  {
+    "ku": "SEDANE",
+    "tr": "yüzlük",
+    "en": "hundreds place",
+    "lv": "2-3",
+    "df": "Xaneya sedanê di hejmarekê de.",
+    "ex": "Di 352 de, 3 li sedane ye = 300.",
+    "s": 1,
+    "visual": {
+      "type": "blocks",
+      "params": {
+        "ones": 0,
+        "tens": 0,
+        "hundreds": 2
+      }
+    }
+  },
+  {
+    "ku": "HEZARANE",
+    "tr": "binlik",
+    "en": "thousands place",
+    "lv": "3-4",
+    "df": "Xaneya hezaranê di hejmarekê de.",
+    "ex": "Di 2345 de, 2 li hezaranê ye = 2000.",
+    "s": 1,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "1000"
+      }
+    }
+  },
+  {
+    "ku": "JIMARTINA PERÇEYAN",
+    "tr": "parça sayma / düzenli-dağınık sayma",
+    "en": "counting sets",
+    "lv": "1",
+    "df": "Dema komeke tiştan ku hêmanên wê belavbûyî an birêkûpêk in tê jimartin.",
+    "ex": "Sêvên belavbûyî li erdê: bihejmêre, 7 hene.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 7,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "JIMARTIN",
+    "tr": "sayma",
+    "en": "counting",
+    "lv": "P-1",
+    "df": "Yek bi yek diyarkirina hejmarê tiştan.",
+    "ex": "Sêvan bihejmêre: yek, du, sê.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 7,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "JIMARTINA RÎTMÎK",
+    "tr": "ritmik sayma",
+    "en": "skip counting",
+    "lv": "1-2",
+    "df": "Bi gavên diyarkirî jimartin: 2, 4, 6, 8...",
+    "ex": "Jimartina rîtmîk: 5, 10, 15, 20...",
+    "s": 1,
+    "visual": {
+      "type": "arrow_sequence",
+      "params": {
+        "from": [4, 8],
+        "to": [6, 10],
+        "label": "+2"
+      }
+    }
+  },
+  {
+    "ku": "JIMARTIN BERPAŞ",
+    "tr": "geriye sayma",
+    "en": "counting backward",
+    "lv": "1",
+    "df": "Ji hejmara mezîn ber bi hejmara piçûk ve jimartin.",
+    "ex": "10, 9, 8, 7, 6, 5, 4, 3, 2, 1!",
+    "s": 1,
+    "visual": {
+      "type": "arrow_sequence",
+      "params": {
+        "from": [5, 4],
+        "to": [4, 3],
+        "label": "-1"
+      }
+    }
+  },
+  {
+    "ku": "RÊZKIRIN",
+    "tr": "sıralama",
+    "en": "ordering",
+    "lv": "1-2",
+    "df": "Tiştan li gor mezinahîyê an taybetmendîyên wan rêzkirin.",
+    "ex": "2, 5, 8, 11 — ji biçûk ber bi mezin.",
+    "s": 1,
+    "visual": {
+      "type": "arrow_sequence",
+      "params": {
+        "from": [2, 5],
+        "to": [5, 8],
+        "label": "+3"
+      }
+    }
+  },
+  {
+    "ku": "PEYHEV",
+    "tr": "ardışık",
+    "en": "consecutive",
+    "lv": "1-2",
+    "df": "Hejmarên ku yek li pey hev tên.",
+    "ex": "7, 8, 9 hejmarên peyhev in.",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 7,
+        "end": 9,
+        "highlight": [7, 8, 9]
+      }
+    }
+  },
+  {
+    "ku": "BERHEVDAN",
+    "tr": "karşılaştırma",
+    "en": "comparison",
+    "lv": "1-2",
+    "df": "Hevberkirina du hejmaran ji bo dîtina ya mezîn an ya biçûk.",
+    "ex": "5 ji 3 mezîntir e: 5 > 3.",
+    "s": 1,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 5,
+        "b": 3,
+        "type": "greater"
+      }
+    }
+  },
+  {
+    "ku": "YEKSAN",
+    "tr": "eşit",
+    "en": "equal",
+    "lv": "1",
+    "df": "Du hejmar an tişt ku heman nirxê hene.",
+    "ex": "2 + 3 = 5, du alî yeksan in.",
+    "s": 1,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 5,
+        "b": 5,
+        "type": "equal"
+      }
+    }
+  },
+  {
+    "ku": "JIMARXÊZ",
+    "tr": "sayı doğrusu",
+    "en": "number line",
+    "lv": "1-2",
+    "df": "Xêzek ku hejmar li ser wê tên rêzkirin.",
+    "ex": "Li jimarxêzê, 3 li navbera 2 û 4 ye.",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 0,
+        "end": 6,
+        "highlight": [
+          3
+        ]
+      }
+    }
+  },
+  {
+    "ku": "TEXMÎN",
+    "tr": "tahmin",
+    "en": "estimate",
+    "lv": "1-2",
+    "df": "Diyarkirina hejmara nêzîk bêyî jimartina tam.",
+    "ex": "Texmîn dikim ku di qutiyê de 30 qelem hene.",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 0,
+        "end": 10,
+        "highlight": [5]
+      }
+    }
+  },
+  {
+    "ku": "KOMKIRIN",
+    "tr": "gruplama",
+    "en": "grouping",
+    "lv": "1-2",
+    "df": "Tiştan li gor taybetmendîyên wan berhevkirin.",
+    "ex": "23 = 2 dehane + 3 yekane.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 8,
+        "groups": 2,
+        "shape": "square",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "BELAVKIRIN",
+    "tr": "dağıtma/paylaşma",
+    "en": "sharing/distributing",
+    "lv": "1-2",
+    "df": "Dabeşkirina tiştan bi wekhevî di navbera koman de.",
+    "ex": "12 sêv di navbera 3 zarokan de: her kes 4 digire.",
+    "s": 1,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "div",
+        "a": 8,
+        "b": 4
+      }
+    }
+  },
+  {
+    "ku": "NÊZANDIN",
+    "tr": "yuvarlama",
+    "en": "rounding",
+    "lv": "2-3",
+    "df": "Hejmara nêzîk a tam ji bo hêsankirinê.",
+    "ex": "47 nêzîkî 50 ye.",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 0,
+        "end": 10,
+        "highlight": [
+          5
+        ]
+      }
+    }
+  },
+  {
+    "ku": "ŞÊWEYA HEJMARAN",
+    "tr": "sayı örüntüsü",
+    "en": "number pattern",
+    "lv": "1-2",
+    "df": "Rêza hejmaran ku li gor qaîdeyekê diçe.",
+    "ex": "1, 3, 5, 7 — şêweya +2.",
+    "s": 1,
+    "visual": {
+      "type": "pattern",
+      "params": {
+        "count": 5
+      }
+    }
+  },
+  {
+    "ku": "ZÊDEDÊR",
+    "tr": "artan",
+    "en": "increasing",
+    "lv": "2-3",
+    "df": "Hejmarên ku her diçe mezîntir dibin.",
+    "ex": "Rêzeya zêdedêr: 3, 6, 9, 12...",
+    "s": 1,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "add",
+        "a": 4,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "RÊZEYA ZÊDEDÊR",
+    "tr": "artan dizi",
+    "en": "increasing sequence",
+    "lv": "2-3",
+    "df": "Rêza hejmaran ku her diçe mezîntir dibe.",
+    "ex": "10, 20, 30, 40 — rêzeya zêdedêr.",
+    "s": 1,
+    "visual": {
+      "type": "arrow_sequence",
+      "params": {
+        "from": [10, 20],
+        "to": [20, 30],
+        "label": "+10"
+      }
+    }
+  },
+  {
+    "ku": "QANDA ZÊDEBÛNÊ",
+    "tr": "artış miktarı",
+    "en": "increment",
+    "lv": "2-3",
+    "df": "Mîqdara ku hejmar tê zêdekirin.",
+    "ex": "Di 10, 15, 20 de, qanda zêdebûnê 5 e.",
+    "s": 1,
+    "visual": {
+      "type": "arrow_sequence",
+      "params": {
+        "from": [10, 15, 20],
+        "to": [15, 20, 25],
+        "label": "+5"
+      }
+    }
+  },
+  {
+    "ku": "KÊMEDÊR",
+    "tr": "azalan",
+    "en": "decreasing",
+    "lv": "2-3",
+    "df": "Hejmarên ku her diçin kêmtir dibin.",
+    "ex": "Rêzeya kêmedêr: 20, 15, 10, 5.",
+    "s": 1,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 6,
+        "b": 2
+      }
+    }
+  },
+  {
+    "ku": "DUBAREBÛYÎ",
+    "tr": "tekrar eden",
+    "en": "repeating",
+    "lv": "1-2",
+    "df": "Şêweya ku dubare dibe.",
+    "ex": "Sor, zer, sor, zer — şêweya dubarebûyî.",
+    "s": 1,
+    "visual": {
+      "type": "pattern",
+      "params": {
+        "count": 5
+      }
+    }
+  },
+  {
+    "ku": "NAVBER",
+    "tr": "aralık",
+    "en": "interval",
+    "lv": "2-3",
+    "df": "Cûdahîya di navbera du hejmaran de.",
+    "ex": "Navbera 10 û 15 = 5.",
+    "s": 1,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 10,
+        "end": 15,
+        "highlight": [10, 15]
+      }
+    }
+  },
+  {
+    "ku": "HEJMARA RÊZEBÛNÊ",
+    "tr": "sıra sayısı",
+    "en": "ordinal number",
+    "lv": "1",
+    "df": "Hejmara ku rêza tiştekî di rêzê de nîşan dide.",
+    "ex": "Ew di rêzê de sêyem e.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 4,
+        "shape": "circle",
+        "color": "accent"
+      }
+    }
+  },
+  {
+    "ku": "YEKEM",
+    "tr": "birinci",
+    "en": "first",
+    "lv": "P-1",
+    "df": "Hejmara rêzebûnê ya yekem.",
+    "ex": "Yîlmaz di rêzê de yekem e.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 3,
+        "shape": "circle",
+        "color": "accent"
+      }
+    }
+  },
+  {
+    "ku": "DUYEM",
+    "tr": "ikinci",
+    "en": "second",
+    "lv": "P-1",
+    "df": "Hejmara rêzebûnê ya duyem.",
+    "ex": "Hevalê min di pêşbaziyê de duyem e.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 3,
+        "shape": "square",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "SÊYEM",
+    "tr": "üçüncü",
+    "en": "third",
+    "lv": "P-1",
+    "df": "Hejmara rêzebûnê ya sêyem.",
+    "ex": "Dîkê di pêşbaziyê de sêyem bû.",
+    "s": 1,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 3,
+        "shape": "triangle",
+        "color": "accent"
+      }
+    }
+  },
+  {
+    "ku": "KIRARÎ",
+    "tr": "işlem",
+    "en": "operation",
+    "lv": "1",
+    "df": "Tişta ku em bi hejmaran re dikin: zêdekirin (+), kemkirin (−), carkirin (×) û parkirin (÷).",
+    "ex": "3 + 2 = 5 kirarîyeke zêdekirinê ye; 12 ÷ 3 = 4 kirarîyeke parkirinê ye.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?�",
+        "label": "− × ÷"
+      }
+    }
+  },
+  {
+    "ku": "ÇAR KIRARÎ",
+    "tr": "dört işlem",
+    "en": "four operations",
+    "lv": "1-2",
+    "df": "Zêdekirin, kemkirin, carkirin û parîn.",
+    "ex": "Çar kirarî ev in: zêdekirin (+), kemkirin (−), carkirin (×) û parkirin (÷).",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "+ − × ÷"
+      }
+    }
+  },
+  {
+    "ku": "ZÊDEKIRIN",
+    "tr": "toplama",
+    "en": "addition",
+    "lv": "1",
+    "df": "Kirarîya ku du an zêdetir hejmaran li hev dike.",
+    "ex": "3 + 2 = 5: zêdebar 3 û 2 ne, zêdok 5 e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "add",
+        "a": 3,
+        "b": 4
+      }
+    }
+  },
+  {
+    "ku": "ZÊDEK (+)",
+    "tr": "artı işareti",
+    "en": "plus sign",
+    "lv": "1",
+    "df": "Nîşanê kirarîya zêdekirinê.",
+    "ex": "3 + 2: nîşanê + zêdekirinê dibêje.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?�",
+        "label": "+"
+      }
+    }
+  },
+  {
+    "ku": "ZÊDEBAR",
+    "tr": "toplanan",
+    "en": "addend",
+    "lv": "1-2",
+    "df": "Hejmara ku di zêdekirinê de tê bikar anîn.",
+    "ex": "Di 3 + 2 = 5 de, 3 û 2 zêdebar in.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "add",
+        "a": 4,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "ZÊDOK",
+    "tr": "toplam",
+    "en": "sum",
+    "lv": "1-2",
+    "df": "Encama zêdekirinê.",
+    "ex": "Zêdoka 3 û 2 dike 5.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "add",
+        "a": 3,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "LI HEV KIRIN",
+    "tr": "birleştirme",
+    "en": "joining",
+    "lv": "1",
+    "df": "Du koman li hev kirin yek kom.",
+    "ex": "3 sêvên sor û 2 sêvên zer li hev = 5 sêv.",
+    "s": 2,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 6,
+        "groups": 2,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "KEMKIRIN",
+    "tr": "çıkarma",
+    "en": "subtraction",
+    "lv": "1",
+    "df": "Kirarîya ku hejmarekî ji hejmarekî din derdixe.",
+    "ex": "5 − 2 = 3: kembar 5 e, kemker 2 e, kemok 3 e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 7,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "KEMEK (−)",
+    "tr": "eksi işareti",
+    "en": "minus sign",
+    "lv": "1",
+    "df": "Nîşanê kirarîya kemkirinê.",
+    "ex": "5 − 2: nîşanê − kemkirinê dibêje.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?�",
+        "label": "−"
+      }
+    }
+  },
+  {
+    "ku": "KEMBAR",
+    "tr": "küçülen/eksilen",
+    "en": "minuend",
+    "lv": "1-2",
+    "df": "Hejmara ku jê tê kemkirin; hejmara mezin di kemkirinê de.",
+    "ex": "Di 5 − 2 de, 5 kembar e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 8,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "KEMKER",
+    "tr": "çıkarılan/eksilen",
+    "en": "subtrahend",
+    "lv": "1-2",
+    "df": "Hejmara ku tê derxistin; hejmara biçûk di kemkirinê de.",
+    "ex": "Di 5 − 2 de, 2 kemker e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 7,
+        "b": 2
+      }
+    }
+  },
+  {
+    "ku": "KEMOK",
+    "tr": "fark",
+    "en": "difference",
+    "lv": "1-2",
+    "df": "Encama kemkirinê; cûdahîya du hejmaran.",
+    "ex": "Kemoka 5 û 2 = 3.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 5,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "JÊ DERXISTIN",
+    "tr": "ayırma",
+    "en": "separating",
+    "lv": "1",
+    "df": "Ji komekê perçeyekê derxistin.",
+    "ex": "5 sêv, 2 jê derxistin, 3 man.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 6,
+        "b": 2
+      }
+    }
+  },
+  {
+    "ku": "CARKIRIN / CARÎN",
+    "tr": "çarpma",
+    "en": "multiplication",
+    "lv": "2-3",
+    "df": "Kirarîya zêdekirina dubare.",
+    "ex": "3 × 4 = 12: carker 3 e, carbar 4 e, carandok 12 e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "mul",
+        "a": 3,
+        "b": 4
+      }
+    }
+  },
+  {
+    "ku": "CAREK (×)",
+    "tr": "çarpı işareti",
+    "en": "multiplication sign",
+    "lv": "2-3",
+    "df": "Nîşanê kirarîya carkirinê.",
+    "ex": "3 × 4: nîşanê × carkirinê dibêje.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "✖�?",
+        "label": "×"
+      }
+    }
+  },
+  {
+    "ku": "CARKER",
+    "tr": "çarpan",
+    "en": "multiplier",
+    "lv": "2-3",
+    "df": "Hejmara ku car dike.",
+    "ex": "Di 3 × 4 de, 3 carker e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "mul",
+        "a": 4,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "CARBAR / BERCAR",
+    "tr": "çarpılan",
+    "en": "multiplicand",
+    "lv": "2-3",
+    "df": "Hejmara ku tê carkirin.",
+    "ex": "Di 3 × 4 de, 4 carbar e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "mul",
+        "a": 3,
+        "b": 5
+      }
+    }
+  },
+  {
+    "ku": "CARANDOK",
+    "tr": "çarpım",
+    "en": "product",
+    "lv": "2-3",
+    "df": "Encama carkirinê.",
+    "ex": "Carandoka 3 û 4 dike 12.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "mul",
+        "a": 3,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "PARKIRIN",
+    "tr": "bölme",
+    "en": "division",
+    "lv": "3-4",
+    "df": "Kirarîya dabeşkirina wekhev.",
+    "ex": "12 ÷ 3 = 4: parbar 12 e, parker 3 e, paran 4 e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "div",
+        "a": 12,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "PARÎNEK (÷)",
+    "tr": "bölü işareti",
+    "en": "division sign",
+    "lv": "3-4",
+    "df": "Nîşanê kirarîya parînê.",
+    "ex": "12 ÷ 3: nîşanê ÷ parînê dibêje.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?�",
+        "label": "÷"
+      }
+    }
+  },
+  {
+    "ku": "PAR",
+    "tr": "bölme (okunurken)",
+    "en": "divided by",
+    "lv": "3-4",
+    "df": "Gava tê parîn, wusa tê xwendin.",
+    "ex": "Bibêje: duwazde par sê.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "div",
+        "a": 9,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "PARKER",
+    "tr": "bölen",
+    "en": "divisor",
+    "lv": "3-4",
+    "df": "Hejmara ku pê tê parîn.",
+    "ex": "Di 12 ÷ 3 de, 3 parker e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "div",
+        "a": 8,
+        "b": 4
+      }
+    }
+  },
+  {
+    "ku": "PARBAR / BERPAR",
+    "tr": "bölünen",
+    "en": "dividend",
+    "lv": "3-4",
+    "df": "Hejmara ku tê parîn.",
+    "ex": "Di 12 ÷ 3 de, 12 parbar e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "div",
+        "a": 6,
+        "b": 2
+      }
+    }
+  },
+  {
+    "ku": "PARAN",
+    "tr": "bölüm (sonuç)",
+    "en": "quotient",
+    "lv": "3-4",
+    "df": "Encama parînê.",
+    "ex": "Paranê 12 ÷ 3 dike 4.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "div",
+        "a": 12,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "JÊMA",
+    "tr": "kalan",
+    "en": "remainder",
+    "lv": "3-4",
+    "df": "Tiştê ku piştî parîna tam dimîne.",
+    "ex": "13 ÷ 4 = 3, jêma 1.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "13÷4=3 jêma1"
+      }
+    }
+  },
+  {
+    "ku": "PARÎNA BI JÊMA",
+    "tr": "kalanlı bölme",
+    "en": "division with remainder",
+    "lv": "3-4",
+    "df": "Parîna ku jêma lê dimîne.",
+    "ex": "13 ÷ 4 = 3, jêma 1 e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "div",
+        "a": 7,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "PÊKHATIN Û VEQETANDIN",
+    "tr": "bileşim ve ayrışım",
+    "en": "composing & decomposing",
+    "lv": "1-2",
+    "df": "Pêkhatin: hejmarekê ji çend parên çêkirin. Veqetandin: hejmarekê li parên wê dabeşkirin.",
+    "ex": "8 = 3 + 5 = 2 + 6.",
+    "s": 2,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 5,
+        "groups": 2,
+        "shape": "circle",
+        "color": "accent"
+      }
+    }
+  },
+  {
+    "ku": "PARJIMAR",
+    "tr": "kesir",
+    "en": "fraction",
+    "lv": "3-4",
+    "df": "Perçeyek ji giştekî; nîşandana parên tiştekî.",
+    "ex": "1/4 ê pîzzayê xwar.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 2,
+        "den": 5,
+        "visual": "pie"
+      }
+    }
+  },
+  {
+    "ku": "PAR",
+    "tr": "pay",
+    "en": "numerator",
+    "lv": "3-4",
+    "df": "Hejmara li ser xêzika parjimaran; hejmara parên hilbijartî.",
+    "ex": "Di 3/4 de, par 3 e.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 2,
+        "den": 5,
+        "visual": "bar"
+      }
+    }
+  },
+  {
+    "ku": "TEVPAR",
+    "tr": "payda",
+    "en": "denominator",
+    "lv": "3-4",
+    "df": "Hejmara li bin xêzika parjimaran.",
+    "ex": "Di 3/4 de, tevpar 4 e.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 1,
+        "den": 4,
+        "visual": "pie"
+      }
+    }
+  },
+  {
+    "ku": "YEKSANÎYA TEVPARAN",
+    "tr": "payda eşitleme",
+    "en": "finding common denominator",
+    "lv": "3-4",
+    "df": "Du parjimaran bi heman tevpar çêkirin.",
+    "ex": "1/2 + 1/3 = 3/6 + 2/6 = 5/6.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 2,
+        "den": 4,
+        "visual": "pie"
+      }
+    }
+  },
+  {
+    "ku": "GIŞT",
+    "tr": "bütün/tam",
+    "en": "whole",
+    "lv": "2-3",
+    "df": "Tiştê ku tam û bêkêmasî ye.",
+    "ex": "Pîzzaya tam = hemû parên wê.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 4,
+        "den": 4,
+        "visual": "pie"
+      }
+    }
+  },
+  {
+    "ku": "NÎV",
+    "tr": "yarım",
+    "en": "half",
+    "lv": "2-3",
+    "df": "Yek ji du parên wekhev.",
+    "ex": "Nîvê sêvê bixwe.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 1,
+        "den": 2,
+        "visual": "pie"
+      }
+    }
+  },
+  {
+    "ku": "ÇAREK",
+    "tr": "çeyrek",
+    "en": "quarter",
+    "lv": "2-3",
+    "df": "Yek ji çar parên wekhev.",
+    "ex": "Çarekê pîzzayê bixwe.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 1,
+        "den": 4,
+        "visual": "pie"
+      }
+    }
+  },
+  {
+    "ku": "PARJIMARA HEVKÊŞ",
+    "tr": "denk kesir",
+    "en": "equivalent fraction",
+    "lv": "4",
+    "df": "Du parjimar ku heman nirxê ne.",
+    "ex": "1/2 bi 2/4 re hevkêş e.",
+    "s": 3,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 2,
+        "den": 4,
+        "visual": "bar"
+      }
+    }
+  },
+  {
+    "ku": "XAL",
+    "tr": "nokta",
+    "en": "point",
+    "lv": "1-2",
+    "df": "Cihê ku mezinahîya wê tune ye, tenê cih nîşan dide.",
+    "ex": "Xalê li ser nexşeyê nîşan bide.",
+    "s": 4,
+    "visual": {
+      "type": "point",
+      "params": {}
+    }
+  },
+  {
+    "ku": "XÊZ",
+    "tr": "doğru",
+    "en": "line",
+    "lv": "2-3",
+    "df": "Rêzeya xalan ku bêdawî ye, her du aliyan diçe.",
+    "ex": "Xêz her du aliyan diçe.",
+    "s": 4,
+    "visual": {
+      "type": "line",
+      "params": {
+        "type": "line"
+      }
+    }
+  },
+  {
+    "ku": "XÊZIK",
+    "tr": "doğru parçası",
+    "en": "line segment",
+    "lv": "2-3",
+    "df": "Parçeya xêzê ku di navbera du xalan de ye.",
+    "ex": "Xêzika AB dirêjahîya 5 cm ye.",
+    "s": 4,
+    "visual": {
+      "type": "line",
+      "params": {
+        "type": "segment"
+      }
+    }
+  },
+  {
+    "ku": "TÎR",
+    "tr": "ışın",
+    "en": "ray",
+    "lv": "2-3",
+    "df": "Parçeya xêzê ku destpêkek heye lê dawî tune ye.",
+    "ex": "Tîr ji xalê destpêkê bêdawî diçe.",
+    "s": 4,
+    "visual": {
+      "type": "line",
+      "params": {
+        "type": "ray"
+      }
+    }
+  },
+  {
+    "ku": "KUJÎ",
+    "tr": "açı",
+    "en": "angle",
+    "lv": "4",
+    "df": "Vekirina di navbera du tîran de; xaleke destpêkê ya hevbeş heye.",
+    "ex": "Goşeya maseyê kujîyeke rast e.",
+    "s": 4,
+    "visual": {
+      "type": "angle",
+      "params": {
+        "degrees": 60
+      }
+    }
+  },
+  {
+    "ku": "PÎLE",
+    "tr": "derece",
+    "en": "degree",
+    "lv": "4",
+    "df": "Yekeya pîvandina kujîyan.",
+    "ex": "Kujîya rast 90 pîle ye.",
+    "s": 4,
+    "visual": {
+      "type": "angle",
+      "params": {
+        "degrees": 90
+      }
+    }
+  },
+  {
+    "ku": "TEŞE",
+    "tr": "şekil",
+    "en": "shape",
+    "lv": "P-1",
+    "df": "Formên ku tişt pê tên diyarkirin.",
+    "ex": "Sêgoşe, çarçik, gilover — teşe ne.",
+    "s": 4,
+    "visual": {
+      "type": "triangle",
+      "params": {
+        "variant": "equilateral"
+      }
+    }
+  },
+  {
+    "ku": "GILOVER",
+    "tr": "daire",
+    "en": "circle",
+    "lv": "P-1",
+    "df": "Teşeya ku hemû xalên wê ji navendê wekhev dûr in.",
+    "ex": "Têker gilover e.",
+    "s": 4,
+    "visual": {
+      "type": "circle",
+      "params": {
+        "showRadius": false
+      }
+    }
+  },
+  {
+    "ku": "SÊGOŞE",
+    "tr": "üçgen",
+    "en": "triangle",
+    "lv": "1",
+    "df": "Teşeya ku sê hêl û sê goşe hene.",
+    "ex": "Çadira sêgoşe ye.",
+    "s": 4,
+    "visual": {
+      "type": "triangle",
+      "params": {}
+    }
+  },
+  {
+    "ku": "ÇARÇIK",
+    "tr": "dikdörtgen",
+    "en": "rectangle",
+    "lv": "1",
+    "df": "Teşeya ku çar hêl û çar goşeyên rast hene.",
+    "ex": "Derî çarçik e.",
+    "s": 4,
+    "visual": {
+      "type": "quadrilateral",
+      "params": {
+        "shape": "rectangle"
+      }
+    }
+  },
+  {
+    "ku": "KARE",
+    "tr": "kare",
+    "en": "square",
+    "lv": "1",
+    "df": "Çarçikek ku hemû hêlên wê wekhev in.",
+    "ex": "Kaxezdank kare ye.",
+    "s": 4,
+    "visual": {
+      "type": "quadrilateral",
+      "params": {
+        "shape": "square"
+      }
+    }
+  },
+  {
+    "ku": "ÇARGOŞE",
+    "tr": "dörtgen",
+    "en": "quadrilateral",
+    "lv": "2-3",
+    "df": "Teşeya ku çar hêl û çar goşe hene.",
+    "ex": "Kare, çarçik, baklava çargoşe ne.",
+    "s": 4,
+    "visual": {
+      "type": "quadrilateral",
+      "params": {}
+    }
+  },
+  {
+    "ku": "PIRGOŞE",
+    "tr": "çokgen",
+    "en": "polygon",
+    "lv": "2-3",
+    "df": "Teşeya girtî ku ji sê an zêdetir xêzikan pêk tê.",
+    "ex": "Hêşgoşe pirgoşeyek bi 6 hêlan e.",
+    "s": 4,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "⬡",
+        "label": "Pirgoşe"
+      }
+    }
+  },
+  {
+    "ku": "HÊL",
+    "tr": "kenar",
+    "en": "side",
+    "lv": "1-2",
+    "df": "Xêzikên ku teşeyê çêdikin.",
+    "ex": "Sêgoşeyê 3 hêl hene.",
+    "s": 4,
+    "visual": {
+      "type": "line",
+      "params": {
+        "type": "segment"
+      }
+    }
+  },
+  {
+    "ku": "GOŞE",
+    "tr": "köşe",
+    "en": "corner/vertex",
+    "lv": "1-2",
+    "df": "Cihê ku du hêl li hev tên.",
+    "ex": "Kareyê 4 goşe hene.",
+    "s": 4,
+    "visual": {
+      "type": "angle",
+      "params": {
+        "degrees": 60
+      }
+    }
+  },
+  {
+    "ku": "NAVEND",
+    "tr": "merkez",
+    "en": "center",
+    "lv": "2-3",
+    "df": "Xalê navîn ê giloverê.",
+    "ex": "Navenda giloverê.",
+    "s": 4,
+    "visual": {
+      "type": "circle",
+      "params": {
+        "showRadius": true
+      }
+    }
+  },
+  {
+    "ku": "RÛQET",
+    "tr": "ayrıt",
+    "en": "edge",
+    "lv": "2-3",
+    "df": "Xêzika ku du rûyên cisimekî bi hev ve girê dide.",
+    "ex": "Kûpê (zarê) 12 rûqet hene.",
+    "s": 4,
+    "visual": {
+      "type": "line",
+      "params": {
+        "type": "segment"
+      }
+    }
+  },
+  {
+    "ku": "HEVSENG",
+    "tr": "simetri",
+    "en": "symmetry",
+    "lv": "2-3",
+    "df": "Rewşa ku du aliyên teşeyê wek hev in.",
+    "ex": "Pervane hevseng e.",
+    "s": 4,
+    "visual": {
+      "type": "symmetry",
+      "params": {}
+    }
+  },
+  {
+    "ku": "RÛBER",
+    "tr": "alan",
+    "en": "area",
+    "lv": "4",
+    "df": "Mezinahîya rûyê teşeyê.",
+    "ex": "Rûberê kareyê = 4 × 4 = 16 cm².",
+    "s": 4,
+    "visual": {
+      "type": "quadrilateral",
+      "params": {
+        "shape": "square"
+      }
+    }
+  },
+  {
+    "ku": "RÛDOR",
+    "tr": "çevre uzunluğu (perimeter)",
+    "en": "perimeter",
+    "lv": "3-4",
+    "df": "Dirêjahîya derdora teşeyê.",
+    "ex": "Rûdorê çarçikê = 2(5+3) = 16 cm.",
+    "s": 4,
+    "visual": {
+      "type": "quadrilateral",
+      "params": {
+        "shape": "rectangle"
+      }
+    }
+  },
+  {
+    "ku": "GILOVÊR",
+    "tr": "çember",
+    "en": "circle (circumference)",
+    "lv": "2-3",
+    "df": "Teşeya gilover ku hemû xalên derdorê ji navendê wekhev dûr in.",
+    "ex": "Derdora saetê gilovêr e.",
+    "s": 4,
+    "visual": {
+      "type": "circle",
+      "params": {
+        "showRadius": true
+      }
+    }
+  },
+  {
+    "ku": "DORPÊÇ",
+    "tr": "çember uzunluğu",
+    "en": "circumference",
+    "lv": "4+",
+    "df": "Dirêjahîya derdora gilovêrê.",
+    "ex": "Dorpêça gilovêrê = 2 × 3.14 × 5 = 31.4 cm.",
+    "s": 4,
+    "visual": {
+      "type": "circle",
+      "params": {
+        "showRadius": false
+      }
+    }
+  },
+  {
+    "ku": "PARALEL",
+    "tr": "paralel",
+    "en": "parallel",
+    "lv": "3-4",
+    "df": "Du xêzên ku qet hev napirin, dûrahîya wan her wekhev e.",
+    "ex": "Du hêlên maseyê paralel in.",
+    "s": 4,
+    "visual": {
+      "type": "line",
+      "params": {
+        "type": "parallel"
+      }
+    }
+  },
+  {
+    "ku": "QEBARE",
+    "tr": "hacim",
+    "en": "volume",
+    "lv": "4+",
+    "df": "Mezinahîya cihê ku cisimek dagir dike.",
+    "ex": "Qebareya qutîyê = 3 × 4 × 5 = 60 cm³.",
+    "s": 4,
+    "visual": {
+      "type": "geometry_3d",
+      "params": {
+        "shape": "cube"
+      }
+    }
+  },
+  {
+    "ku": "KÛP",
+    "tr": "küp",
+    "en": "cube",
+    "lv": "1-2",
+    "df": "Cisimê ku 6 rûyên kare hene.",
+    "ex": "Zarê lîstikê kûp e.",
+    "s": 4,
+    "visual": {
+      "type": "geometry_3d",
+      "params": {
+        "shape": "cube"
+      }
+    }
+  },
+  {
+    "ku": "GILOR",
+    "tr": "küre",
+    "en": "sphere",
+    "lv": "1-2",
+    "df": "Cisimê ku hemû xalên rûyê ji navendê wekhev dûr in.",
+    "ex": "Topa fûtbolê gilor e.",
+    "s": 4,
+    "visual": {
+      "type": "geometry_3d",
+      "params": {
+        "shape": "sphere"
+      }
+    }
+  },
+  {
+    "ku": "BALOR",
+    "tr": "silindir",
+    "en": "cylinder",
+    "lv": "2-3",
+    "df": "Cisimê ku du rûyên gilover û rûyekî peyt hene.",
+    "ex": "Qutîya nûşabeyê balor e.",
+    "s": 4,
+    "visual": {
+      "type": "geometry_3d",
+      "params": {
+        "shape": "cylinder"
+      }
+    }
+  },
+  {
+    "ku": "PRÎZMA",
+    "tr": "prizma",
+    "en": "prism",
+    "lv": "3-4",
+    "df": "Cisimê ku du rûyên wekhev û rûyên çarçik hene.",
+    "ex": "Qutîya pêlavê prîzma ye.",
+    "s": 4,
+    "visual": {
+      "type": "geometry_3d",
+      "params": {
+        "shape": "prism"
+      }
+    }
+  },
+  {
+    "ku": "KONÎ",
+    "tr": "koni",
+    "en": "cone",
+    "lv": "3-4",
+    "df": "Cisimê ku bingehek gilover û nûkek heye.",
+    "ex": "Qedehê dondirmê konî ye.",
+    "s": 4,
+    "visual": {
+      "type": "geometry_3d",
+      "params": {
+        "shape": "cone"
+      }
+    }
+  },
+  {
+    "ku": "DUDÎMEN",
+    "tr": "iki boyutlu",
+    "en": "two-dimensional (2D)",
+    "lv": "1-2",
+    "df": "Teşeya ku tenê dirêjahî û firehî heye.",
+    "ex": "Sêgoşe teşeya dudîmen e.",
+    "s": 4,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "showGrid": true
+      }
+    }
+  },
+  {
+    "ku": "SÊDÎMEN",
+    "tr": "üç boyutlu",
+    "en": "three-dimensional (3D)",
+    "lv": "1-2",
+    "df": "Cisimê ku dirêjahî, firehî û bilindahî heye.",
+    "ex": "Kûp cisimê sêdîmen e.",
+    "s": 4,
+    "visual": {
+      "type": "geometry_3d",
+      "params": {
+        "shape": "cube"
+      }
+    }
+  },
+  {
+    "ku": "GERÎN",
+    "tr": "dönme",
+    "en": "rotation",
+    "lv": "3-4",
+    "df": "Zivirîna li dora xalekê.",
+    "ex": "Saet li dora navenda xwe gerîn dike; sêgoşe jî li dora xalekê digerîne.",
+    "s": 4,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Gerîn"
+      }
+    }
+  },
+  {
+    "ku": "VEBEYÎN",
+    "tr": "yansıma",
+    "en": "reflection",
+    "lv": "3-4",
+    "df": "Wêneya neynikê ya teşeyê.",
+    "ex": "Wêneya sêgoşeyê li neynikê tê girtin; ew wêne vebeyîna sêgoşeyê ye.",
+    "s": 4,
+    "visual": {
+      "type": "symmetry",
+      "params": { "label": false }
+    }
+  },
+  {
+    "ku": "GUHÊZTIN",
+    "tr": "öteleme",
+    "en": "translation",
+    "lv": "3-4",
+    "df": "Guheztina teşeyê bêyî guhertina form û mezinahîyê.",
+    "ex": "Pirtûkê veguhêze: heman teşe dimîne.",
+    "s": 4,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?��?",
+        "label": "Guhêztin"
+      }
+    }
+  },
+  {
+    "ku": "PÎVANDIN",
+    "tr": "ölçme",
+    "en": "measurement",
+    "lv": "1",
+    "df": "Dîtina mezinahîya tiştekî bi yekeyekê.",
+    "ex": "Bi xêzkeşê dirêjahîya pênûsê bipive; 15 santîmetre ye.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 5,
+        "unit": "cm"
+      }
+    }
+  },
+  {
+    "ku": "YEKE",
+    "tr": "birim",
+    "en": "unit",
+    "lv": "1-2",
+    "df": "Pîveka ku pê re pîvandin tê kirin.",
+    "ex": "Santîmetre yekeya dirêjahîyê ye.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 1,
+        "unit": "yeke"
+      }
+    }
+  },
+  {
+    "ku": "DIRÊJAHÎ",
+    "tr": "uzunluk",
+    "en": "length",
+    "lv": "1",
+    "df": "Dûrahîya ji serê heta dawîya tiştekî.",
+    "ex": "Dirêjahîya pirtûkê 30 santîmetre ye; bi xêzkeşê tê pîvandin.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 6,
+        "unit": "cm"
+      }
+    }
+  },
+  {
+    "ku": "FIREHÎ",
+    "tr": "en/genişlik",
+    "en": "width",
+    "lv": "1-2",
+    "df": "Pîvandina ji hêlê rast heta çep.",
+    "ex": "Firehîya maseyê 60 cm ye.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 4,
+        "unit": "cm"
+      }
+    }
+  },
+  {
+    "ku": "BILINDAHÎ",
+    "tr": "yükseklik",
+    "en": "height",
+    "lv": "1-2",
+    "df": "Pîvandina ji binî heta serî.",
+    "ex": "Bilindahîya dîwêr 3 metre ye.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 3,
+        "unit": "cm"
+      }
+    }
+  },
+  {
+    "ku": "GIRANÎ",
+    "tr": "ağırlık",
+    "en": "weight/mass",
+    "lv": "1-2",
+    "df": "Mîqdara ku giranîya tiştekî diyar dike.",
+    "ex": "Giranîya sêvê 200 gram e; giranîya torbê 2 kîlogram e.",
+    "s": 5,
+    "visual": {
+      "type": "scale",
+      "params": {
+        "balanced": false
+      }
+    }
+  },
+  {
+    "ku": "DEM",
+    "tr": "zaman",
+    "en": "time",
+    "lv": "2",
+    "df": "Dirêjahîya bûyerekê di navbera destpêk û dawîyê de; saet, deqe û saniye yekeyên demê ne.",
+    "ex": "Ji destpêka dersê heta dawîya wê, 40 deqe dem derbas bû.",
+    "s": 5,
+    "visual": {
+      "type": "clock",
+      "params": {
+        "hour": 12,
+        "minute": 0
+      }
+    }
+  },
+  {
+    "ku": "SAET",
+    "tr": "saat",
+    "en": "hour/clock",
+    "lv": "2",
+    "df": "Yekeya demê ku 60 deqe ye; rojek 24 saet e.",
+    "ex": "Şanîdera saetê li ser 3 e, saet 3 e.",
+    "s": 5,
+    "visual": {
+      "type": "clock",
+      "params": {
+        "hour": 3,
+        "minute": 0
+      }
+    }
+  },
+  {
+    "ku": "DEQE",
+    "tr": "dakika",
+    "en": "minute",
+    "lv": "2",
+    "df": "Yekeya demê ku 60 saniye ye; 1 saet = 60 deqe ye.",
+    "ex": "1 saet = 60 deqe ye; dersê me her roj 40 deqe dom dike.",
+    "s": 5,
+    "visual": {
+      "type": "clock",
+      "params": {
+        "hour": 12,
+        "minute": 30
+      }
+    }
+  },
+  {
+    "ku": "ŞANÎDERA SAETÊ",
+    "tr": "akrep (kısa ibre)",
+    "en": "hour hand",
+    "lv": "2",
+    "df": "Milê saetê yê kurt ku saetan nîşan dide.",
+    "ex": "Şanîdera saetê li ser 6 ye, saet 6 e.",
+    "s": 5,
+    "visual": {
+      "type": "clock",
+      "params": {
+        "hour": 9,
+        "minute": 0
+      }
+    }
+  },
+  {
+    "ku": "ŞANÎDERA DEQEYÊ",
+    "tr": "yelkovan (uzun ibre)",
+    "en": "minute hand",
+    "lv": "2",
+    "df": "Milê saetê yê dirêj ku deqeyan nîşan dide.",
+    "ex": "Şanîdera deqeyê li ser 6 ye, 30 deqe ye.",
+    "s": 5,
+    "visual": {
+      "type": "clock",
+      "params": {
+        "hour": 3,
+        "minute": 0
+      }
+    }
+  },
+  {
+    "ku": "SANIYE",
+    "tr": "saniye",
+    "en": "second",
+    "lv": "3",
+    "df": "Yekeya herî biçûk a demê; 1 deqe = 60 saniye ye.",
+    "ex": "1 deqe = 60 saniye ye; pêşbazkar di 15 saniyeyan de 100 metre beziya.",
+    "s": 5,
+    "visual": {
+      "type": "clock",
+      "params": {
+        "hour": 12,
+        "minute": 1
+      }
+    }
+  },
+  {
+    "ku": "PÎVANDINA NE-STANDART",
+    "tr": "standart olmayan ölçme",
+    "en": "non-standard measurement",
+    "lv": "1",
+    "df": "Bi amûrên ne-standart (gav, lik, pênûs) dirêjahî û giranîyê pîvandin.",
+    "ex": "Mase 8 pênûs dirêj e.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 3,
+        "unit": "gav"
+      }
+    }
+  },
+  {
+    "ku": "PERE",
+    "tr": "para",
+    "en": "money",
+    "lv": "1",
+    "df": "Yekeya aborî ji bo kirîn û firotinê.",
+    "ex": "Sêvek 5 lîre ye; ji bo kirîn û firotinê pere tê bikaranîn.",
+    "s": 5,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Pere"
+      }
+    }
+  },
+  {
+    "ku": "SANTÎMETRE",
+    "tr": "santimetre",
+    "en": "centimeter",
+    "lv": "2-3",
+    "df": "Yekeya dirêjahîyê, 1/100 ê metreyê.",
+    "ex": "Qelema min 15 santîmetre dirêj e.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 5,
+        "unit": "cm"
+      }
+    }
+  },
+  {
+    "ku": "METRE",
+    "tr": "metre",
+    "en": "meter",
+    "lv": "2-3",
+    "df": "Yekeya bingehîn a dirêjahîyê.",
+    "ex": "Odeyê 5 metre dirêj e.",
+    "s": 5,
+    "visual": {
+      "type": "ruler",
+      "params": {
+        "length": 3,
+        "unit": "m"
+      }
+    }
+  },
+  {
+    "ku": "KÎLOGRAM",
+    "tr": "kilogram",
+    "en": "kilogram",
+    "lv": "3",
+    "df": "Yekeya bingehîn a giranîyê.",
+    "ex": "Torbê 3 kîlogram e.",
+    "s": 5,
+    "visual": {
+      "type": "scale",
+      "params": {
+        "balanced": true
+      }
+    }
+  },
+  {
+    "ku": "LÎTRE",
+    "tr": "litre",
+    "en": "liter",
+    "lv": "3-4",
+    "df": "Yekeya qebareyê ji bo şlemîyan.",
+    "ex": "Şûşeya avê 2 lître ye.",
+    "s": 5,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Lître"
+      }
+    }
+  },
+  {
+    "ku": "DANE",
+    "tr": "veri",
+    "en": "data",
+    "lv": "1-2",
+    "df": "Agahdarî û hejmarên ku ji bo armancekê tên berhevkirin û sererast kirin.",
+    "ex": "Rengên çavên şagirdên polê dane ne; em wan di tabloya daneyê de berhev dikin.",
+    "s": 6,
+    "visual": {
+      "type": "table",
+      "params": {
+        "rows": 3,
+        "cols": 2
+      }
+    }
+  },
+  {
+    "ku": "NEXŞE",
+    "tr": "grafik",
+    "en": "graph",
+    "lv": "2-3",
+    "df": "Nîşandana daneyan bi formên dîtbarî.",
+    "ex": "Nexşeya stûnî ya rengên çavên şagirdên polê daneyan bi wêneyan nîşan dide.",
+    "s": 6,
+    "visual": {
+      "type": "bar_chart",
+      "params": {
+        "values": [
+          3,
+          5,
+          2,
+          4
+        ],
+        "labels": [
+          "A",
+          "B",
+          "C",
+          "D"
+        ]
+      }
+    }
+  },
+  {
+    "ku": "TABLOYA DANE",
+    "tr": "veri tablosu",
+    "en": "data table",
+    "lv": "2-3",
+    "df": "Tabloya ku daneyan bi rêzkirî nîşan dide.",
+    "ex": "Tabloya daneyên rengên çavên şagirdên polê bi rêzkirî nîşan dide.",
+    "s": 6,
+    "visual": {
+      "type": "table",
+      "params": {
+        "rows": 4,
+        "cols": 3
+      }
+    }
+  },
+  {
+    "ku": "KERTÎK",
+    "tr": "çetele",
+    "en": "tally marks",
+    "lv": "1-2",
+    "df": "Nîşaneyên xêzkirî yên ji bo jimartinê.",
+    "ex": "Kertîk bikar bîne: |||| ||| = 8.",
+    "s": 6,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "||||",
+        "formula": "|||| |||",
+        "label": "= 8"
+      }
+    }
+  },
+  {
+    "ku": "NÎGARA TIŞTAN",
+    "tr": "resim grafiği",
+    "en": "pictograph",
+    "lv": "1-2",
+    "df": "Nexşeya ku daneyan bi wêneyan nîşan dide.",
+    "ex": "Nîgara tiştan: her wêneya sêvê = 1 sêv; 4 wêne = 4 sêv dane nîşan dide.",
+    "s": 6,
+    "visual": {
+      "type": "bar_chart",
+      "params": {
+        "values": [
+          2,
+          4,
+          3,
+          5
+        ]
+      }
+    }
+  },
+  {
+    "ku": "NEXŞEYA STÛNÎ",
+    "tr": "sütun grafiği",
+    "en": "bar graph",
+    "lv": "2-3",
+    "df": "Nexşeya ku daneyan bi stûnên vertîkal nîşan dide; bilindahîya her stûnê mîqdara daneyê nîşan dide.",
+    "ex": "Nexşeya stûnî ya rengên çavên polê: stûna herî dirêj rengê herî zêde nîşan dide.",
+    "s": 6,
+    "visual": {
+      "type": "bar_chart",
+      "params": {
+        "values": [
+          5,
+          3,
+          4,
+          2,
+          6
+        ]
+      }
+    }
+  },
+  {
+    "ku": "NAVGÎN",
+    "tr": "ortalama",
+    "en": "average/mean",
+    "lv": "3-4",
+    "df": "Koma hemû daneyan li hejmara daneyan dabeşkirin.",
+    "ex": "Navgîna 4, 6, 8 = 6.",
+    "s": 6,
+    "visual": {
+      "type": "bar_chart",
+      "params": {
+        "values": [
+          3,
+          5,
+          4,
+          4,
+          4
+        ],
+        "labels": [
+          "",
+          "",
+          "",
+          "",
+          "∅=4"
+        ]
+      }
+    }
+  },
+  {
+    "ku": "JIMARYARÎ",
+    "tr": "aritmetik",
+    "en": "arithmetic",
+    "lv": "1-4",
+    "df": "Beşa matematîkê ya ku bi hejmaran û çar kirarîyan re têkildar e.",
+    "ex": "Jimaryarî, bingeha matematîkê ye.",
+    "s": 0,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 5,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "HESTA ÇENDÎNÎ",
+    "tr": "sayı duyusu",
+    "en": "number sense",
+    "lv": "P-4",
+    "df": "Têgihîştina xwezayî ya hejmaran û têkiliyên wan.",
+    "ex": "Zarok bi hesta çendînî tavilê dizane ku 99 nêzîkî 100 e.",
+    "s": 0,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 4,
+        "shape": "square",
+        "color": "accent"
+      }
+    }
+  },
+  {
+    "ku": "TAVILZANÎNA ÇENDÎNÎ",
+    "tr": "anlık bilme (subitizing)",
+    "en": "subitizing",
+    "lv": "P-1",
+    "df": "Bêyî jimartinê, bi dîtinê tavilê zanîna hejmara tiştan.",
+    "ex": "Bêyî jimartinê, 3 xalên li ser zarê nas kir.",
+    "s": 0,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 3,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "TÊGIHÎŞTINA TÊGEHÎ",
+    "tr": "kavramsal anlama",
+    "en": "conceptual understanding",
+    "lv": "P-4",
+    "df": "Têgihîştina kûr a têgehên matematîkî.",
+    "ex": "Şagird bi têgihîştinê dizane çima 2+3=5: du hejmar li hev tên zêdekirin.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Têgihîştin"
+      }
+    }
+  },
+  {
+    "ku": "HERIKBARIYA KIRARÎ",
+    "tr": "işlemsel akıcılık",
+    "en": "procedural fluency",
+    "lv": "2-4",
+    "df": "Kirarîyan bi lez û bi rast kirin.",
+    "ex": "Bi herikbarîya kirarî, şagird 8+5=13 tavilê bersiv dide.",
+    "s": 0,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "add",
+        "a": 4,
+        "b": 3
+      }
+    }
+  },
+  {
+    "ku": "BÎRKARÎ",
+    "tr": "zihinden işlem",
+    "en": "mental calculation",
+    "lv": "2-4",
+    "df": "Hesabkirina bêyî nivîsandin an amûran.",
+    "ex": "25 + 10 = 35 bi bîrkarî tê hesabkirin, bêyî kaxez û pênûsê.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Bîrkarî"
+      }
+    }
+  },
+  {
+    "ku": "RAMANA CIHÎ",
+    "tr": "uzamsal düşünme",
+    "en": "spatial thinking",
+    "lv": "P-4",
+    "df": "Şiyana têgihîştina cih û teşeyan di bîrê de.",
+    "ex": "Di bîrê de teşeyan biguhêze.",
+    "s": 0,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "showGrid": true
+      }
+    }
+  },
+  {
+    "ku": "PIRSGIRÊK",
+    "tr": "problem",
+    "en": "problem",
+    "lv": "1",
+    "df": "Rewşa ku çareseriyekê hewce dike.",
+    "ex": "Heke 3 sêv hebûn û 2 zêde bûn, 5 hene.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?�",
+        "label": "Pirsgirêk"
+      }
+    }
+  },
+  {
+    "ku": "ÇARESERKIRIN",
+    "tr": "çözme",
+    "en": "solving",
+    "lv": "1",
+    "df": "Dîtina bersiva pirsgirêkê.",
+    "ex": "Pirsgirêkê gav bi gav çareser bike.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "✅",
+        "label": "Çareserkirin"
+      }
+    }
+  },
+  {
+    "ku": "RÊBAZ",
+    "tr": "strateji",
+    "en": "strategy",
+    "lv": "1-2",
+    "df": "Awayê çareserkirinê.",
+    "ex": "Rêbazên cuda yên çareserkirinê.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?��?",
+        "label": "Rêbaz"
+      }
+    }
+  },
+  {
+    "ku": "DÎYARKIRINA RÊBAZÊ",
+    "tr": "strateji belirleme",
+    "en": "strategy determination",
+    "lv": "1-2",
+    "df": "Hilbijartina rêya herî baş ji bo çareserkirinê.",
+    "ex": "Rêbazê herî baş hilbijêre.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?��?",
+        "label": "Dîyarkirin"
+      }
+    }
+  },
+  {
+    "ku": "BERSIV",
+    "tr": "cevap",
+    "en": "answer",
+    "lv": "1",
+    "df": "Encama çareserkirinê.",
+    "ex": "Bersiva 3 + 2 = 5.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Bersiv"
+      }
+    }
+  },
+  {
+    "ku": "NIMÛNEYA BARÎ",
+    "tr": "bar modeli",
+    "en": "bar model / tape diagram",
+    "lv": "1-2",
+    "df": "Modela dîtbarî ku pirsgirêkan bi baran nîşan dide.",
+    "ex": "3 + 5 = 8 bi barên rengîn nîşan bide.",
+    "s": 0,
+    "visual": {
+      "type": "bar_chart",
+      "params": {
+        "values": [3, 5, 8],
+        "labels": ["3", "5", "=8"]
+      }
+    }
+  },
+  {
+    "ku": "PEYT",
+    "tr": "ispat",
+    "en": "proof",
+    "lv": "3-4",
+    "df": "Delîlkirina rastbûna tiştekî bi mantiqê.",
+    "ex": "Peyta ku 2+3=5 e.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?��?",
+        "label": "Peyt"
+      }
+    }
+  },
+  {
+    "ku": "PEYÎTANDIN",
+    "tr": "ispatlama",
+    "en": "proving",
+    "lv": "3-4",
+    "df": "Pêvajoya peytkirinê.",
+    "ex": "Peyîtandina ku hemû sêgoşeyan 180° ne.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?��?",
+        "label": "Peyîtandin"
+      }
+    }
+  },
+  {
+    "ku": "DUPATKIRIN",
+    "tr": "sağlama",
+    "en": "verification",
+    "lv": "1-2",
+    "df": "Kontrolkirina bersivê.",
+    "ex": "Dupatkirin: 5-2=3, erê rast e.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "✔�?",
+        "label": "Dupatkirin"
+      }
+    }
+  },
+  {
+    "ku": "TEQEZÎ",
+    "tr": "kesinlik",
+    "en": "certainty",
+    "lv": "2-3",
+    "df": "Rewşa ku bersiv teqez e.",
+    "ex": "2+2=4 teqez e.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?�?�",
+        "label": "Teqezî"
+      }
+    }
+  },
+  {
+    "ku": "RÊZAN",
+    "tr": "kural",
+    "en": "rule",
+    "lv": "1-2",
+    "df": "Qaîdeya ku divê bê şopandin.",
+    "ex": "Rêzan: a+b = b+a (rêza guheztinê).",
+    "s": 0,
+    "visual": {
+      "type": "pattern",
+      "params": {
+        "count": 5
+      }
+    }
+  },
+  {
+    "ku": "PIVANG",
+    "tr": "ölçüt/kriter",
+    "en": "criterion",
+    "lv": "2-3",
+    "df": "Pîveka ku pê nirxandin tê kirin.",
+    "ex": "Pivanga rastîyê bikar bîne.",
+    "s": 0,
+    "visual": {
+      "type": "scale",
+      "params": {
+        "balanced": true
+      }
+    }
+  },
+  {
+    "ku": "JÊDERK",
+    "tr": "kaynak",
+    "en": "source",
+    "lv": "2-3",
+    "df": "Cihê ku agahdarî jê tê.",
+    "ex": "Pirtûka matematîkê jêderk e.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Jêderk"
+      }
+    }
+  },
+  {
+    "ku": "TÊGIHÎN",
+    "tr": "anlama",
+    "en": "understanding",
+    "lv": "P-4",
+    "df": "Zanîna kûr a têgehekî.",
+    "ex": "Têgihîna ku çima 2+3=5.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Têgihîn"
+      }
+    }
+  },
+  {
+    "ku": "PÊKANÎN",
+    "tr": "uygulama",
+    "en": "application",
+    "lv": "1-2",
+    "df": "Bikaranîna zanînê di jiyanê de.",
+    "ex": "Li bazarê pêkan: 5+3=8 TL.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?�?��?",
+        "label": "Pêkanîn"
+      }
+    }
+  },
+  {
+    "ku": "NIRXANDIN",
+    "tr": "değerlendirme",
+    "en": "evaluation",
+    "lv": "2-4",
+    "df": "Dîtina qalîteyê yan rastîya tiştekî.",
+    "ex": "Mamoste bersivên şagirtan nirxand: 8 ji 10 rast bûn.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?",
+        "label": "Nirxandin"
+      }
+    }
+  },
+  {
+    "ku": "HÎNDARÎ",
+    "tr": "alıştırma",
+    "en": "exercise",
+    "lv": "P-4",
+    "df": "Kirina pirsgirêkan ji bo rahênandinê.",
+    "ex": "Hîndarîyên zêdekirinê bike.",
+    "s": 0,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?�?�",
+        "label": "Hîndarî"
+      }
+    }
+  },
+  {
+    "ku": "ERÊNÎ",
+    "tr": "olumlu/pozitif",
+    "en": "positive",
+    "lv": "4+",
+    "df": "Hejmara ku ji sifirê mezîntir e.",
+    "ex": "+5 hejmara erênî ye.",
+    "s": 0,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": -3,
+        "end": 3,
+        "highlight": [2]
+      }
+    }
+  },
+  {
+    "ku": "NEYÎNÎ",
+    "tr": "olumsuz/negatif",
+    "en": "negative",
+    "lv": "4+",
+    "df": "Hejmara ku ji sifirê piçûktir e.",
+    "ex": "-3 hejmara neyînî ye.",
+    "s": 0,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": -3,
+        "end": 3,
+        "highlight": [-2]
+      }
+    }
+  },
+  {
+    "ku": "SER / BIN",
+    "tr": "üst / alt",
+    "en": "top / bottom",
+    "lv": "P",
+    "df": "Cihê ku li jorê an jêrê ye.",
+    "ex": "Pirtûk li ser maseyê ye.",
+    "s": 9,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "direction": "above_below"
+      }
+    }
+  },
+  {
+    "ku": "RAST / ÇEP",
+    "tr": "sağ / sol",
+    "en": "right / left",
+    "lv": "P-1",
+    "df": "Aliyên rastê û çepê.",
+    "ex": "Bi destê xwe yê rastê binivîse.",
+    "s": 9,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "direction": "left_right"
+      }
+    }
+  },
+  {
+    "ku": "PÊŞ / PAŞ",
+    "tr": "ön / arka",
+    "en": "front / back",
+    "lv": "P-1",
+    "df": "Aliyên pêşîn û paşîn.",
+    "ex": "Li pêşiya min bisekine.",
+    "s": 9,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "↔�?",
+        "label": "Pêş / Paş"
+      }
+    }
+  },
+  {
+    "ku": "HUNDUR / DERVE",
+    "tr": "iç / dış",
+    "en": "inside / outside",
+    "lv": "P-1",
+    "df": "Di hundurê an derveyê tiştekî de.",
+    "ex": "Top di hundurê qutiyê de ye.",
+    "s": 9,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "direction": "inside_outside"
+      }
+    }
+  },
+  {
+    "ku": "NÊZÎK / DÛR",
+    "tr": "yakın / uzak",
+    "en": "near / far",
+    "lv": "P-1",
+    "df": "Bi dûrahîya kêm an zêde ji hev.",
+    "ex": "Mal nêzîkî dibistanê ye.",
+    "s": 9,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "direction": "near_far"
+      }
+    }
+  },
+  {
+    "ku": "NAVBÊR",
+    "tr": "ara/arasında",
+    "en": "between",
+    "lv": "P-1",
+    "df": "Di navbera du tiştan de.",
+    "ex": "Sêv di navbera çay û nanê li ser maseyê de ye.",
+    "s": 9,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": 1,
+        "end": 5,
+        "highlight": [
+          3
+        ]
+      }
+    }
+  },
+  {
+    "ku": "JOR",
+    "tr": "yukarı",
+    "en": "up",
+    "lv": "P-1",
+    "df": "Aliyê jor.",
+    "ex": "Balonê ber bi jor diçe.",
+    "s": 9,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "direction": "above_below"
+      }
+    }
+  },
+  {
+    "ku": "JÊR",
+    "tr": "aşağı",
+    "en": "down",
+    "lv": "P-1",
+    "df": "Aliyê jêr.",
+    "ex": "Top ber bi jêr ket.",
+    "s": 9,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "direction": "above_below"
+      }
+    }
+  },
+  {
+    "ku": "PÊŞVE",
+    "tr": "ileri",
+    "en": "forward",
+    "lv": "P-1",
+    "df": "Ber bi pêşê ve.",
+    "ex": "Du gavan pêşve bimeşe.",
+    "s": 9,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "�?��?",
+        "label": "Pêşve"
+      }
+    }
+  },
+  {
+    "ku": "PAŞVE",
+    "tr": "geri",
+    "en": "backward",
+    "lv": "P-1",
+    "df": "Ber bi paşê ve.",
+    "ex": "Du gavan paşve bimeşe.",
+    "s": 9,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "⬅�?",
+        "label": "Paşve"
+      }
+    }
+  },
+  {
+    "ku": "BERBI",
+    "tr": "yön",
+    "en": "direction",
+    "lv": "P-1",
+    "df": "Aliyê ku tiştên ber bi wê ve diçin.",
+    "ex": "Berbi dibistanê bimeşe.",
+    "s": 9,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?���",
+        "label": "Berbi"
+      }
+    }
+  },
+  {
+    "ku": "CIHWAR",
+    "tr": "konum",
+    "en": "position",
+    "lv": "P-1",
+    "df": "Cihê ku tiştekî lê ye.",
+    "ex": "Cihwara topê li bin maseyê ye.",
+    "s": 9,
+    "visual": {
+      "type": "coordinate",
+      "params": {
+        "showGrid": true
+      }
+    }
+  },
+  {
+    "ku": "HEVSENGÎ",
+    "tr": "denge/eşitlik",
+    "en": "balance/equality",
+    "lv": "1-2",
+    "df": "Rewşa ku du alî hevwate ne.",
+    "ex": "3 + 2 = 5, her du alî 5 in.",
+    "s": 10,
+    "visual": {
+      "type": "scale",
+      "params": {
+        "balanced": true
+      }
+    }
+  },
+  {
+    "ku": "WEKHEVÎ",
+    "tr": "eşitlik (denge kavramı)",
+    "en": "equality",
+    "lv": "1-3",
+    "df": "Têkiliya ku du aliyên hevkêşanê hevwate ne; = nîşanê.",
+    "ex": "3 + 2 = 5, du alî yeksan in.",
+    "s": 10,
+    "visual": {
+      "type": "equation",
+      "params": {
+        "type": "equation",
+        "equation": "3 + 4 = 7",
+        "balanced": true
+      }
+    }
+  },
+  {
+    "ku": "HEVKÊŞAN",
+    "tr": "denklem",
+    "en": "equation",
+    "lv": "3-4",
+    "df": "Biwêjek ku du aliyên wê bi nîşana = ve tê girêdayîn.",
+    "ex": "x + 3 = 7 hevkêşan e.",
+    "s": 10,
+    "visual": {
+      "type": "equation",
+      "params": {
+        "type": "equation",
+        "equation": "□ + 3 = 8",
+        "balanced": true
+      }
+    }
+  },
+  {
+    "ku": "HEVKÊŞ",
+    "tr": "denk",
+    "en": "equivalent",
+    "lv": "3-4",
+    "df": "Du tişt ku heman nirx an mezinahîyê ne.",
+    "ex": "1/2 hevkêşê 2/4 e.",
+    "s": 10,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "⚖�?",
+        "label": "="
+      }
+    }
+  },
+  {
+    "ku": "NEDÎYAR",
+    "tr": "bilinmeyen",
+    "en": "unknown",
+    "lv": "1-2",
+    "df": "Tiştê ku nirxa wê ne diyar e.",
+    "ex": "Di □ + 3 = 7 de, □ = 4.",
+    "s": 10,
+    "visual": {
+      "type": "variable",
+      "params": {
+        "show": "box"
+      }
+    }
+  },
+  {
+    "ku": "YEKSAN KIRIN",
+    "tr": "eşitleme",
+    "en": "equalization",
+    "lv": "1-2",
+    "df": "Du aliyan wekhev kirin.",
+    "ex": "3 + □ = 7 → □ = 4.",
+    "s": 10,
+    "visual": {
+      "type": "equation",
+      "params": {
+        "type": "equation",
+        "equation": "x = 5",
+        "balanced": true
+      }
+    }
+  },
+  {
+    "ku": "HEVSAN",
+    "tr": "eş/özdeş",
+    "en": "congruent",
+    "lv": "2-3",
+    "df": "Du teşe ku bi form û mezinahî wekhev in.",
+    "ex": "Ev du sêgoşe hevsan in: forma û mezinahîya wan yek e.",
+    "s": 10,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 4,
+        "b": 4,
+        "type": "equal"
+      }
+    }
+  },
+  {
+    "ku": "HEVSANKIRINA YEKEYEK",
+    "tr": "bire bir eşleme",
+    "en": "one-to-one correspondence",
+    "lv": "P-1",
+    "df": "Her tiştekî bi tiştekî din re girêdayîn.",
+    "ex": "Her zarokek kupek: hevsankirina yekeyek.",
+    "s": 10,
+    "visual": {
+      "type": "equation",
+      "params": {
+        "type": "equation",
+        "equation": "□ = 1",
+        "balanced": true
+      }
+    }
+  },
+  {
+    "ku": "TÊZAN",
+    "tr": "bilinen",
+    "en": "known",
+    "lv": "2-3",
+    "df": "Hejmara ku nirxa wê diyar e.",
+    "ex": "3 û 7 hejmarên têzan in.",
+    "s": 10,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 7,
+        "b": 3,
+        "type": "greater"
+      }
+    }
+  },
+  {
+    "ku": "NAYZAN",
+    "tr": "bilinmeyen",
+    "en": "unknown",
+    "lv": "2-3",
+    "df": "Hejmara ku nirxa wê hê ne diyar e.",
+    "ex": "□ di hevkêşanê de nayzan e.",
+    "s": 10,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 2,
+        "b": 6,
+        "type": "less"
+      }
+    }
+  },
+  {
+    "ku": "TABAR",
+    "tr": "katsayı",
+    "en": "coefficient",
+    "lv": "3-4",
+    "df": "Hejmara ku li ber guhêrbar e.",
+    "ex": "Di 3x de, 3 tabar e.",
+    "s": 10,
+    "visual": {
+      "type": "equation",
+      "params": {
+        "type": "equation",
+        "equation": "3x + 2",
+        "balanced": false
+      }
+    }
+  },
+  {
+    "ku": "RÊJE",
+    "tr": "oran",
+    "en": "ratio",
+    "lv": "3-4",
+    "df": "Têkilîya du hejmaran bi dabeşkirinê.",
+    "ex": "Rêjeya sêvên sor û zer 3:5 e.",
+    "s": 10,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 2,
+        "den": 3,
+        "visual": "bar"
+      }
+    }
+  },
+  {
+    "ku": "DIJBER",
+    "tr": "karşıt/zıt",
+    "en": "opposite",
+    "lv": "2-3",
+    "df": "Tiştê ku berevajî ye.",
+    "ex": "Dijberê 5 = -5.",
+    "s": 10,
+    "visual": {
+      "type": "number_line",
+      "params": {
+        "start": -3,
+        "end": 3,
+        "highlight": [
+          2,
+          -2
+        ]
+      }
+    }
+  },
+  {
+    "ku": "HÊMAN",
+    "tr": "eleman/öğe",
+    "en": "element",
+    "lv": "2-3",
+    "df": "Tiştekî ku di komekê de ye.",
+    "ex": "3 hêmanê komê ye.",
+    "s": 10,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 3,
+        "shape": "square",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "TEV",
+    "tr": "tam",
+    "en": "whole/complete",
+    "lv": "1-2",
+    "df": "Tiştê ku tam û bêkêmasî ye.",
+    "ex": "Çar çareka pîzzayê tev (tam) dikin: 4/4 = 1.",
+    "s": 10,
+    "visual": {
+      "type": "fraction",
+      "params": {
+        "num": 4,
+        "den": 4,
+        "visual": "pie"
+      }
+    }
+  },
+  {
+    "ku": "HEMAN / WEK / MÎNA",
+    "tr": "aynı",
+    "en": "same",
+    "lv": "P-1",
+    "df": "Tiştên ku wek hev in.",
+    "ex": "Du sêvên sor heman in.",
+    "s": 10,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 3,
+        "b": 3,
+        "type": "equal"
+      }
+    }
+  },
+  {
+    "ku": "HINDIK / KÊM",
+    "tr": "az",
+    "en": "few/less",
+    "lv": "P-1",
+    "df": "Mîqdara piçûk.",
+    "ex": "2 ji 5 hindik e.",
+    "s": 10,
+    "visual": {
+      "type": "compare",
+      "params": {
+        "a": 2,
+        "b": 5,
+        "type": "less"
+      }
+    }
+  },
+  {
+    "ku": "CURE",
+    "tr": "çeşit/tür",
+    "en": "type/kind",
+    "lv": "P-1",
+    "df": "Kategorîya tiştekî.",
+    "ex": "Sêgoşe û çarçik cureyên teşeyan in.",
+    "s": 10,
+    "visual": {
+      "type": "set",
+      "params": {
+        "labels": [
+          "A",
+          "B"
+        ]
+      }
+    }
+  },
+  {
+    "ku": "HEYBER",
+    "tr": "nesne/obje",
+    "en": "object",
+    "lv": "P-1",
+    "df": "Tiştê fizîkî yan nîgaşî.",
+    "ex": "Sêv heyberek e.",
+    "s": 10,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 4,
+        "shape": "circle",
+        "color": "accent"
+      }
+    }
+  },
+  {
+    "ku": "NÎGAŞÎ",
+    "tr": "soyut",
+    "en": "abstract",
+    "lv": "3-4",
+    "df": "Tiştê ku tenê di ramanan de ye, ne fizîkî.",
+    "ex": "Hejmar 5 nîgaşî ye.",
+    "s": 10,
+    "visual": {
+      "type": "equation",
+      "params": {
+        "type": "equation",
+        "equation": "2x + 3",
+        "balanced": false
+      }
+    }
+  },
+  {
+    "ku": "PEVEK",
+    "tr": "ek/ilave",
+    "en": "supplement",
+    "lv": "2-3",
+    "df": "Tiştê ku tê zêdekirin ji bo temamkirinê.",
+    "ex": "Peveka 3 ji 10 = 7.",
+    "s": 10,
+    "visual": {
+      "type": "counting",
+      "params": {
+        "count": 6,
+        "groups": 2,
+        "shape": "circle",
+        "color": "primary"
+      }
+    }
+  },
+  {
+    "ku": "HÎMÎ",
+    "tr": "esas/temel",
+    "en": "fundamental",
+    "lv": "P-4",
+    "df": "Bingehîn, ya herî girîng.",
+    "ex": "Jimartin têgeheke hîmî ye.",
+    "s": 10,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?�?��?",
+        "label": "Hîmî"
+      }
+    }
+  },
+  {
+    "ku": "KOMIK",
+    "tr": "küme",
+    "en": "set",
+    "lv": "2-3",
+    "df": "Berhevoka tiştên ku taybetmendîyeke hevpar heye.",
+    "ex": "Komika hejmaran: {1, 2, 3, 4, 5}.",
+    "s": 10,
+    "visual": {
+      "type": "set",
+      "params": {
+        "labels": [
+          "K",
+          ""
+        ]
+      }
+    }
+  },
+  {
+    "ku": "POLKIRIN",
+    "tr": "sınıflandırma",
+    "en": "classification",
+    "lv": "P-1",
+    "df": "Li gorî taybetmendîyekê dabeşkirina tiştan di pol û koman de.",
+    "ex": "Teşeyan li gorî reng û mezinahî pol kirin.",
+    "s": 10,
+    "visual": {
+      "type": "set",
+      "params": {
+        "labels": [
+          "A",
+          "B"
+        ]
+      }
+    }
+  },
+  {
+    "ku": "HEVPAR",
+    "tr": "ortak",
+    "en": "common",
+    "lv": "2-3",
+    "df": "Tiştê ku di nav du koman de heye.",
+    "ex": "3 hevparê du koman e.",
+    "s": 10,
+    "visual": {
+      "type": "set",
+      "params": {
+        "labels": [
+          "A",
+          "B"
+        ]
+      }
+    }
+  },
+  {
+    "ku": "FORMULA",
+    "tr": "formül",
+    "en": "formula",
+    "lv": "3-4",
+    "df": "Rêbaza ku têkiliya di navbera guhêrbaran de nîşan dide.",
+    "ex": "Formula rûberê çarçikê: A = a × b.",
+    "s": 10,
+    "visual": {
+      "type": "equation",
+      "params": {
+        "type": "equation",
+        "equation": "A = l × w",
+        "balanced": false
+      }
+    }
+  },
+  {
+    "ku": "NÊRÎN",
+    "tr": "gözlem",
+    "en": "observation",
+    "lv": "P-1",
+    "df": "Bi baldarî li tiştekî mêzekirin û agahdarîyan berhevkirin.",
+    "ex": "Nêrîn: di sînifê de 5 keçik û 7 kur hene.",
+    "s": 10,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "?��?�?",
+        "label": "Nêrîn"
+      }
+    }
+  }
+];

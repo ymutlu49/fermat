@@ -1,0 +1,33 @@
+{
+  "packageId": "com.yilmazmutlu.ferhengamatematike",
+  "host": "TODO_USERNAME.github.io",
+  "name": "Ferhenga Matematîkê",
+  "launcherName": "Ferhenga Mat.",
+  "display": "standalone",
+  "themeColor": "#0F4C5C",
+  "navigationColor": "#0F4C5C",
+  "navigationColorDark": "#0F1419",
+  "navigationDividerColor": "#0F4C5C",
+  "navigationDividerColorDark": "#0F1419",
+  "backgroundColor": "#0F4C5C",
+  "enableNotifications": false,
+  "startUrl": "/ferhenga-matematik/",
+  "iconUrl": "/ferhenga-matematik/icon-512.png",
+  "maskableIconUrl": "/ferhenga-matematik/icon-512.png",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "TODO_keystore.jks",
+    "alias": "ferhenga"
+  },
+  "appVersionCode": 1,
+  "appVersionName": "3.0.0",
+  "shortcuts": [],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://TODO_USERNAME.github.io/ferhenga-matematik/manifest.json",
+  "fallbackType": "customtabs",
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "minSdkVersion": 19,
+  "orientation": "portrait"
+}

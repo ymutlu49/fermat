@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F4C5C"/>
+      <stop offset="50%" stop-color="#0D3D4A"/>
+      <stop offset="100%" stop-color="#0F4C5C"/>
+    </linearGradient>
+    <linearGradient id="ndA" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0D9488"/>
+      <stop offset="100%" stop-color="#0F766E"/>
+    </linearGradient>
+    <linearGradient id="ndB" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#C2410C"/>
+    </linearGradient>
+    <linearGradient id="ndC" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#15803D"/>
+      <stop offset="100%" stop-color="#166534"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+  <!-- Arka plan — uygulama teal tonu -->
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <!-- Subtle radial glow -->
+  <circle cx="256" cy="256" r="200" fill="rgba(78,205,196,0.05)"/>
+  <!-- Kesikli dış halka -->
+  <circle cx="256" cy="256" r="180" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="5" stroke-dasharray="18 12"/>
+  <!-- Bağlantı çizgileri (kavisli) -->
+  <path d="M148 175 Q256 140 364 175" stroke="rgba(255,255,255,0.15)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M148 175 Q125 315 256 392" stroke="rgba(255,255,255,0.15)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <path d="M364 175 Q387 315 256 392" stroke="rgba(255,255,255,0.15)" stroke-width="5" fill="none" stroke-linecap="round"/>
+  <!-- Teal node — üç xal (analog/miktar) -->
+  <circle cx="148" cy="175" r="62" fill="url(#ndA)" filter="url(#glow)"/>
+  <circle cx="118" cy="175" r="9" fill="white" opacity="0.95"/>
+  <circle cx="148" cy="175" r="9" fill="white" opacity="0.95"/>
+  <circle cx="178" cy="175" r="9" fill="white" opacity="0.95"/>
+  <!-- Coral node — "sê" (sözel/Kurdî) -->
+  <circle cx="364" cy="175" r="62" fill="url(#ndB)" filter="url(#glow)"/>
+  <text x="364" y="190" font-family="Inter,system-ui,Arial,sans-serif" font-size="42" font-weight="700" fill="white" text-anchor="middle" opacity="0.95">sê</text>
+  <!-- Green node — "3" (sembolik) -->
+  <circle cx="256" cy="392" r="62" fill="url(#ndC)" filter="url(#glow)"/>
+  <text x="256" y="414" font-family="Inter,system-ui,Arial,sans-serif" font-size="70" font-weight="800" fill="white" text-anchor="middle" opacity="0.95">3</text>
+  <!-- Merkez accent -->
+  <circle cx="256" cy="248" r="4" fill="rgba(255,255,255,0.2)"/>
+</svg>
