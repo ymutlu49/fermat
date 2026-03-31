@@ -16,7 +16,7 @@
   "maskableIconUrl": "/fermat/icon-512.png",
   "splashScreenFadeOutDuration": 300,
   "signingKey": {
-    "path": "TODO_keystore.jks",
+    "path": "keys/ferhenga.jks",
     "alias": "ferhenga"
   },
   "appVersionCode": 1,
