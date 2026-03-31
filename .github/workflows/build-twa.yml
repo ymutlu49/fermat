@@ -22,23 +22,19 @@ jobs:
         uses: android-actions/setup-android@v3
 
       - name: Install Bubblewrap CLI
-        run: npm install -g @nickvdh/nicolo@latest 2>/dev/null || npm install -g @nickvdh/nicolo 2>/dev/null || npm install -g @nickvdh/nicolo@latest 2>/dev/null || npm install -g nicolo@latest 2>/dev/null || npm install -g @nickvdh/nicolo@latest 2>/dev/null || true && npm install -g @nickvdh/nicolo@latest 2>/dev/null || true
-
-      - name: Install Bubblewrap (fallback @bubblewrap/cli)
         run: npm install -g @bubblewrap/cli
 
       - name: Init TWA project
-        env:
-          JAVA_HOME: ${{ env.JAVA_HOME }}
-          ANDROID_HOME: ${{ env.ANDROID_HOME }}
         run: |
           mkdir -p twa-build && cd twa-build
-          echo "n" | bubblewrap init --manifest="https://ymutlu49.github.io/fermat/manifest.json" 2>&1 || true
+          printf "n\n$JAVA_HOME\n$ANDROID_HOME\n" | bubblewrap init --manifest="https://ymutlu49.github.io/fermat/manifest.json" 2>&1 || true
+          ls -la
 
       - name: Build unsigned AAB
         run: |
           cd twa-build
-          bubblewrap build --signingMode=none 2>&1 || true
+          printf "\n\n\n" | bubblewrap build --signingMode=none 2>&1 || true
+          ls -la
           find . -name "*.aab" -o -name "*.apk" 2>/dev/null
 
       - name: Upload artifacts
