@@ -1,15 +1,87 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
+ * Kurdish Kurmanji number words
+ */
+const KURDISH_NUMBERS = {
+  '0': 'sifir',
+  '1': 'yek',
+  '2': 'du',
+  '3': 'sê',
+  '4': 'çar',
+  '5': 'pênc',
+  '6': 'şeş',
+  '7': 'heft',
+  '8': 'heşt',
+  '9': 'neh',
+  '10': 'deh',
+  '11': 'yanzdeh',
+  '12': 'diwanzdeh',
+  '13': 'sêzdeh',
+  '14': 'çardeh',
+  '15': 'panzdeh',
+  '16': 'şanzdeh',
+  '17': 'hivdeh',
+  '18': 'hijdeh',
+  '19': 'nozdeh',
+  '20': 'bîst',
+  '30': 'sîh',
+  '40': 'çil',
+  '50': 'pêncî',
+  '60': 'şêst',
+  '70': 'heftê',
+  '80': 'heştê',
+  '90': 'nod',
+  '100': 'sed',
+  '1000': 'hezar',
+};
+
+/**
+ * Convert a number string to Kurdish words
+ */
+function numberToKurdish(numStr) {
+  const n = parseInt(numStr, 10);
+  if (isNaN(n)) return numStr;
+
+  // Direct lookup
+  if (KURDISH_NUMBERS[numStr]) return KURDISH_NUMBERS[numStr];
+  if (KURDISH_NUMBERS[String(n)]) return KURDISH_NUMBERS[String(n)];
+
+  // For numbers 21-99
+  if (n > 20 && n < 100) {
+    const tens = Math.floor(n / 10) * 10;
+    const ones = n % 10;
+    const tensWord = KURDISH_NUMBERS[String(tens)] || '';
+    if (ones === 0) return tensWord;
+    const onesWord = KURDISH_NUMBERS[String(ones)] || String(ones);
+    return `${tensWord} û ${onesWord}`;
+  }
+
+  // For 100+, just read digits individually in Kurdish
+  if (n >= 100) {
+    return numStr.split('').map(d => KURDISH_NUMBERS[d] || d).join(' ');
+  }
+
+  return numStr;
+}
+
+/**
+ * Replace all standalone numbers in text with Kurdish words
+ */
+function replaceNumbersWithKurdish(text) {
+  return text.replace(/\b\d+\b/g, (match) => numberToKurdish(match));
+}
+
+/**
  * Kurdish Kurmanji phonetic conversion for Turkish TTS engine.
  *
- * Strategy: Replace only non-Turkish characters with their closest
- * Turkish equivalents. Keep everything else as-is for natural reading.
+ * Converts non-Turkish characters and numbers to Kurdish-readable form.
  */
 function kurdishToPhonetic(text) {
-  let s = text;
+  // First replace numbers with Kurdish words
+  let s = replaceNumbersWithKurdish(text);
 
-  // ê → e (Turkish TTS reads 'e' naturally)
+  // ê → "é" sound — use 'e' (Turkish TTS reads naturally)
   s = s.replace(/[Êê]/g, 'e');
 
   // î → i
@@ -33,7 +105,7 @@ function kurdishToPhonetic(text) {
 
 /**
  * Text-to-Speech hook for Kurdish Kurmanji using Web Speech API.
- * Uses Turkish (tr-TR) voice with minimal phonetic conversion.
+ * Uses Turkish (tr-TR) voice with phonetic conversion and Kurdish numbers.
  */
 export function useSpeech() {
   const [isSpeaking, setIsSpeaking] = useState(false);
