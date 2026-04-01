@@ -3,63 +3,37 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 /**
  * Kurdish Kurmanji phonetic conversion for Turkish TTS engine.
  *
- * Kurmanji uses Latin script with these special characters:
- *   ê (open e), î (long i), û (long u), ç, ş — shared with Turkish
- *   x (velar fricative), w (labial approximant), q (uvular stop) — not in Turkish
- *
- * Strategy: minimal intervention — only convert sounds Turkish TTS can't produce.
- * Keep ê/î/û as-is because Turkish TTS reads them as e/i/u which is close enough
- * and sounds more natural than artificial doubling.
+ * Strategy: Replace only non-Turkish characters with their closest
+ * Turkish equivalents. Keep everything else as-is for natural reading.
  */
 function kurdishToPhonetic(text) {
   let s = text;
 
-  // x → 'hh' with slight friction — doubled h gives a heavier sound closer to Kurdish x
-  s = s.replace(/X/g, 'HH');
-  s = s.replace(/x/g, 'hh');
+  // ê → e (Turkish TTS reads 'e' naturally)
+  s = s.replace(/[Êê]/g, 'e');
 
-  // w → Turkish doesn't have /w/, use 'v' which is the nearest
-  s = s.replace(/W/g, 'V');
-  s = s.replace(/w/g, 'v');
+  // î → i
+  s = s.replace(/Î/g, 'İ');
+  s = s.replace(/î/g, 'i');
 
-  // q → uvular stop, approximate with hard 'k'
-  s = s.replace(/Q/g, 'K');
-  s = s.replace(/q/g, 'k');
+  // û → u
+  s = s.replace(/[Ûû]/g, 'u');
 
-  // ê → open e, use 'ee' for slightly longer sound
-  s = s.replace(/Ê/g, 'EE');
-  s = s.replace(/ê/g, 'ee');
+  // x → h (velar fricative → closest Turkish sound)
+  s = s.replace(/[Xx]/g, 'h');
 
-  // î → long i, use 'ii' for elongation
-  s = s.replace(/Î/g, 'İİ');
-  s = s.replace(/î/g, 'ii');
+  // w → v (labial approximant → nearest Turkish)
+  s = s.replace(/[Ww]/g, 'v');
 
-  // û → long u
-  s = s.replace(/Û/g, 'UU');
-  s = s.replace(/û/g, 'uu');
-
-  // Add micro-pauses between compound words (hyphenated)
-  s = s.replace(/-/g, ', ');
+  // q → k (uvular stop → hard k)
+  s = s.replace(/[Qq]/g, 'k');
 
   return s;
 }
 
 /**
- * Detect if text is a short term (1-3 words) vs a full sentence.
- * Short terms get slower, more emphatic reading.
- */
-function getTextProfile(text, slow = false) {
-  const wordCount = text.trim().split(/\s+/).length;
-  const slowFactor = slow ? 0.8 : 1;
-  if (wordCount <= 2) return { rate: 0.85 * slowFactor, pitch: 1.0 };     // single term — clear but natural
-  if (wordCount <= 5) return { rate: 0.88 * slowFactor, pitch: 0.98 };    // short phrase
-  return { rate: 0.92 * slowFactor, pitch: 0.96 };                         // full sentence
-}
-
-/**
  * Text-to-Speech hook for Kurdish Kurmanji using Web Speech API.
- * Uses Turkish (tr-TR) voice with phonetic conversion.
- * Selects the most natural-sounding voice available.
+ * Uses Turkish (tr-TR) voice with minimal phonetic conversion.
  */
 export function useSpeech() {
   const [isSpeaking, setIsSpeaking] = useState(false);
@@ -74,10 +48,8 @@ export function useSpeech() {
       const voices = speechSynthesis.getVoices();
       if (!voices.length) return;
 
-      // Rank Turkish voices by quality (prefer online/neural voices)
+      // Find Turkish voices, prefer online/neural
       const turkishVoices = voices.filter(v => v.lang === 'tr-TR' || v.lang.startsWith('tr'));
-
-      // Priority: online neural > online > local
       const ranked = turkishVoices.sort((a, b) => {
         const scoreA = (!a.localService ? 2 : 0) + (a.name.includes('Online') ? 1 : 0);
         const scoreB = (!b.localService ? 2 : 0) + (b.name.includes('Online') ? 1 : 0);
@@ -97,12 +69,12 @@ export function useSpeech() {
     speechSynthesis.cancel();
 
     const phonetic = kurdishToPhonetic(text);
-    const { rate, pitch } = getTextProfile(text, slow);
+    const rate = slow ? 0.75 : 0.9;
 
     const utterance = new SpeechSynthesisUtterance(phonetic);
     utterance.lang = 'tr-TR';
     utterance.rate = rate;
-    utterance.pitch = pitch;
+    utterance.pitch = 1.0;
     utterance.volume = 1.0;
     if (voiceRef.current) utterance.voice = voiceRef.current;
 
