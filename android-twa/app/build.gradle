@@ -30,6 +30,7 @@ android {
                 storePassword project.property('KEYSTORE_PASSWORD')
                 keyAlias 'ferhenga'
                 keyPassword project.property('KEYSTORE_PASSWORD')
+                storeType 'PKCS12'
             }
         }
     }
