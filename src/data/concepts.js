@@ -700,7 +700,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "counting",
       "params": {
-        "count": 3,
+        "count": 2,
         "shape": "square",
         "color": "primary"
       }
