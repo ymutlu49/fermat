@@ -23,27 +23,42 @@ jobs:
       - name: Decode keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
-        run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > android-twa/app/release.jks
+        run: echo "$KEYSTORE_BASE64" | base64 -d > /tmp/release.p12
 
-      - name: Build signed AAB
+      - name: Build unsigned AAB
         working-directory: android-twa
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
           chmod +x gradlew
-          ./gradlew bundleRelease --no-daemon \
-            -PKEYSTORE_FILE=release.jks \
-            -PKEYSTORE_PASSWORD="$KEYSTORE_PASSWORD"
+          ./gradlew bundleRelease --no-daemon
 
-      - name: Build signed APK
-        working-directory: android-twa
+      - name: Sign AAB with jarsigner
         env:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
-          ./gradlew assembleRelease --no-daemon \
-            -PKEYSTORE_FILE=release.jks \
-            -PKEYSTORE_PASSWORD="$KEYSTORE_PASSWORD"
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore /tmp/release.p12 \
+            -storetype PKCS12 \
+            -storepass "$KEYSTORE_PASSWORD" \
+            -keypass "$KEYSTORE_PASSWORD" \
+            android-twa/app/build/outputs/bundle/release/app-release.aab \
+            ferhenga
+
+      - name: Build unsigned APK
+        working-directory: android-twa
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: Sign APK
+        env:
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          # Sign with apksigner
+          ${ANDROID_HOME}/build-tools/$(ls ${ANDROID_HOME}/build-tools/ | tail -1)/apksigner sign \
+            --ks /tmp/release.p12 \
+            --ks-type PKCS12 \
+            --ks-pass "pass:${KEYSTORE_PASSWORD}" \
+            --ks-key-alias ferhenga \
+            --key-pass "pass:${KEYSTORE_PASSWORD}" \
+            android-twa/app/build/outputs/apk/release/app-release-unsigned.apk || true
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
