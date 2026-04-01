@@ -81,14 +81,15 @@ function kurdishToPhonetic(text) {
   // First replace numbers with Kurdish words
   let s = replaceNumbersWithKurdish(text);
 
-  // ê → "é" sound — use 'e' (Turkish TTS reads naturally)
+  // ê → open/long e — Turkish TTS reads â as elongated, use 'â' trick doesn't work
+  // Best approach: keep as 'e' but slow down rate for these words
   s = s.replace(/[Êê]/g, 'e');
 
-  // î → i
+  // î → long i — keep as 'i', TTS handles it
   s = s.replace(/Î/g, 'İ');
   s = s.replace(/î/g, 'i');
 
-  // û → u
+  // û → long u — keep as 'u'
   s = s.replace(/[Ûû]/g, 'u');
 
   // x → h (velar fricative → closest Turkish sound)
@@ -141,7 +142,7 @@ export function useSpeech() {
     speechSynthesis.cancel();
 
     const phonetic = kurdishToPhonetic(text);
-    const rate = slow ? 0.75 : 0.9;
+    const rate = slow ? 0.7 : 0.85;
 
     const utterance = new SpeechSynthesisUtterance(phonetic);
     utterance.lang = 'tr-TR';
