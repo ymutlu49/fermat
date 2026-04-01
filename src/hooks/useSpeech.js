@@ -50,10 +50,10 @@ function kurdishToPhonetic(text) {
  */
 function getTextProfile(text, slow = false) {
   const wordCount = text.trim().split(/\s+/).length;
-  const slowFactor = slow ? 0.75 : 1;
-  if (wordCount <= 2) return { rate: 0.68 * slowFactor, pitch: 1.0 };     // single term — slow & clear
-  if (wordCount <= 5) return { rate: 0.74 * slowFactor, pitch: 0.98 };    // short phrase
-  return { rate: 0.80 * slowFactor, pitch: 0.96 };                         // full sentence
+  const slowFactor = slow ? 0.8 : 1;
+  if (wordCount <= 2) return { rate: 0.85 * slowFactor, pitch: 1.0 };     // single term — clear but natural
+  if (wordCount <= 5) return { rate: 0.88 * slowFactor, pitch: 0.98 };    // short phrase
+  return { rate: 0.92 * slowFactor, pitch: 0.96 };                         // full sentence
 }
 
 /**
