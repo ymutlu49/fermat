@@ -1,0 +1,41 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.yilmazmutlu.ferhengamatematike'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.yilmazmutlu.ferhengamatematike"
+        minSdk 19
+        targetSdk 34
+        versionCode 1
+        versionName "1.0.0"
+
+        // TWA host and path configuration
+        manifestPlaceholders = [
+            hostName      : "ymutlu49.github.io",
+            defaultUrl    : "https://ymutlu49.github.io/fermat/",
+            launcherName  : "Ferhenga Mat.",
+            assetStatements: '[{ "relation": ["delegate_permission/common.handle_all_urls"], ' +
+                             '"target": { "namespace": "web", "site": "https://ymutlu49.github.io" } }]'
+        ]
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.5.0'
+}

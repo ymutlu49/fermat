@@ -14,62 +14,36 @@ jobs:
           distribution: temurin
           java-version: 17
 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Install Bubblewrap CLI
-        run: npm install -g @bubblewrap/cli
+      - name: Set SDK path
+        run: echo "sdk.dir=$ANDROID_HOME" > android-twa/local.properties
 
-      - name: Configure Bubblewrap
+      - name: Build AAB
+        working-directory: android-twa
         run: |
-          mkdir -p ~/.aspect
-          mkdir -p ~/.aspect/bubblewrap
-          cat > ~/.aspect/bubblewrap/config.json << 'EOF'
-          {
-            "jdkPath": "$JAVA_HOME",
-            "androidSdkPath": "$ANDROID_HOME"
-          }
-          EOF
-          # Replace env vars
-          envsubst < ~/.aspect/bubblewrap/config.json > ~/.aspect/bubblewrap/config.tmp && mv ~/.aspect/bubblewrap/config.tmp ~/.aspect/bubblewrap/config.json
-          cat ~/.aspect/bubblewrap/config.json
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon
 
-      - name: Init and Build TWA
+      - name: Build APK
+        working-directory: android-twa
+        run: ./gradlew assembleRelease --no-daemon
+
+      - name: List outputs
         run: |
-          mkdir -p twa-build && cd twa-build
+          find android-twa -name "*.aab" -o -name "*.apk" 2>/dev/null
+          ls -la android-twa/app/build/outputs/bundle/release/ 2>/dev/null || true
+          ls -la android-twa/app/build/outputs/apk/release/ 2>/dev/null || true
 
-          # Provide all answers: No JDK install, JAVA_HOME path, No Android SDK install, ANDROID_HOME path, then accepts for all manifest questions
-          printf "n\n${JAVA_HOME}\nn\n${ANDROID_HOME}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" | bubblewrap init --manifest="https://ymutlu49.github.io/fermat/manifest.json" 2>&1 || true
-
-          echo "=== Files after init ==="
-          ls -la
-          echo "=== Checking for gradle ==="
-          ls -la gradlew 2>/dev/null || echo "No gradlew found"
-
-          # Try build
-          if [ -f "gradlew" ]; then
-            echo "=== Running bubblewrap build ==="
-            printf "\n\n\n\n\n\n\n\n\n\n" | bubblewrap build --signingMode=none 2>&1 || true
-          else
-            echo "Init failed - no gradlew found"
-          fi
-
-          echo "=== Final file listing ==="
-          find . -name "*.aab" -o -name "*.apk" 2>/dev/null
-          ls -la app/build/outputs/ 2>/dev/null || true
-          ls -la *.aab *.apk 2>/dev/null || echo "No AAB/APK in root"
-
-      - name: Upload artifacts
+      - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
-          name: android-package
-          path: |
-            twa-build/**/*.aab
-            twa-build/**/*.apk
-            twa-build/*.aab
-            twa-build/*.apk
-          if-no-files-found: warn
+          name: ferhenga-matematike-aab
+          path: android-twa/app/build/outputs/bundle/release/*.aab
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: ferhenga-matematike-apk
+          path: android-twa/app/build/outputs/apk/release/*.apk
