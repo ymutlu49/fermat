@@ -23,10 +23,24 @@ android {
         ]
     }
 
+    signingConfigs {
+        release {
+            if (project.hasProperty('KEYSTORE_FILE')) {
+                storeFile file(project.property('KEYSTORE_FILE'))
+                storePassword project.property('KEYSTORE_PASSWORD')
+                keyAlias 'ferhenga'
+                keyPassword project.property('KEYSTORE_PASSWORD')
+            }
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            if (project.hasProperty('KEYSTORE_FILE')) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 
