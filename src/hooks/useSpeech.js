@@ -1,7 +1,6 @@
 import { useState, useCallback, useRef } from 'react';
 
-const API_URL = 'https://www.kurdishtts.com/api/tts-proxy';
-const API_KEY = '5c9c38988a75c872ed65cad6e7d85f291dcb17a1';
+const API_URL = 'https://kurdish-tts-proxy.y-mutlu.workers.dev';
 const SPEAKER_ID = 'kurmanji_72'; // Female Kurmanji voice
 
 // Cache for audio blobs to avoid re-fetching
@@ -20,7 +19,6 @@ async function fetchKurdishAudio(text) {
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: {
-      'x-api-key': API_KEY,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
