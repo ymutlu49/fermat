@@ -21,16 +21,13 @@ jobs:
         run: echo "sdk.dir=$ANDROID_HOME" > android-twa/local.properties
 
       - name: Create signing keystore
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
           keytool -genkeypair -v \
             -keystore /tmp/upload.p12 \
             -storetype PKCS12 \
             -alias ferhenga \
             -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass "$KEYSTORE_PASSWORD" \
-            -keypass "$KEYSTORE_PASSWORD" \
+            -storepass android -keypass android \
             -dname "CN=Yilmaz Mutlu, OU=Education, O=Ferhenga Matematike, L=Van, ST=Van, C=TR"
 
       - name: Build unsigned AAB
@@ -40,14 +37,11 @@ jobs:
           ./gradlew bundleRelease --no-daemon
 
       - name: Sign AAB with jarsigner
-        env:
-          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
           jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
             -keystore /tmp/upload.p12 \
             -storetype PKCS12 \
-            -storepass "$KEYSTORE_PASSWORD" \
-            -keypass "$KEYSTORE_PASSWORD" \
+            -storepass android -keypass android \
             android-twa/app/build/outputs/bundle/release/app-release.aab \
             ferhenga
 
