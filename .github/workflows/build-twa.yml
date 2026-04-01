@@ -20,16 +20,6 @@ jobs:
       - name: Set SDK path
         run: echo "sdk.dir=$ANDROID_HOME" > android-twa/local.properties
 
-      - name: Create signing keystore
-        run: |
-          keytool -genkeypair -v \
-            -keystore /tmp/upload.p12 \
-            -storetype PKCS12 \
-            -alias ferhenga \
-            -keyalg RSA -keysize 2048 -validity 10000 \
-            -storepass android -keypass android \
-            -dname "CN=Yilmaz Mutlu, OU=Education, O=Ferhenga Matematike, L=Van, ST=Van, C=TR"
-
       - name: Build unsigned AAB
         working-directory: android-twa
         run: |
@@ -39,7 +29,7 @@ jobs:
       - name: Sign AAB with jarsigner
         run: |
           jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
-            -keystore /tmp/upload.p12 \
+            -keystore android-twa/upload-key.p12 \
             -storetype PKCS12 \
             -storepass android -keypass android \
             android-twa/app/build/outputs/bundle/release/app-release.aab \
