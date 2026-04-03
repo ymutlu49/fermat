@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Section Registry ─────────────────────────────────
+// ─── FerMat — Section Registry ─────────────────────────────────
 export const SECTIONS = {
   0:  { name: "TÊGEHÊN PERWERDEYÎ",      short: "PERWERDEYÎ",  tr: "Pedagojik Kavramlar",      icon: "🎓", colorIndex: 7 },
   1:  { name: "HEJMAR Û PERGALA DEHÎ",   short: "HEJMAR",       tr: "Sayılar ve Onluk Sistem", icon: "🔢", colorIndex: 0 },

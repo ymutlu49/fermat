@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Shared UI Components ──────────────────────────────
+// ─── FerMat — Shared UI Components ──────────────────────────────
 import { useState, useEffect } from 'react';
 import { SECTIONS, THEME, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { getSectionColor } from '@utils/helpers.js';

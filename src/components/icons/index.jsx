@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — SVG Icon Library ─────────────────────────────────
+// ─── FerMat — SVG Icon Library ─────────────────────────────────
 // All icons are 24×24 viewBox, stroke-based, accept size + color props.
 
 export const IconSearch = ({ size=20, color='currentColor' }) => (

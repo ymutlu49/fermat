@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Design Tokens ────────────────────────────────────
+// ─── FerMat — Design Tokens ────────────────────────────────────
 
 // ── Spacing scale (4px base unit) ───────────────────────────────────────────
 export const SPACING = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };

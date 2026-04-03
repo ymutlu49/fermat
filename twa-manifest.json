@@ -1,8 +1,8 @@
 {
   "packageId": "com.yilmazmutlu.ferhengamatematike",
   "host": "ymutlu49.github.io",
-  "name": "Ferhenga Matematîkê",
-  "launcherName": "Ferhenga Mat.",
+  "name": "FerMat",
+  "launcherName": "FerMat",
   "display": "standalone",
   "themeColor": "#0F4C5C",
   "navigationColor": "#0F4C5C",

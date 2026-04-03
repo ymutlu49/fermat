@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — HomeView (Warm & Vibrant Redesign) ────────────────
+// ─── FerMat — HomeView (Warm & Vibrant Redesign) ────────────────
 import { useState, useMemo } from 'react';
 import { ALL_CONCEPTS, SECTIONS, LEITNER_KNOWN_BOX, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN, MOTIVATIONAL_QUOTES, getDailyConceptIndex, SYLLABLES } from '@data';
 import { getSectionColor } from '@utils/helpers.js';

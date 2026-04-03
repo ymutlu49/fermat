@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Fuzzy Search Engine ──────────────────────────────
+// ─── FerMat — Fuzzy Search Engine ──────────────────────────────
 
 /**
  * Lightweight fuzzy search for Kurdish/Turkish/English math terms.

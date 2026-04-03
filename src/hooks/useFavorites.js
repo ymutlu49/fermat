@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Favorites Hook ───────────────────────────────────
+// ─── FerMat — Favorites Hook ───────────────────────────────────
 import { useCallback, useMemo } from 'react';
 import { usePersistedState } from './usePersistedState.js';
 

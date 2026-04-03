@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Anonymous Local Analytics ──────────────────────────
+// ─── FerMat — Anonymous Local Analytics ──────────────────────────
 // Tracks usage patterns locally (localStorage only, no external calls).
 // Helps understand which features are used most for future improvements.
 

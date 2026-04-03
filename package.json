@@ -1,7 +1,7 @@
 {
   "name": "ferhenga-matematik",
   "version": "3.0.0",
-  "description": "Ferhenga Matematîkê — Kürtçe Matematik Sözlüğü (Pêşdibistanî – Dibistana Seretayî)",
+  "description": "FerMat — Kürtçe Matematik Sözlüğü (Pêşdibistanî – Dibistana Seretayî)",
   "author": "Prof. Dr. Yılmaz MUTLU",
   "license": "MIT",
   "private": true,

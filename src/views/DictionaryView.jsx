@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Ferheng (Dictionary — Vibrant Redesign) ───────────
+// ─── FerMat — Ferheng (Dictionary — Vibrant Redesign) ───────────
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import {
   ALL_CONCEPTS, SECTIONS,

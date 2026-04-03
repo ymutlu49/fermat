@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Confetti Celebration Effect ───────────────────────
+// ─── FerMat — Confetti Celebration Effect ───────────────────────
 import { useEffect, useState } from 'react';
 
 const COLORS = ['#E76F51', '#4ECDC4', '#F4D35E', '#2D6A4F', '#6366F1', '#F43F5E', '#22C55E', '#3B82F6'];

@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Root Application Component ───────────────────────
+// ─── FerMat — Root Application Component ───────────────────────
 import { useState, useCallback, useEffect } from 'react';
 import '@/styles/animations.css';
 
@@ -86,7 +86,7 @@ const GAMES_VIEWS = ['quiz', 'match', 'write'];
 const MORE_VIEWS = ['exercise', 'about', 'feedback', 'conceptmap', 'worksheet'];
 
 const VIEW_TITLES = {
-  home:       'Ferhenga Matematîkê',
+  home:       'FerMat',
   dict:       'Ferheng',
   flash:      'Pirs û Bersiv',
   games:      'Lîstik',
@@ -205,7 +205,7 @@ export default function App() {
             <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? SPACING.sm : SPACING.sm + 2 }}>
               <img
                 src={import.meta.env.BASE_URL + 'favicon.svg'}
-                alt="Ferhenga Matematîkê"
+                alt="FerMat"
                 style={{
                   width: isMobile ? 32 : 36,
                   height: isMobile ? 32 : 36,
@@ -218,7 +218,7 @@ export default function App() {
                   fontSize: isMobile ? '0.8rem' : FONT_SIZE.base,
                   fontWeight: FONT_WEIGHT.extrabold, color: t.text,
                 }}>
-                  {VIEW_TITLES[view] || 'Ferhenga Matematîkê'}
+                  {VIEW_TITLES[view] || 'FerMat'}
                 </div>
                 {isDesktop && view === 'home' && (
                   <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>

@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Concept Metadata (Syllables, Related, Real-world) ─
+// ─── FerMat — Concept Metadata (Syllables, Related, Real-world) ─
 // This file extends concepts with pedagogical metadata without modifying concepts.js
 
 /**

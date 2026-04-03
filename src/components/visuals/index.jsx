@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — SVG Concept Visual Library v2 ─────────────────────
+// ─── FerMat — SVG Concept Visual Library v2 ─────────────────────
 // Complete overhaul: unique IDs, theme-safe colors, consistent size×size viewBox,
 // fixed defs ordering, improved aesthetics, new visual types.
 import { useId } from 'react';

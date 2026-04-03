@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Graph Layout Engine ──────────────────────────────
+// ─── FerMat — Graph Layout Engine ──────────────────────────────
 import { ALL_CONCEPTS, SECTIONS } from '@data';
 import { RELATED_CONCEPTS } from '@data/conceptMeta.js';
 

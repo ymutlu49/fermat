@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — PDF Export Utility (Colorful Edition) ─────────────
+// ─── FerMat — PDF Export Utility (Colorful Edition) ─────────────
 // Generates a printable HTML page with visuals — a pictorial math dictionary.
 // Each section uses its own vibrant color palette from SECTION_COLORS.
 
@@ -28,7 +28,7 @@ function hexToRgba(hex, alpha) {
  * @param {Array} concepts - Array of concept objects to export
  * @param {string} title - Page title
  */
-export function exportConceptsAsPDF(concepts, title = 'Ferhenga Matematîkê — Ferhenga Wêneyî ya Matematîkê') {
+export function exportConceptsAsPDF(concepts, title = 'FerMat — Ferhenga Wêneyî ya Matematîkê') {
   const grouped = {};
   const groupSectionIds = {};
   concepts.forEach(c => {
@@ -223,7 +223,7 @@ export function exportConceptsAsPDF(concepts, title = 'Ferhenga Matematîkê —
     </div>`;
   }).join('')}
   <div class="footer">
-    Ferhenga Matematîkê · Ferhenga Wêneyî ya Matematîkê
+    FerMat · Ferhenga Wêneyî ya Matematîkê
   </div>
   <script>window.onload = () => { window.print(); };<\/script>
 </body>

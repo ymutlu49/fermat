@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Error Boundary ────────────────────────────────────
+// ─── FerMat — Error Boundary ────────────────────────────────────
 import { Component } from 'react';
 
 export class ErrorBoundary extends Component {
@@ -12,7 +12,7 @@ export class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
-    console.error('[Ferhenga Matematîkê] Xeletî:', error, errorInfo);
+    console.error('[FerMat] Xeletî:', error, errorInfo);
   }
 
   handleReset = () => {

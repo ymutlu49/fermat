@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Hîndarî (Concept-based Exercise) ──────────────────
+// ─── FerMat — Hîndarî (Concept-based Exercise) ──────────────────
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
 import { shuffle, getSectionColor } from '@utils/helpers.js';

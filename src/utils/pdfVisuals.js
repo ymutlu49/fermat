@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — PDF Visual Icons ─────────────────────────────────
+// ─── FerMat — PDF Visual Icons ─────────────────────────────────
 // Simple SVG icons for each visual type, used in PDF/print exports.
 // These are lightweight inline SVGs that render well on paper.
 

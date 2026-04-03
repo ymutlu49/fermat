@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Pirsan û Hîndarî ──────────────────────────────────
+// ─── FerMat — Pirsan û Hîndarî ──────────────────────────────────
 // Her pirs: id, s (beş), lv (ast), q (pirs), opts [4], ans (bersiva rast 0-3), explain
 
 export const EXERCISES = [

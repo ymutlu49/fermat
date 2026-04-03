@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Rûpelên Xebatê (Worksheet Generator) ─────────────
+// ─── FerMat — Rûpelên Xebatê (Worksheet Generator) ─────────────
 import { useState, useMemo } from 'react';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { getSectionColor } from '@utils/helpers.js';

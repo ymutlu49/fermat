@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Application Constants ────────────────────────────
+// ─── FerMat — Application Constants ────────────────────────────
 export const PASSING_SCORE          = 8;
 export const QUIZ_TOTAL_QUESTIONS   = 10;
 export const FEEDBACK_DELAY_MS      = 1500;

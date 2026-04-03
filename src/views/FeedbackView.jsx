@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Pêşniyar û Serrastkirin (Feedback View) ───────────
+// ─── FerMat — Pêşniyar û Serrastkirin (Feedback View) ───────────
 import { useState, useCallback } from 'react';
 import { SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { useMediaQuery } from '@hooks';
@@ -33,7 +33,7 @@ export default function FeedbackView({ theme, isDark }) {
     localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(existing));
     // Send via email
     const typeLabel = FEEDBACK_TYPES.find(ft => ft.id === feedbackType)?.label || feedbackType;
-    const subject = encodeURIComponent(`[Ferhenga Matematîkê] ${typeLabel}`);
+    const subject = encodeURIComponent(`[FerMat] ${typeLabel}`);
     const body = encodeURIComponent(
       `Cure: ${typeLabel}\n\n${message.trim()}\n\n---\nDema: ${new Date().toLocaleString()}\nGuherto: 3.0.0`
     );

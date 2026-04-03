@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Derbarê Ferhengê (About View) ─────────────────────
+// ─── FerMat — Derbarê Ferhengê (About View) ─────────────────────
 import { SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION } from '@data';
 import { useMediaQuery } from '@hooks';
 
@@ -15,14 +15,14 @@ export default function AboutView({ theme, isDark }) {
         <div style={{ textAlign: 'center', marginBottom: SPACING.xl + 4 }}>
           <img
             src={import.meta.env.BASE_URL + 'favicon.svg'}
-            alt="Ferhenga Matematîkê"
+            alt="FerMat"
             style={{ width: 80, height: 80, borderRadius: RADIUS.xl, marginBottom: SPACING.md }}
           />
           <div style={{
             fontSize: isMobile ? '1.3rem' : '1.5rem',
             fontWeight: FONT_WEIGHT.extrabold, color: t.text,
           }}>
-            Ferhenga Matematîkê
+            FerMat
           </div>
           <div style={{ fontSize: FONT_SIZE.sm, color: t.textMuted, marginTop: SPACING.xs }}>
             Pêşdibistanî – Dibistana Seretayî

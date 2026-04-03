@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — All 201 Concepts ─────────────────────────────────
+// ─── FerMat — All 201 Concepts ─────────────────────────────────
 // KRİTİK: Bu veriyi manual olarak değiştirme — tek kaynak budur.
 /** @typedef {{ ku:string, tr:string, en:string, lv:string, df:string, ex:string, s:number, visual:Object }} Concept */
 export const ALL_CONCEPTS = [

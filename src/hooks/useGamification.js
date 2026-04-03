@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Gamification Hook ────────────────────────────────
+// ─── FerMat — Gamification Hook ────────────────────────────────
 import { useCallback, useMemo } from 'react';
 import { usePersistedState } from './usePersistedState.js';
 import {

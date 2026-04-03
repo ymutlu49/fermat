@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Gamification System ──────────────────────────────
+// ─── FerMat — Gamification System ──────────────────────────────
 
 // ── XP Rewards ──────────────────────────────────────────────────────────────
 export const XP_REWARDS = {

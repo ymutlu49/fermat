@@ -66,7 +66,7 @@ export default function SplashView({ onStart }) {
         }}>
           <img
             src={import.meta.env.BASE_URL + 'favicon.svg'}
-            alt="Ferhenga Matematîkê"
+            alt="FerMat"
             style={{ width: 90, height: 90, borderRadius: 16 }}
           />
         </div>
@@ -74,11 +74,8 @@ export default function SplashView({ onStart }) {
 
       {/* Title */}
       <div style={{ animation: 'fadeInUp 0.7s ease-out 0.1s both', marginBottom: SPACING.sm }}>
-        <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.medium, color: 'rgba(255,255,255,0.85)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>
-          FERHENGA
-        </div>
-        <div style={{ fontSize: FONT_SIZE.xxl, fontWeight: FONT_WEIGHT.extrabold, color: '#fff', letterSpacing: '0.05em' }}>
-          MATEMATÎKÊ
+        <div style={{ fontSize: '2.5rem', fontWeight: FONT_WEIGHT.extrabold, color: '#fff', letterSpacing: '0.05em' }}>
+          FerMat
         </div>
         <div style={{ fontSize: FONT_SIZE.base, color: 'rgba(255,255,255,0.65)', marginTop: SPACING.xs }}>
           Pêşdibistanî – Dibistana Seretayî

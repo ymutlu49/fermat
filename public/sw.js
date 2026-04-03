@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Service Worker v4 ─────────────────────────────────
+// ─── FerMat — Service Worker v4 ───────────────────────────────────────────────
 const CACHE_NAME = 'ferhenga-v4';
 const PRECACHE_URLS = [
   './',

@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Worksheet Export Utilities ─────────────────────────
+// ─── FerMat — Worksheet Export Utilities ─────────────────────────
 // Generates printable HTML worksheets for classroom use.
 // Pattern: build HTML string, open in new window, trigger window.print().
 
@@ -364,7 +364,7 @@ function wrapHTML(title, subtitle, bodyHtml, answerHtml = '') {
   ${answerPage}
 
   <div class="footer">
-    Ferhenga Matematike &middot; Prof. Dr. Yilmaz MUTLU
+    FerMat &middot; Prof. Dr. Yilmaz MUTLU
   </div>
 
   <script>window.onload = () => { window.print(); };<\/script>

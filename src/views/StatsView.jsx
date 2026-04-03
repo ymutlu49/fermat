@@ -240,7 +240,7 @@ function FeedbackSection({ theme: t, isDark }) {
     localStorage.setItem(FEEDBACK_STORAGE_KEY, JSON.stringify(existing));
     // Send via email
     const typeLabel = { bug: 'Xeletî', idea: 'Pêşniyar', term: 'Têgeh', like: 'Spas' }[feedbackType] || feedbackType;
-    const subject = encodeURIComponent(`[Ferhenga Matematîkê] ${typeLabel}`);
+    const subject = encodeURIComponent(`[FerMat] ${typeLabel}`);
     const body = encodeURIComponent(
       `Cure: ${typeLabel}\n\n${message.trim()}\n\n---\nDema: ${new Date().toLocaleString()}\nGuherto: 3.0.0`
     );

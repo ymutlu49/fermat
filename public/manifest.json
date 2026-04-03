@@ -1,7 +1,7 @@
 {
-  "name": "Ferhenga Matematîkê",
-  "short_name": "Ferhenga Mat.",
-  "description": "Ferhenga Matematîkê — Pêşdibistanî û Dibistana Seretayî ji bo zarokan",
+  "name": "FerMat",
+  "short_name": "FerMat",
+  "description": "FerMat — Pêşdibistanî û Dibistana Seretayî ji bo zarokan",
   "start_url": "/fermat/",
   "scope": "/fermat/",
   "display": "standalone",

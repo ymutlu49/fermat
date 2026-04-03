@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Concept Map View (SVG Radial Graph) ───────────────
+// ─── FerMat — Concept Map View (SVG Radial Graph) ───────────────
 import { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
 import { getSectionColor } from '@utils/helpers.js';

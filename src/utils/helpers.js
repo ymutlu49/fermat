@@ -1,4 +1,4 @@
-// ─── Ferhenga Matematîkê — Pure Utility Functions ───────────────────────────
+// ─── FerMat — Pure Utility Functions ───────────────────────────
 import { SECTIONS, SECTION_COLORS } from '@data';
 
 /** Fisher-Yates shuffle — returns new array */
