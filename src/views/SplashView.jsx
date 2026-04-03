@@ -15,39 +15,27 @@ export default function SplashView({ onStart }) {
       background: 'linear-gradient(135deg, #0F4C5C 0%, #1A6B7F 50%, #E76F51 100%)',
       position: 'relative', overflow: 'hidden',
     }}>
-      {/* Decorative circles */}
+      {/* Decorative circles — static, subtle */}
       {[
-        { top: '-60px', right: '-60px', size: 200, opacity: 0.05 },
-        { bottom: '-80px', left: '-80px', size: 260, opacity: 0.04 },
-        { top: '20%', left: '10%', size: 100, opacity: 0.03 },
-        { top: '60%', right: '15%', size: 140, opacity: 0.04 },
-        { top: '10%', right: '30%', size: 60, opacity: 0.06 },
+        { top: '-60px', right: '-60px', size: 200, opacity: 0.03 },
+        { bottom: '-80px', left: '-80px', size: 260, opacity: 0.02 },
+        { top: '40%', right: '10%', size: 120, opacity: 0.02 },
       ].map((c, i) => (
         <div key={i} style={{
           position: 'absolute', borderRadius: '50%',
           background: 'rgba(255,255,255,' + c.opacity + ')',
           width: c.size, height: c.size,
           top: c.top, bottom: c.bottom, left: c.left, right: c.right,
-          animation: 'floatUpDown ' + (15 + i * 3) + 's ease-in-out infinite',
-          animationDelay: (i * 0.8) + 's',
         }} />
       ))}
-      {/* Kurdish math terms & child-friendly symbols */}
+      {/* Kurdish math terms & symbols — sparse, subtle */}
       {[
-        { t: '🔢', x: 5,  y: 5,  r: -12, s: 2.0 },
-        { t: 'HEJMAR',  x: 75, y: 3,  r: 8,   s: 0.85 },
-        { t: '📐', x: 90, y: 12, r: -15, s: 1.8 },
-        { t: 'SÊGOŞE',  x: 3,  y: 22, r: 10,  s: 0.8 },
-        { t: '➕', x: 88, y: 28, r: 18,  s: 2.0 },
-        { t: '🍕', x: 8,  y: 40, r: -8,  s: 1.9 },
-        { t: 'GILOVER',  x: 82, y: 42, r: -6,  s: 0.8 },
-        { t: '🧩', x: 92, y: 55, r: 12,  s: 1.7 },
-        { t: 'KIRARÎ',  x: 2,  y: 58, r: -10, s: 0.8 },
-        { t: '🎲', x: 6,  y: 75, r: 14,  s: 1.8 },
-        { t: 'PÎVANDIN',x: 78, y: 72, r: -8,  s: 0.8 },
-        { t: '⭐', x: 88, y: 85, r: 10,  s: 1.7 },
-        { t: '🧮', x: 5,  y: 90, r: -12, s: 1.8 },
-        { t: 'REQEM',   x: 55, y: 92, r: 6,   s: 0.8 },
+        { t: '🔢', x: 5,  y: 6,  r: -10, s: 1.6 },
+        { t: 'HEJMAR',  x: 80, y: 8,  r: 8,   s: 0.75 },
+        { t: '📐', x: 4,  y: 40, r: 12,  s: 1.5 },
+        { t: 'SÊGOŞE',  x: 88, y: 50, r: -6,  s: 0.75 },
+        { t: '⭐', x: 6,  y: 80, r: 10,  s: 1.5 },
+        { t: 'MATEMATÎK', x: 70, y: 88, r: -8,  s: 0.75 },
       ].map((item, i) => {
         const isEmoji = /\p{Emoji}/u.test(item.t) && item.t.length <= 3;
         return (
@@ -56,8 +44,8 @@ export default function SplashView({ onStart }) {
             left: item.x + '%', top: item.y + '%',
             transform: `rotate(${item.r}deg)`,
             fontSize: item.s + 'rem',
-            color: isEmoji ? undefined : 'rgba(255,255,255,0.08)',
-            opacity: isEmoji ? 0.15 : 1,
+            color: isEmoji ? undefined : 'rgba(255,255,255,0.04)',
+            opacity: isEmoji ? 0.06 : 1,
             fontWeight: 900,
             userSelect: 'none', pointerEvents: 'none',
             whiteSpace: 'nowrap', letterSpacing: isEmoji ? 0 : '0.04em',
@@ -81,14 +69,6 @@ export default function SplashView({ onStart }) {
             alt="Ferhenga Matematîkê"
             style={{ width: 90, height: 90, borderRadius: 16 }}
           />
-          {/* Spinning ring */}
-          <svg width="140" height="140" viewBox="0 0 140 140" style={{
-            position: 'absolute', top: -10, left: -10,
-            animation: 'spin 8s linear infinite',
-          }}>
-            <circle cx="70" cy="70" r="65" fill="none" stroke="rgba(255,255,255,0.4)"
-              strokeWidth="2" strokeDasharray="20 10" strokeLinecap="round"/>
-          </svg>
         </div>
       </div>
 
@@ -132,14 +112,14 @@ export default function SplashView({ onStart }) {
           borderRadius: RADIUS.full, border: 'none',
           background: '#E76F51', color: '#fff',
           fontSize: '1.1rem', fontWeight: FONT_WEIGHT.bold, cursor: 'pointer',
-          boxShadow: '0 8px 24px rgba(231,111,81,0.5)',
-          animation: 'fadeInUp 0.8s ease-out 0.4s both, pulseGlow 2.5s ease-in-out infinite 1.2s',
+          boxShadow: '0 4px 12px rgba(231,111,81,0.3)',
+          animation: 'fadeInUp 0.8s ease-out 0.4s both',
           transition: `transform ${DURATION.normal}, box-shadow ${DURATION.normal}`,
           display: 'flex', alignItems: 'center', gap: SPACING.sm,
           minHeight: TOUCH_MIN + 4,
         }}
-        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.03)'; e.currentTarget.style.boxShadow = '0 12px 32px rgba(231,111,81,0.6)'; }}
-        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 8px 24px rgba(231,111,81,0.5)'; }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.02)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(231,111,81,0.35)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(231,111,81,0.3)'; }}
         aria-label="Dest pê bike"
       >
         Dest pê bike

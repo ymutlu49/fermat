@@ -206,8 +206,8 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               position: 'absolute', width: '100%', minHeight: 280,
               backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
               borderRadius: RADIUS.xl,
-              background: 'linear-gradient(135deg, ' + sectionColors.bg + ' 0%, ' + sectionColors.accent + '22 100%)',
-              border: '2px solid ' + sectionColors.accent + '44',
+              background: sectionColors.bg,
+              border: '1px solid ' + sectionColors.accent + '20',
               display: 'flex', flexDirection: 'column', alignItems: 'center',
               justifyContent: 'center', padding: SPACING.xl + 'px', textAlign: 'center',
               boxShadow: t.cardShadow,
@@ -244,7 +244,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               transform: 'rotateY(180deg)',
               borderRadius: RADIUS.xl,
               background: t.surface,
-              borderTop: '4px solid ' + sectionColors.accent,
+              borderTop: '1px solid ' + t.border,
               border: '1px solid ' + t.border,
               display: 'flex', flexDirection: 'column', padding: '20px', textAlign: 'left',
               boxShadow: t.cardShadow,
@@ -277,9 +277,9 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
         {isFlipped && (
           <div style={{ display: 'flex', gap: SPACING.sm, width: '100%', maxWidth: 400, animation: 'fadeInUp ' + DURATION.normal + ' ease-out' }}>
             {[
-              { box: 0, label: 'Nizanim', emoji: '😕', color: t.error, bg: t.error + '12' },
-              { box: 1, label: 'Fêr dibim', emoji: '🤔', color: t.warning, bg: t.warning + '15' },
-              { box: 2, label: 'Dizanim', emoji: '😊', color: t.success, bg: t.success + '12' },
+              { box: 0, label: 'Nizanim', color: t.error, bg: t.error + '12' },
+              { box: 1, label: 'Fêr dibim', color: t.warning, bg: t.warning + '15' },
+              { box: 2, label: 'Dizanim', color: t.success, bg: t.success + '12' },
             ].map(btn => (
               <button key={btn.box} onClick={() => handleRate(btn.box)} style={{
                 flex: 1, padding: '13px ' + SPACING.sm + 'px', borderRadius: RADIUS.xl,
@@ -292,7 +292,6 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               onMouseEnter={e => { e.currentTarget.style.background = btn.color + '25'; e.currentTarget.style.borderColor = btn.color; e.currentTarget.style.transform = 'scale(1.04)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = btn.bg; e.currentTarget.style.borderColor = btn.color + '60'; e.currentTarget.style.transform = 'scale(1)'; }}
               >
-                <span style={{ fontSize: '1.4rem' }}>{btn.emoji}</span>
                 {btn.label}
               </button>
             ))}
@@ -307,7 +306,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
             background: t.surface, cursor: currentIndex === 0 ? 'not-allowed' : 'pointer',
             opacity: currentIndex === 0 ? 0.35 : 1,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: t.cardShadow, transition: 'all ' + DURATION.fast,
+            transition: 'all ' + DURATION.fast,
           }}>
             <IconArrowLeft size={18} color={t.text} />
           </button>
@@ -335,7 +334,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
             border: '1.5px solid ' + (isShuffled ? t.primary : t.border),
             background: isShuffled ? t.primary : t.surface, cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: t.cardShadow, transition: 'all ' + DURATION.fast,
+            transition: 'all ' + DURATION.fast,
           }}>
             <IconShuffle size={18} color={isShuffled ? t.textOnPrimary : t.text} />
           </button>
@@ -346,7 +345,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
             background: t.surface, cursor: currentIndex >= deckConcepts.length - 1 ? 'not-allowed' : 'pointer',
             opacity: currentIndex >= deckConcepts.length - 1 ? 0.35 : 1,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: t.cardShadow, transition: 'all ' + DURATION.fast,
+            transition: 'all ' + DURATION.fast,
           }}>
             <IconArrowRight size={18} color={t.text} />
           </button>

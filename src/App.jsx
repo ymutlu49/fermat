@@ -10,6 +10,7 @@ import {
   IconVolume, IconVolumeMute, IconSun, IconMoon, IconMusic, IconMusicOff,
   IconHome, IconBook, IconCards, IconQuizIcon, IconPuzzle,
   IconPencil, IconBarChart, IconLightbulb, IconMessage, IconInfo,
+  IconMoreHorizontal, IconGamepad, IconMap, IconClipboard,
 } from '@components/icons';
 import {
   SplashView, HomeView, DictionaryView, FlashcardView,
@@ -18,63 +19,29 @@ import {
 } from '@views';
 import { trackEvent, trackSession } from '@utils/analytics.js';
 
-// ─── Background decoration — child-friendly emojis + Kurdish math terms ──────
+// ─── Background decoration — subtle, sparse pattern ─────────────────────────
 const BG_ITEMS = [
-  // Emojis — shapes, numbers, school items (age 4-9 friendly)
-  { t: '🔢', x:  3, y:  4, r: -10, s: 2.2 },
-  { t: '📐', x: 22, y:  2, r:  12, s: 2.0 },
-  { t: '✏️', x: 42, y:  5, r: -8,  s: 1.8 },
-  { t: '🌟', x: 62, y:  3, r:  15, s: 2.0 },
-  { t: '📏', x: 82, y:  6, r: -12, s: 1.9 },
-  { t: '🎯', x: 95, y:  2, r:   8, s: 1.7 },
-  // Kurdish terms — row 2
-  { t: 'HEJMAR',    x:  8, y: 14, r:   6, s: 1.0 },
-  { t: '🍕', x: 30, y: 16, r: -15, s: 2.1 },
-  { t: 'GILOVER',   x: 50, y: 13, r:   9, s: 0.95 },
-  { t: '🔵', x: 72, y: 18, r: -6,  s: 2.0 },
-  { t: 'SÊGOŞE',   x: 88, y: 15, r:  12, s: 0.95 },
-  // Emojis + terms — row 3
-  { t: '🧩', x:  2, y: 28, r:  10, s: 2.0 },
-  { t: 'PÎVANDIN',  x: 18, y: 30, r:  -7, s: 0.95 },
-  { t: '➕', x: 38, y: 26, r:  18, s: 2.2 },
-  { t: 'ÇARÇIK',    x: 56, y: 32, r:  -5, s: 0.95 },
-  { t: '🎲', x: 78, y: 28, r:  14, s: 2.0 },
-  { t: '✖️', x: 93, y: 33, r: -10, s: 1.8 },
-  // Row 4
-  { t: '🍎', x:  5, y: 42, r:  -8, s: 1.9 },
-  { t: 'KIRARÎ',    x: 22, y: 45, r:  10, s: 0.95 },
-  { t: '🔺', x: 42, y: 40, r: -14, s: 2.1 },
-  { t: 'PARJIMAR',  x: 60, y: 44, r:   7, s: 0.95 },
-  { t: '📊', x: 80, y: 42, r: -12, s: 1.8 },
-  // Row 5
-  { t: '1️⃣', x:  8, y: 56, r:  12, s: 1.6 },
-  { t: 'HEJMARDAN', x: 28, y: 58, r:  -6, s: 0.95 },
-  { t: '🌈', x: 48, y: 54, r:  16, s: 2.0 },
-  { t: 'REQEM',     x: 68, y: 57, r:  -9, s: 0.95 },
-  { t: '⭐', x: 88, y: 55, r:   8, s: 2.0 },
-  // Row 6
-  { t: '🎓', x:  3, y: 70, r: -10, s: 1.9 },
-  { t: 'CÎYOMETRÎ', x: 20, y: 72, r:   8, s: 0.95 },
-  { t: '🧮', x: 42, y: 68, r: -16, s: 2.0 },
-  { t: 'DANE',      x: 60, y: 73, r:   5, s: 0.95 },
-  { t: '🔷', x: 80, y: 70, r: -8,  s: 1.8 },
-  // Row 7
-  { t: '📖', x:  6, y: 84, r:  14, s: 1.8 },
-  { t: 'ZANIST',    x: 25, y: 86, r:  -7, s: 0.95 },
-  { t: '🎨', x: 45, y: 82, r:  10, s: 2.0 },
-  { t: 'MATEMATÎK', x: 65, y: 85, r: -12, s: 0.95 },
-  { t: '💡', x: 85, y: 83, r:   6, s: 1.9 },
-  // Bottom
-  { t: '🏆', x: 12, y: 94, r:  -8, s: 1.8 },
-  { t: '➗', x: 35, y: 96, r:  12, s: 2.0 },
-  { t: '🌍', x: 55, y: 93, r: -10, s: 1.9 },
-  { t: '➖', x: 75, y: 95, r:   8, s: 2.0 },
-  { t: '🎈', x: 92, y: 92, r: -14, s: 1.8 },
+  { t: '🔢', x:  5, y:  4, r: -10, s: 1.8 },
+  { t: '📐', x: 82, y:  6, r:  12, s: 1.6 },
+  { t: 'HEJMAR',    x: 12, y: 16, r:   6, s: 0.85 },
+  { t: 'SÊGOŞE',   x: 85, y: 18, r:  10, s: 0.85 },
+  { t: '➕', x:  4, y: 30, r:  14, s: 1.8 },
+  { t: 'PÎVANDIN',  x: 55, y: 28, r:  -5, s: 0.85 },
+  { t: '🎲', x: 90, y: 35, r:  12, s: 1.6 },
+  { t: 'KIRARÎ',    x: 20, y: 45, r:   8, s: 0.85 },
+  { t: '🔺', x: 75, y: 42, r: -12, s: 1.7 },
+  { t: 'HEJMARDAN', x: 30, y: 58, r:  -5, s: 0.85 },
+  { t: '⭐', x: 88, y: 55, r:   8, s: 1.6 },
+  { t: '🧮', x:  6, y: 70, r: -14, s: 1.6 },
+  { t: 'CÎYOMETRÎ', x: 65, y: 72, r:   6, s: 0.85 },
+  { t: '📖', x:  8, y: 84, r:  12, s: 1.5 },
+  { t: 'MATEMATÎK', x: 60, y: 86, r: -10, s: 0.85 },
+  { t: '🏆', x: 88, y: 92, r:  -6, s: 1.5 },
 ];
 
 function BackgroundDecoration({ isDark }) {
-  const textColor = isDark ? 'rgba(78,205,196,0.10)' : 'rgba(15,118,110,0.07)';
-  const emojiOpacity = isDark ? 0.08 : 0.12;
+  const textColor = isDark ? 'rgba(78,205,196,0.04)' : 'rgba(15,118,110,0.03)';
+  const emojiOpacity = isDark ? 0.03 : 0.04;
   return (
     <div style={{
       position: 'fixed', inset: 0, zIndex: 0,
@@ -108,25 +75,27 @@ function BackgroundDecoration({ isDark }) {
 const NAV_ITEMS = [
   { id: 'home',     icon: IconHome,      label: 'Malper',    color: '#0F766E' },
   { id: 'dict',     icon: IconBook,      label: 'Ferheng',   color: '#2563EB' },
-  { id: 'flash',    icon: IconCards,     label: 'P û B',     color: '#EA580C' },
-  { id: 'quiz',     icon: IconQuizIcon,  label: 'Azmûn',     color: '#16A34A' },
-  { id: 'match',    icon: IconPuzzle,    label: 'Cot Bike',  color: '#7C3AED' },
-  { id: 'write',    icon: IconPencil,    label: 'Binivîse',  color: '#1D4ED8' },
-  { id: 'exercise', icon: IconLightbulb, label: 'Hîndarî',   color: '#0E7490' },
+  { id: 'flash',    icon: IconCards,     label: 'Fêrbûn',    color: '#EA580C' },
+  { id: 'games',    icon: IconGamepad,   label: 'Lîstik',    color: '#16A34A' },
   { id: 'stats',    icon: IconBarChart,  label: 'Agahî',     color: '#B45309' },
-  { id: 'about',    icon: IconInfo,       label: 'Derbarê',    color: '#0F4C5C' },
-  { id: 'feedback', icon: IconMessage,   label: 'Pêşniyar',  color: '#059669' },
+  { id: 'more',     icon: IconMoreHorizontal, label: 'Zêdetir', color: '#64748B' },
 ];
 
+// Views that belong to "games" and "more" hub tabs
+const GAMES_VIEWS = ['quiz', 'match', 'write'];
+const MORE_VIEWS = ['exercise', 'about', 'feedback', 'conceptmap', 'worksheet'];
+
 const VIEW_TITLES = {
-  home:     'Ferhenga Matematîkê',
-  dict:     'Ferheng',
-  flash:    'Pirs û Bersiv',
-  quiz:     'Azmûn',
-  match:    'Cot Bîne',
-  write:    'Binivîse',
-  exercise: 'Hîndarî',
-  stats:    'Pêşketin',
+  home:       'Ferhenga Matematîkê',
+  dict:       'Ferheng',
+  flash:      'Pirs û Bersiv',
+  games:      'Lîstik',
+  quiz:       'Azmûn',
+  match:      'Cot Bîne',
+  write:      'Binivîse',
+  more:       'Zêdetir',
+  exercise:   'Hîndarî',
+  stats:      'Pêşketin',
   about:      'Derbarê Ferhengê',
   feedback:   'Pêşniyar û Serrastkirin',
   nexse:      'Nexşeya Têgehan',
@@ -186,7 +155,7 @@ export default function App() {
   }, [gamification, sounds]);
 
   // ── Derived layout values ─────────────────────────────────────────────────
-  const showNavLabels = !isMobile;
+  const showNavLabels = true; // Always show labels with 6 tabs
   const navHeight = isMobile ? 52 : 56;
 
   // ── Render ────────────────────────────────────────────────────────────────
@@ -282,31 +251,6 @@ export default function App() {
             </div>
           </header>
 
-          {/* Slogan strip */}
-          <div style={{
-            textAlign: 'center',
-            padding: isMobile
-              ? `${SPACING.xs + 1}px ${SPACING.md}px`
-              : `${SPACING.xs + 2}px ${SPACING.lg}px`,
-            background: view === 'home'
-              ? 'transparent'
-              : (isDark
-                ? 'linear-gradient(90deg, #0D4A55 0%, #0F2E3A 50%, #0D4A55 100%)'
-                : 'linear-gradient(90deg, #F0FDFA 0%, #E6F7F5 50%, #F0FDFA 100%)'),
-            borderBottom: view === 'home' ? 'none' : ('1px solid ' + (isDark ? 'rgba(78,205,196,0.15)' : 'rgba(15,118,110,0.12)')),
-            flexShrink: 0,
-          }}>
-            <span style={{
-              fontSize: isMobile ? FONT_SIZE.xs : '0.72rem',
-              fontStyle: 'italic',
-              fontWeight: FONT_WEIGHT.medium,
-              color: isDark ? 'rgba(78,205,196,0.85)' : '#0F766E',
-              letterSpacing: '0.01em',
-            }}>
-              "Matematîk bi her zimanî diaxive, bi kurdî jî."
-            </span>
-          </div>
-
           {/* View content */}
           <main style={{
             flex: 1, overflow: 'hidden',
@@ -339,6 +283,9 @@ export default function App() {
                 awardXP={handleAwardXP}
               />
             )}
+            {view === 'games' && (
+              <GamesHubView theme={theme} isDark={isDark} isMobile={isMobile} setView={handleSetView} />
+            )}
             {view === 'quiz' && (
               <QuizGame
                 theme={theme} isDark={isDark}
@@ -364,6 +311,9 @@ export default function App() {
                 sounds={sounds}
                 awardXP={handleAwardXP}
               />
+            )}
+            {view === 'more' && (
+              <MoreHubView theme={theme} isDark={isDark} isMobile={isMobile} setView={handleSetView} />
             )}
             {view === 'exercise' && (
               <ExerciseView
@@ -425,7 +375,9 @@ export default function App() {
             }}
           >
             {NAV_ITEMS.map(item => {
-              const isActive = view === item.id;
+              const isActive = view === item.id
+                || (item.id === 'games' && GAMES_VIEWS.includes(view))
+                || (item.id === 'more' && MORE_VIEWS.includes(view));
               const Icon = item.icon;
               const activeColor = item.color;
               return (
@@ -502,6 +454,100 @@ export default function App() {
   );
 }
 
+// ── Games Hub View ───────────────────────────────────────────────────────────
+function GamesHubView({ theme: t, isDark, isMobile, setView }) {
+  const games = [
+    { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',     color: '#166534', colorEnd: '#15803D' },
+    { id: 'match', icon: IconPuzzle,   label: 'Cot Bike',  desc: 'Peyv û wateyan bide hev',   color: '#5B21B6', colorEnd: '#7C3AED' },
+    { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse',   color: '#1D4ED8', colorEnd: '#3B82F6' },
+  ];
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.xl}px ${isMobile ? SPACING.md : SPACING.xl}px` }}>
+      <div style={{ maxWidth: 480, margin: '0 auto' }}>
+        <div style={{ fontSize: FONT_SIZE.lg, fontWeight: FONT_WEIGHT.bold, color: t.text, marginBottom: SPACING.xl }}>
+          Lîstik
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.md }}>
+          {games.map(g => {
+            const Icon = g.icon;
+            return (
+              <button key={g.id} onClick={() => setView(g.id)} style={{
+                display: 'flex', alignItems: 'center', gap: SPACING.lg,
+                padding: `${SPACING.lg}px ${SPACING.xl}px`,
+                background: `linear-gradient(135deg, ${g.color}, ${g.colorEnd})`,
+                borderRadius: RADIUS.xl, border: 'none', cursor: 'pointer',
+                fontFamily: 'inherit', textAlign: 'left',
+                transition: `all ${DURATION.normal}`,
+                WebkitTapHighlightColor: 'transparent',
+              }}>
+                <div style={{
+                  width: 48, height: 48, borderRadius: RADIUS.lg,
+                  background: 'rgba(255,255,255,0.2)',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <Icon size={24} color="#fff" />
+                </div>
+                <div>
+                  <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: '#fff' }}>{g.label}</div>
+                  <div style={{ fontSize: FONT_SIZE.sm, color: 'rgba(255,255,255,0.8)', marginTop: 2 }}>{g.desc}</div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── More Hub View ────────────────────────────────────────────────────────────
+function MoreHubView({ theme: t, isDark, isMobile, setView }) {
+  const items = [
+    { id: 'exercise',   icon: IconLightbulb, label: 'Hîndarî',              desc: 'Temrîn û pratîk',    color: '#0E7490' },
+    { id: 'conceptmap', icon: IconMap,        label: 'Nexşeya Têgehan',      desc: 'Têgehan bi nexşeyê bibîne', color: '#7E22CE' },
+    { id: 'worksheet',  icon: IconClipboard,  label: 'Rûpelên Xebatê',       desc: 'Rûpelên çapkirî',    color: '#B45309' },
+    { id: 'about',      icon: IconInfo,       label: 'Derbarê Ferhengê',      desc: 'Agahdarî û pêşgotin', color: '#0F4C5C' },
+    { id: 'feedback',   icon: IconMessage,    label: 'Pêşniyar û Serrastkirin', desc: 'Pêşniyarên xwe bişîne', color: '#059669' },
+  ];
+  return (
+    <div style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.xl}px ${isMobile ? SPACING.md : SPACING.xl}px` }}>
+      <div style={{ maxWidth: 480, margin: '0 auto' }}>
+        <div style={{ fontSize: FONT_SIZE.lg, fontWeight: FONT_WEIGHT.bold, color: t.text, marginBottom: SPACING.xl }}>
+          Zêdetir
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.sm }}>
+          {items.map(item => {
+            const Icon = item.icon;
+            return (
+              <button key={item.id} onClick={() => setView(item.id)} style={{
+                display: 'flex', alignItems: 'center', gap: SPACING.md,
+                padding: `${SPACING.md}px ${SPACING.lg}px`,
+                background: t.surface, borderRadius: RADIUS.lg,
+                border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+                cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
+                transition: `all ${DURATION.normal}`,
+                WebkitTapHighlightColor: 'transparent',
+              }}>
+                <div style={{
+                  width: 40, height: 40, borderRadius: RADIUS.md,
+                  background: item.color + (isDark ? '25' : '10'),
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                }}>
+                  <Icon size={20} color={item.color} />
+                </div>
+                <div>
+                  <div style={{ fontSize: FONT_SIZE.base, fontWeight: FONT_WEIGHT.semibold, color: t.text }}>{item.label}</div>
+                  <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>{item.desc}</div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Small icon button helper ──────────────────────────────────────────────────
 function IconBtn({ children, onClick, label, theme: t }) {
   return (
@@ -511,7 +557,7 @@ function IconBtn({ children, onClick, label, theme: t }) {
       style={{
         width: TOUCH_MIN, height: TOUCH_MIN,
         borderRadius: '50%',
-        border: '1px solid ' + t.border,
+        border: 'none',
         background: 'transparent',
         cursor: 'pointer',
         display: 'flex', alignItems: 'center', justifyContent: 'center',

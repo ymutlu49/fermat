@@ -133,7 +133,7 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
                 { value: 'en-ku', label: 'English → Kurdî' },
               ].map(opt => (
                 <button key={opt.value} onClick={() => setDirection(opt.value)} style={{
-                  padding: `${SPACING.md}px ${SPACING.lg}px`, borderRadius: '12px', border: '2px solid ' + (direction === opt.value ? t.primary : t.border),
+                  padding: `${SPACING.md}px ${SPACING.lg}px`, borderRadius: '12px', border: `1px solid ${direction === opt.value ? t.primary : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
                   background: direction === opt.value ? t.primarySoft : t.surface,
                   color: direction === opt.value ? t.primary : t.text,
                   fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold, cursor: 'pointer',
@@ -169,7 +169,7 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
 
   if (quizPhase === 'result') {
     const pct = Math.round((quizState.score / QUIZ_TOTAL_QUESTIONS) * 100);
-    const message = pct >= 80 ? '🏆 Tu serkeftî!' : pct >= 50 ? '🌿 Baş e, tu pêş dikevî!' : '🌱 Bixebite, tu dikarî!';
+    const message = pct >= 80 ? 'Tu serkeftî!' : pct >= 50 ? 'Baş e, tu pêş dikevî!' : 'Bixebite, tu dikarî!';
     return (
       <div style={{ flex: 1, overflow: 'auto', background: 'transparent', padding: `${SPACING.xl}px ${SPACING.lg}px` }}>
         <div style={{ maxWidth: 400, margin: '0 auto', textAlign: 'center' }}>
@@ -274,7 +274,7 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
                 disabled={selectedAnswer !== null}
                 aria-label={'Bersiv ' + (idx + 1) + ': ' + option}
                 style={{
-                  padding: `14px ${SPACING.lg}px`, borderRadius: RADIUS.xl + 'px', border: '2px solid ' + optBorder,
+                  padding: `14px ${SPACING.lg}px`, borderRadius: RADIUS.xl + 'px', border: `1px solid ${selectedAnswer !== null && (option === currentQuestion.correct || (option === selectedAnswer && !isCorrect)) ? optBorder : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
                   background: optBg, color: optColor,
                   fontFamily: 'inherit', fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.semibold, cursor: selectedAnswer !== null ? 'default' : 'pointer',
                   textAlign: 'left', transition: `all ${DURATION.normal}`,
@@ -309,7 +309,7 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
             display: 'flex', alignItems: 'center', gap: SPACING.sm,
           }}>
             {isCorrect ? <IconCheck size={18} color={t.success} /> : <IconX size={18} color={t.error} />}
-            {isCorrect ? 'Rast! Aferîn! 🎉' : 'Xelet. Bersiva rast: ' + currentQuestion.correct}
+            {isCorrect ? 'Rast! Aferîn!' : 'Xelet. Bersiva rast: ' + currentQuestion.correct}
           </div>
         )}
       </div>

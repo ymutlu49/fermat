@@ -71,51 +71,17 @@ export default function HomeView({ theme, isDark, progress, setView, setActiveSe
       {/* ═══ ZONE 1 — HERO BANNER ═══ */}
       <div style={{
         padding: `${SPACING.md}px ${px}px ${SPACING.lg}px`,
-        marginBottom: SPACING.sm,
+        marginBottom: SPACING.xl,
       }}>
       <div style={{ maxWidth: contentMax, margin: '0 auto' }}>
-        {/* Gamification bar */}
+        {/* Gamification — compact single line */}
         {level && (
           <div style={{
-            display: 'flex', alignItems: 'center', gap: SPACING.sm,
+            fontSize: FONT_SIZE.sm, color: t.textMuted,
+            fontWeight: FONT_WEIGHT.medium,
             marginBottom: SPACING.md,
-            padding: `${SPACING.sm}px ${SPACING.sm + 2}px`,
-            background: isDark ? 'rgba(255,255,255,0.05)' : 'rgba(15,76,92,0.05)',
-            borderRadius: RADIUS.lg,
           }}>
-            <span style={{ fontSize: '1.3rem' }}>{level.current.icon}</span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 3 }}>
-                <span style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.bold, color: t.text }}>
-                  {level.current.title}
-                </span>
-                <span style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, fontWeight: FONT_WEIGHT.semibold }}>
-                  {xp} XP
-                </span>
-              </div>
-              <ProgressBar value={level.progressToNext * 100} max={100} color={t.primary} bgColor={isDark ? 'rgba(255,255,255,0.1)' : 'rgba(15,76,92,0.12)'} height={5} />
-            </div>
-            <div style={{
-              padding: `3px ${SPACING.sm + 2}px`, borderRadius: RADIUS.full,
-              background: streak >= 3
-                ? (isDark ? 'rgba(255,107,107,0.2)' : 'rgba(231,111,81,0.15)')
-                : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'),
-              display: 'flex', alignItems: 'center', gap: 3,
-              fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.bold,
-              color: streak >= 3 ? t.accent : t.textMuted,
-            }}>
-              🔥 {streak || 0}
-            </div>
-            <div style={{
-              padding: `3px ${SPACING.sm + 2}px`, borderRadius: RADIUS.full,
-              background: dailyProgress?.isComplete
-                ? (isDark ? 'rgba(82,183,136,0.2)' : 'rgba(45,106,79,0.12)')
-                : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.04)'),
-              fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
-              color: dailyProgress?.isComplete ? t.success : t.textMuted,
-            }}>
-              {dailyProgress?.xp || 0}/{dailyProgress?.xpTarget || 100}
-            </div>
+            {level.current.icon} {level.current.title} · {xp} XP · 🔥 {streak || 0}
           </div>
         )}
 
@@ -126,10 +92,10 @@ export default function HomeView({ theme, isDark, progress, setView, setActiveSe
             fontWeight: FONT_WEIGHT.black, color: t.text,
             lineHeight: 1.2, marginBottom: SPACING.xs,
           }}>
-            {greetEmoji} {greeting}!
+            {greeting}!
           </div>
           <div style={{
-            fontSize: FONT_SIZE.sm, fontStyle: 'italic', color: t.textSecondary,
+            fontSize: FONT_SIZE.xs, fontStyle: 'italic', color: t.textSecondary,
             lineHeight: 1.5,
           }}>
             "{quote}"
@@ -146,31 +112,21 @@ export default function HomeView({ theme, isDark, progress, setView, setActiveSe
               background: dailyColors
                 ? (isDark ? dailyColors.bg : dailyColors.bg)
                 : t.surface,
-              border: `2px solid ${dailyColors?.accent || t.primary}30`,
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
               borderRadius: RADIUS.xl,
               cursor: 'pointer',
               transition: `all ${DURATION.normal}`,
-              boxShadow: isDark
-                ? `0 4px 16px ${dailyColors?.accent || t.primary}15`
-                : `0 4px 20px ${dailyColors?.accent || t.primary}12`,
             }}
           >
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: SPACING.xs,
-                padding: `2px ${SPACING.sm + 2}px`,
-                borderRadius: RADIUS.full,
-                background: dailyColors?.accent + '20',
-                marginBottom: SPACING.xs,
+              <span style={{
+                fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
+                color: dailyColors?.accent || t.primary,
+                textTransform: 'uppercase', letterSpacing: '0.06em',
+                marginBottom: SPACING.xs, display: 'block',
               }}>
-                <span style={{
-                  fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
-                  color: dailyColors?.accent || t.primary,
-                  textTransform: 'uppercase', letterSpacing: '0.06em',
-                }}>
-                  ✦ Têgeha Rojê
-                </span>
-              </div>
+                Têgeha Rojê
+              </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.xs + 2 }}>
                 <span style={{
                   fontSize: isMobile ? FONT_SIZE.lg : FONT_SIZE.xl,
@@ -189,14 +145,6 @@ export default function HomeView({ theme, isDark, progress, setView, setActiveSe
               <div style={{ fontSize: FONT_SIZE.sm, color: dailyColors?.text || t.textSecondary, opacity: 0.75, marginTop: SPACING.xs }}>
                 {dailyConcept.tr} · {dailyConcept.en}
               </div>
-            </div>
-            <div style={{
-              width: 52, height: 52, borderRadius: RADIUS.lg,
-              background: dailyColors?.accent + '18',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '1.8rem', flexShrink: 0,
-            }}>
-              {SECTIONS[dailyConcept.s]?.icon || '📘'}
             </div>
           </div>
         )}
@@ -245,7 +193,7 @@ export default function HomeView({ theme, isDark, progress, setView, setActiveSe
       </div>
 
       {/* ═══ ZONE 3 — SECTION EXPLORER ═══ */}
-      <div style={{ padding: `${SPACING.lg}px ${px}px 0`, maxWidth: contentMax, margin: '0 auto' }}>
+      <div style={{ padding: `${SPACING.xxl}px ${px}px 0`, maxWidth: contentMax, margin: '0 auto' }}>
         <SectionLabel label="Beşên Ferhengê" theme={t} />
         <div style={{
           display: 'grid',
@@ -275,11 +223,8 @@ export default function HomeView({ theme, isDark, progress, setView, setActiveSe
       }}>
       <div style={{
         padding: `${SPACING.lg}px`,
-        background: isDark
-          ? 'linear-gradient(135deg, rgba(82,183,136,0.08), rgba(78,205,196,0.06))'
-          : 'linear-gradient(135deg, rgba(45,106,79,0.06), rgba(15,76,92,0.04))',
+        background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
         borderRadius: RADIUS.xl,
-        border: `1px solid ${isDark ? 'rgba(82,183,136,0.15)' : 'rgba(45,106,79,0.12)'}`,
         display: 'flex', alignItems: 'center', gap: SPACING.lg,
       }}>
         <ScoreCircle
@@ -348,10 +293,9 @@ function PrimaryActionCard({ action, theme: t, isDark, isMobile, onClick }) {
         fontFamily: 'inherit',
         display: 'flex', alignItems: 'center', gap: SPACING.md,
         boxShadow: hovered
-          ? `0 8px 24px ${action.color}50`
-          : `0 4px 16px ${action.color}30`,
-        transform: hovered ? 'translateY(-2px) scale(1.01)' : 'none',
-        filter: hovered ? 'brightness(1.08)' : 'none',
+          ? `0 2px 8px ${action.color}30`
+          : `0 1px 4px ${action.color}20`,
+        transform: hovered ? 'translateY(-2px)' : 'none',
         transition: `all ${DURATION.normal}`,
         WebkitTapHighlightColor: 'transparent',
         textAlign: 'left',
@@ -360,20 +304,6 @@ function PrimaryActionCard({ action, theme: t, isDark, isMobile, onClick }) {
         overflow: 'hidden',
       }}
     >
-      {/* Decorative circle */}
-      <div style={{
-        position: 'absolute', right: -12, top: -12,
-        width: 60, height: 60, borderRadius: '50%',
-        background: 'rgba(255,255,255,0.08)',
-        pointerEvents: 'none',
-      }} />
-      <div style={{
-        position: 'absolute', right: 16, bottom: -8,
-        width: 40, height: 40, borderRadius: '50%',
-        background: 'rgba(255,255,255,0.05)',
-        pointerEvents: 'none',
-      }} />
-
       {/* Icon */}
       <div style={{
         width: isMobile ? 44 : 48, height: isMobile ? 44 : 48,
@@ -381,7 +311,6 @@ function PrimaryActionCard({ action, theme: t, isDark, isMobile, onClick }) {
         background: 'rgba(255,255,255,0.2)',
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexShrink: 0,
-        backdropFilter: 'blur(4px)',
       }}>
         <Icon size={isMobile ? 22 : 24} color="#FFFFFF" />
       </div>
@@ -392,7 +321,6 @@ function PrimaryActionCard({ action, theme: t, isDark, isMobile, onClick }) {
           fontSize: isMobile ? FONT_SIZE.base : FONT_SIZE.md,
           fontWeight: FONT_WEIGHT.bold, color: '#FFFFFF',
           lineHeight: 1.2,
-          textShadow: '0 1px 2px rgba(0,0,0,0.15)',
         }}>
           {action.label}
         </div>
@@ -422,16 +350,13 @@ function SectionChip({ sec, pct, known, total, colors, theme: t, isDark, onClick
         display: 'flex', flexDirection: 'column', gap: SPACING.xs + 2,
         padding: `${SPACING.md}px ${SPACING.md}px ${SPACING.sm + 2}px`,
         borderRadius: RADIUS.xl,
-        border: `2px solid ${colors.accent}30`,
+        border: `1px solid ${colors.accent}18`,
         background: colors.bg,
         cursor: 'pointer',
         fontFamily: 'inherit',
         transition: `all ${DURATION.normal}`,
         WebkitTapHighlightColor: 'transparent',
-        transform: hovered ? 'translateY(-2px)' : 'none',
-        boxShadow: hovered
-          ? `0 6px 20px ${colors.accent}25`
-          : `0 2px 8px ${colors.accent}10`,
+        transform: hovered ? 'translateY(-1px)' : 'none',
       }}
     >
       {/* Top: emoji badge + section name */}
@@ -492,7 +417,7 @@ function SecondaryActionCard({ action, theme: t, isDark, onClick }) {
         background: action.color + (isDark ? '18' : '0D'),
         borderRadius: RADIUS.lg,
         padding: `${SPACING.md}px ${SPACING.sm}px`,
-        border: `1.5px solid ${action.color}${hovered ? '40' : '20'}`,
+        border: `1px solid ${isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)'}`,
         cursor: 'pointer',
         fontFamily: 'inherit',
         display: 'flex', flexDirection: 'column', alignItems: 'center',

@@ -13,7 +13,7 @@ export function Pill({ label, isActive = false, color, onClick, children }) {
       role="tab"
       aria-selected={isActive}
       style={{
-        padding: `${SPACING.sm + 1}px ${SPACING.lg}px`,
+        padding: `${SPACING.sm}px ${SPACING.md}px`,
         minHeight: TOUCH_MIN,
         borderRadius: RADIUS.full,
         cursor: 'pointer',
@@ -68,7 +68,7 @@ export function Card({ children, theme, onClick, style = {}, isInteractive = fal
         borderRadius: RADIUS.lg,
         boxShadow: isHovered ? t.cardShadowHover : t.cardShadow,
         border: '1px solid ' + t.border,
-        transition: `all ${DURATION.normal} cubic-bezier(0.4, 0, 0.2, 1)`,
+        transition: `all ${DURATION.normal} ease`,
         transform: isInteractive && isHovered ? 'translateY(-2px)' : 'none',
         cursor: onClick ? 'pointer' : 'default',
         ...style,
@@ -139,10 +139,10 @@ export function Modal({ isOpen, onClose, theme, children, maxWidth = 420 }) {
           background: t.surface,
           borderRadius: RADIUS.xl,
           padding: `${SPACING.xl}px ${SPACING.xl - 4}px`,
-          boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.2)',
           maxWidth: maxWidth + 'px',
           width: '100%',
-          animation: `slideUp ${DURATION.normal} cubic-bezier(0.34,1.56,0.64,1)`,
+          animation: `slideUp ${DURATION.normal} cubic-bezier(0.22,0.61,0.36,1)`,
           maxHeight: '90dvh',
           overflowY: 'auto',
         }}

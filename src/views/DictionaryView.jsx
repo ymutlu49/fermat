@@ -474,17 +474,15 @@ function ConceptCard({ concept, colors, lvColor, theme: t, isDark, isMobile, onC
       style={{
         background: t.surface,
         borderRadius: RADIUS.xl,
-        border: `2px solid ${hovered ? colors.accent + '60' : colors.accent + '20'}`,
+        border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
         cursor: 'pointer',
         textAlign: 'left',
         fontFamily: 'inherit',
         overflow: 'hidden',
         display: 'flex', flexDirection: 'column',
-        boxShadow: hovered
-          ? `0 8px 24px ${colors.accent}25, 0 2px 8px rgba(0,0,0,0.06)`
-          : `0 1px 4px rgba(0,0,0,0.05)`,
-        transform: hovered ? 'translateY(-3px) scale(1.01)' : 'none',
-        transition: 'all 0.18s cubic-bezier(0.34,1.56,0.64,1)',
+        boxShadow: hovered ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
+        transform: hovered ? 'translateY(-2px)' : 'none',
+        transition: 'all 0.18s ease',
         WebkitTapHighlightColor: 'transparent',
         userSelect: 'none',
       }}
@@ -524,7 +522,7 @@ function ConceptCard({ concept, colors, lvColor, theme: t, isDark, isMobile, onC
       {/* Footer */}
       <div style={{
         padding: isMobile ? `${SPACING.sm}px ${SPACING.sm}px 10px` : `10px 10px ${SPACING.md}px`,
-        borderTop: `3px solid ${colors.accent}`,
+        borderTop: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
         flex: 1, display: 'flex', flexDirection: 'column', gap: 2,
       }}>
         <div style={{
@@ -596,8 +594,8 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
           borderRadius: `${SPACING.xl}px ${SPACING.xl}px 0 0`,
           width: '100%', maxWidth: 540,
           maxHeight: '90dvh', overflowY: 'auto',
-          animation: 'slideUp 0.22s cubic-bezier(0.34,1.56,0.64,1)',
-          boxShadow: '0 -8px 40px rgba(0,0,0,0.25)',
+          animation: 'slideUp 0.22s cubic-bezier(0.22,0.61,0.36,1)',
+          boxShadow: '0 -4px 16px rgba(0,0,0,0.15)',
           WebkitOverflowScrolling: 'touch',
         }}
       >
@@ -670,13 +668,12 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
             <div style={{
               background: colors.bg, borderRadius: RADIUS.lg,
               padding: `${SPACING.md}px ${SPACING.lg - 2}px`, marginBottom: 10,
-              border: `1.5px solid ${colors.accent}30`,
             }}>
               <div style={{
                 fontSize: '0.68rem', fontWeight: FONT_WEIGHT.extrabold, color: colors.accent,
                 marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em',
               }}>
-                📖 Penase
+                PENASE
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <div style={{ fontSize: '0.9rem', color: t.text, lineHeight: 1.65, flex: 1 }}>
@@ -692,13 +689,12 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
             <div style={{
               background: isDark ? '#2A1F14' : '#FFF7ED',
               borderRadius: RADIUS.lg, padding: `${SPACING.md}px ${SPACING.lg - 2}px`, marginBottom: 18,
-              border: '1.5px solid ' + (isDark ? 'rgba(249,115,22,0.2)' : 'rgba(249,115,22,0.2)'),
             }}>
               <div style={{
                 fontSize: '0.68rem', fontWeight: FONT_WEIGHT.extrabold, color: '#F97316',
                 marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em',
               }}>
-                💡 Mînak
+                MÎNAK
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
                 <div style={{ fontSize: '0.9rem', color: t.text, lineHeight: 1.65, fontStyle: 'italic', flex: 1 }}>
