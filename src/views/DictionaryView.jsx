@@ -156,12 +156,13 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
           overflowX: 'auto', paddingBottom: 2,
           scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
         }}>
-          <Pill label="Hemû" isActive={activeSectionId === null} color={t.primary} onClick={() => setActiveSectionId(null)} />
+          <Pill label="Hemû" isActive={activeSectionId === null} color={t.primary} isDark={isDark} onClick={() => setActiveSectionId(null)} />
           {Object.entries(SECTIONS).map(([id, sec]) => (
             <Pill
               key={id}
               isActive={activeSectionId === parseInt(id)}
               color={t.primary}
+              isDark={isDark}
               onClick={() => setActiveSectionId(parseInt(id))}
             >
               {sec.short}

@@ -8,7 +8,7 @@ import { IconBook, IconCards, IconGamepad } from '@components/icons';
 const ACTIONS = [
   { id: 'dict',  icon: IconBook,    label: 'Ferheng',  desc: 'Hemû têgehan bibîne', color: '#0D9488' },
   { id: 'flash', icon: IconCards,   label: 'Fêrbûn',   desc: 'Bi kartan fêr bibe',  color: '#EA580C' },
-  { id: 'games', icon: IconGamepad, label: 'Lîstik',   desc: 'Azmûn, cot bike...',  color: '#15803D' },
+  { id: 'games', icon: IconGamepad, label: 'Lîstik',   desc: 'Azmûn, cot bîne...',  color: '#15803D' },
 ];
 
 export default function HomeView({ theme, isDark, progress, setView }) {

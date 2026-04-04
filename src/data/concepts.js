@@ -875,7 +875,7 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "KEMBAR",
-    "tr": "küçülen/eksilen",
+    "tr": "eksilen",
     "en": "minuend",
     "lv": "1-2",
     "df": "Hejmara ku jê tê kemkirin; hejmara mezin di kemkirinê de.",
@@ -892,7 +892,7 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "KEMKER",
-    "tr": "çıkarılan/eksilen",
+    "tr": "çıkarılan",
     "en": "subtrahend",
     "lv": "1-2",
     "df": "Hejmara ku tê derxistin; hejmara biçûk di kemkirinê de.",
@@ -1059,7 +1059,7 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "PAR",
+    "ku": "DABEŞÎN",
     "tr": "bölme (okunurken)",
     "en": "divided by",
     "lv": "3-4",
@@ -2395,7 +2395,7 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "RÊBAZ",
-    "tr": "strateji",
+    "tr": "yöntem/strateji",
     "en": "strategy",
     "lv": "1-2",
     "df": "Awayê çareserkirinê.",
@@ -2411,7 +2411,7 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "DÎYARKIRINA RÊBAZÊ",
-    "tr": "strateji belirleme",
+    "tr": "yöntem/strateji belirleme",
     "en": "strategy determination",
     "lv": "1-2",
     "df": "Hilbijartina rêya herî baş ji bo çareserkirinê.",
@@ -3003,7 +3003,7 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "NAYZAN",
-    "tr": "bilinmeyen",
+    "tr": "bilinmeyen (değişken)",
     "en": "unknown",
     "lv": "2-3",
     "df": "Hejmara ku nirxa wê hê ne diyar e.",
@@ -3194,7 +3194,7 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "PEVEK",
-    "tr": "ek/ilave",
+    "tr": "tamamlayan",
     "en": "supplement",
     "lv": "2-3",
     "df": "Tiştê ku tê zêdekirin ji bo temamkirinê.",

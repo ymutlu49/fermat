@@ -5,15 +5,15 @@ import { getSectionColor } from '@utils/helpers.js';
 import { IconCheck, IconX, IconSearch, IconVolume, IconChevronRight } from '@components/icons';
 
 // ── Pill (section filter button) ──────────────────────────────────────────────
-export function Pill({ label, isActive = false, color, onClick, children }) {
-  const displayColor = color || '#0F4C5C';
+export function Pill({ label, isActive = false, color, onClick, children, isDark = false }) {
+  const displayColor = color || '#0D9488';
   return (
     <button
       onClick={onClick}
       role="tab"
       aria-selected={isActive}
       style={{
-        padding: `6px 12px`,
+        padding: `6px 14px`,
         minHeight: 36,
         borderRadius: RADIUS.full,
         cursor: 'pointer',
@@ -21,9 +21,9 @@ export function Pill({ label, isActive = false, color, onClick, children }) {
         fontSize: FONT_SIZE.sm,
         fontWeight: FONT_WEIGHT.semibold,
         transition: `all ${DURATION.normal}`,
-        border: 'none',
-        background: isActive ? displayColor : 'rgba(0,0,0,0.04)',
-        color: isActive ? '#fff' : displayColor,
+        border: isActive ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}`,
+        background: isActive ? displayColor : 'transparent',
+        color: isActive ? '#fff' : (isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)'),
         outline: 'none',
         whiteSpace: 'nowrap',
         letterSpacing: '0.01em',
@@ -122,6 +122,7 @@ export function PageContainer({ children, noPadTop = false }) {
       <div style={{
         maxWidth: 520, margin: '0 auto',
         padding: `${noPadTop ? 0 : 24}px 16px 80px`,
+        animation: 'fadeIn 0.2s ease-out',
       }}>
         {children}
       </div>
@@ -176,11 +177,14 @@ export function ActionRow({ icon: Icon, iconColor, label, desc, onClick, theme, 
         borderBottom: isLast ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}`,
         cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
         WebkitTapHighlightColor: 'transparent',
+        transition: 'background 0.15s ease',
       }}
+      onMouseEnter={e => { e.currentTarget.style.background = isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.02)'; }}
+      onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; }}
     >
       <div style={{
         width: 40, height: 40, borderRadius: 10,
-        background: (iconColor || '#0F4C5C') + (isDark ? '20' : '10'),
+        background: (iconColor || '#0D9488') + (isDark ? '20' : '10'),
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexShrink: 0,
       }}>

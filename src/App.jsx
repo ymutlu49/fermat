@@ -138,14 +138,21 @@ export default function App() {
           <header style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
             padding: `0 ${isMobile ? SPACING.md : SPACING.lg}px`,
-            background: isDark ? '#0F4C5C' : '#0F4C5C',
+            background: isDark ? '#0D3D4A' : '#0F4C5C',
             flexShrink: 0, zIndex: 10,
             minHeight: 48,
           }}>
-            <div style={{
-              fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: '#FFFFFF',
-            }}>
-              {VIEW_TITLES[view] || 'FerMat'}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <img
+                src={import.meta.env.BASE_URL + 'favicon.svg'}
+                alt="FerMat"
+                style={{ width: 28, height: 28, borderRadius: 6, flexShrink: 0 }}
+              />
+              <span style={{
+                fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: '#FFFFFF',
+              }}>
+                {VIEW_TITLES[view] || 'FerMat'}
+              </span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <IconBtn onClick={toggleSound} label={isSoundEnabled ? 'Dengê daxe' : 'Deng veke'} theme={t}>
@@ -168,6 +175,9 @@ export default function App() {
             flex: 1, overflow: 'hidden',
             display: 'flex', flexDirection: 'column',
             position: 'relative',
+            background: isDark
+              ? 'radial-gradient(ellipse at 20% 0%, rgba(13,148,136,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(234,88,12,0.04) 0%, transparent 50%)'
+              : 'radial-gradient(ellipse at 20% 0%, rgba(13,148,136,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(234,88,12,0.03) 0%, transparent 50%)',
           }}>
             {view === 'home' && (
               <HomeView
@@ -342,7 +352,7 @@ export default function App() {
 function GamesHubView({ theme: t, isDark, setView }) {
   const games = [
     { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',  color: '#15803D' },
-    { id: 'match', icon: IconPuzzle,   label: 'Cot Bike',  desc: 'Peyv û wateyan bide hev', color: '#0D9488' },
+    { id: 'match', icon: IconPuzzle,   label: 'Cot Bîne',  desc: 'Peyv û wateyan bîne hev', color: '#0D9488' },
     { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse', color: '#EA580C' },
   ];
   return (

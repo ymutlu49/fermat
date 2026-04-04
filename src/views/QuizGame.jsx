@@ -16,7 +16,7 @@ import {
   IconCheck, IconVolume, IconVolumeMute, IconShuffle, IconLightbulb,
   IconRefresh, IconStar, IconTrophy, IconSun, IconMoon,
 } from '@components/icons';
-import { Pill, Badge, Card, ProgressBar, Modal, ToastContainer, EmptyState, SectionTag, ScoreCircle, SpeakButton } from '@components/ui';
+import { Pill, Badge, Card, ProgressBar, Modal, ToastContainer, EmptyState, SectionTag, ScoreCircle, SpeakButton, PageContainer } from '@components/ui';
 import { ConceptVisual } from '@components/visuals';
 export default function QuizGame({ theme, isDark, concepts, progress, setProgress, sounds, awardXP }) {
   const t = theme;
@@ -106,48 +106,43 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
 
   if (quizPhase === 'start') {
     return (
-      <div style={{ flex: 1, overflow: 'auto', background: 'transparent', padding: `${SPACING.xl}px ${SPACING.lg}px` }}>
-        <div style={{ maxWidth: 400, margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: SPACING.xl }}>
-            <div style={{ fontSize: '1.4rem', fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginBottom: SPACING.sm }}>Azmûn</div>
-            <div style={{ fontSize: '0.9rem', color: t.textSecondary }}>Zanîna xwe biceribîne · {QUIZ_TOTAL_QUESTIONS} pirs</div>
-          </div>
-
-          <div style={{ marginBottom: 20 }}>
-            <select
-              value={direction}
-              onChange={e => setDirection(e.target.value)}
-              style={{
-                padding: '8px 12px',
-                borderRadius: 8,
-                border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'}`,
-                background: 'transparent',
-                color: t.text,
-                fontSize: FONT_SIZE.sm,
-                fontFamily: 'inherit',
-                width: '100%',
-              }}
-            >
-              <option value="ku-tr">Kurdî → Tirkî</option>
-              <option value="tr-ku">Tirkî → Kurdî</option>
-              <option value="ku-en">Kurdî → English</option>
-              <option value="en-ku">English → Kurdî</option>
-            </select>
-          </div>
-
-          <button onClick={buildQuiz} style={{
-            width: '100%', padding: `${SPACING.lg}px`, borderRadius: `${RADIUS.xl}px`, border: 'none',
-            background: 'linear-gradient(135deg, #166534, #15803D)', color: t.textOnPrimary,
-            fontSize: '1.1rem', fontWeight: FONT_WEIGHT.bold, cursor: 'pointer', transition: `all ${DURATION.fast}`,
-            minHeight: TOUCH_MIN,
-          }}
-          onMouseEnter={e => { e.currentTarget.style.background = 'linear-gradient(135deg, #15803D, #166534)'; }}
-          onMouseLeave={e => { e.currentTarget.style.background = 'linear-gradient(135deg, #166534, #15803D)'; }}
-          >
-            Dest pê bike
-          </button>
+      <PageContainer>
+        <div style={{ textAlign: 'center', marginBottom: SPACING.xl }}>
+          <div style={{ fontSize: '1.4rem', fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginBottom: SPACING.sm }}>Azmûn</div>
+          <div style={{ fontSize: '0.9rem', color: t.textSecondary }}>Zanîna xwe biceribîne · {QUIZ_TOTAL_QUESTIONS} pirs</div>
         </div>
-      </div>
+
+        <div style={{ marginBottom: 20 }}>
+          <select
+            value={direction}
+            onChange={e => setDirection(e.target.value)}
+            style={{
+              padding: '8px 12px',
+              borderRadius: 8,
+              border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'}`,
+              background: 'transparent',
+              color: t.text,
+              fontSize: FONT_SIZE.sm,
+              fontFamily: 'inherit',
+              width: '100%',
+            }}
+          >
+            <option value="ku-tr">Kurdî → Tirkî</option>
+            <option value="tr-ku">Tirkî → Kurdî</option>
+            <option value="ku-en">Kurdî → English</option>
+            <option value="en-ku">English → Kurdî</option>
+          </select>
+        </div>
+
+        <button onClick={buildQuiz} style={{
+          width: '100%', padding: `${SPACING.lg}px`, borderRadius: 12, border: 'none',
+          background: '#15803D', color: t.textOnPrimary,
+          fontSize: '1.1rem', fontWeight: FONT_WEIGHT.bold, cursor: 'pointer', transition: `all ${DURATION.fast}`,
+          minHeight: TOUCH_MIN,
+        }}>
+          Dest pê bike
+        </button>
+      </PageContainer>
     );
   }
 
@@ -155,8 +150,8 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
     const pct = Math.round((quizState.score / QUIZ_TOTAL_QUESTIONS) * 100);
     const message = pct >= 80 ? 'Tu serkeftî!' : pct >= 50 ? 'Baş e, tu pêş dikevî!' : 'Bixebite, tu dikarî!';
     return (
-      <div style={{ flex: 1, overflow: 'auto', background: 'transparent', padding: `${SPACING.xl}px ${SPACING.lg}px` }}>
-        <div style={{ maxWidth: 400, margin: '0 auto', textAlign: 'center' }}>
+      <PageContainer>
+        <div style={{ textAlign: 'center' }}>
           <div style={{ marginBottom: SPACING.xl }}>
             <ScoreCircle score={quizState.score} total={QUIZ_TOTAL_QUESTIONS} theme={theme} />
           </div>
@@ -182,22 +177,22 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
 
           <div style={{ display: 'flex', gap: 10 }}>
             <button onClick={() => buildQuiz()} style={{
-              flex: 1, padding: '14px', borderRadius: `${RADIUS.xl}px`, border: '1.5px solid ' + t.border,
+              flex: 1, padding: '14px', borderRadius: 12, border: '1px solid ' + t.border,
               background: t.surface, color: t.text, fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold, cursor: 'pointer',
               minHeight: TOUCH_MIN,
             }}>
               Dîsa biceribîne
             </button>
             <button onClick={() => setQuizPhase('start')} style={{
-              flex: 1, padding: '14px', borderRadius: `${RADIUS.xl}px`, border: 'none',
-              background: 'linear-gradient(135deg, #166534, #15803D)', color: t.textOnPrimary, fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold, cursor: 'pointer',
+              flex: 1, padding: '14px', borderRadius: 12, border: 'none',
+              background: '#15803D', color: t.textOnPrimary, fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold, cursor: 'pointer',
               minHeight: TOUCH_MIN,
             }}>
               Malper
             </button>
           </div>
         </div>
-      </div>
+      </PageContainer>
     );
   }
 
@@ -206,25 +201,28 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
   const sectionColors = getSectionColor(currentQuestion.concept.s, isDark);
 
   return (
-    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'transparent' }}>
+    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'transparent', padding: '0 16px' }}>
       {/* Quiz header */}
-      <div style={{ padding: `${SPACING.md}px ${SPACING.lg}px`, background: isDark ? 'rgba(26,35,50,0.95)' : 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderBottom: '1px solid ' + (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)') }}>
-        <div style={{ marginBottom: SPACING.sm }}>
-          <ProgressBar value={currentQIndex} max={questions.length} color={t.primary} bgColor={t.border} height={6} />
-        </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.8rem', color: t.textMuted }}>{currentQIndex + 1} / {questions.length}</span>
-          <span style={{ fontSize: '0.8rem', fontWeight: FONT_WEIGHT.bold }}>
-            <span style={{ color: t.success }}>✓ {quizState.score}</span>
-            <span style={{ color: t.textMuted }}> · </span>
-            <span style={{ color: t.error }}>✗ {quizState.total - quizState.score}</span>
-          </span>
-          <Badge label={difficultyLabels[difficulty]} color={t.primary} bgColor={t.primarySoft} />
+      <div style={{ padding: `${SPACING.md}px 0`, background: isDark ? 'rgba(26,35,50,0.95)' : 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderBottom: '1px solid ' + (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)') }}>
+        <div style={{ maxWidth: 520, margin: '0 auto' }}>
+          <div style={{ marginBottom: SPACING.sm }}>
+            <ProgressBar value={currentQIndex} max={questions.length} color={t.primary} bgColor={t.border} height={6} />
+          </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.8rem', color: t.textMuted }}>{currentQIndex + 1} / {questions.length}</span>
+            <span style={{ fontSize: '0.8rem', fontWeight: FONT_WEIGHT.bold }}>
+              <span style={{ color: t.success }}>✓ {quizState.score}</span>
+              <span style={{ color: t.textMuted }}> · </span>
+              <span style={{ color: t.error }}>✗ {quizState.total - quizState.score}</span>
+            </span>
+            <Badge label={difficultyLabels[difficulty]} color={t.primary} bgColor={t.primarySoft} />
+          </div>
         </div>
       </div>
 
       {/* Question */}
-      <div style={{ flex: 1, overflowY: 'auto', padding: `20px ${SPACING.lg}px` }}>
+      <div style={{ flex: 1, overflowY: 'auto', padding: '20px 0' }}>
+        <div style={{ maxWidth: 520, margin: '0 auto' }}>
         <div style={{
           background: sectionColors.bg, borderRadius: RADIUS.xl + 'px', padding: `${SPACING.xl}px`,
           textAlign: 'center', marginBottom: 20,
@@ -296,6 +294,7 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
             {isCorrect ? 'Rast! Aferîn!' : 'Xelet. Bersiva rast: ' + currentQuestion.correct}
           </div>
         )}
+        </div>
       </div>
     </div>
   );
