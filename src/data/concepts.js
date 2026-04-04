@@ -875,6 +875,40 @@ export const ALL_CONCEPTS = [
     }
   },
   {
+    "ku": "ZÊDEKIRINA DIDESTDEMAYÎ",
+    "tr": "eldeli toplama",
+    "en": "addition with regrouping",
+    "lv": "1-2",
+    "df": "Dema ku encama zêdekirina yekaniyan dibe dupêpilk, dehanî di dest de dimîne û li jora dehaniyan tê zêdekirin.",
+    "ex": "18 + 24 = 42: 8+4=12, em 2 dinivîsin û 1 di dest de dimîne.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "🔢",
+        "formula": "18+24=42",
+        "label": "didestdemayî"
+      }
+    }
+  },
+  {
+    "ku": "ZÊDEKIRINA BÊDESTDEMAYÎ",
+    "tr": "eldesiz toplama",
+    "en": "addition without regrouping",
+    "lv": "1",
+    "df": "Zêdekirina ku encama yekaniyan ji 9 mezintir nabe û tiştek di dest de namîne.",
+    "ex": "23 + 14 = 37: 3+4=7, 2+1=3, tiştek di dest de namîne.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "🔢",
+        "formula": "23+14=37",
+        "label": "bêdestdemayî"
+      }
+    }
+  },
+  {
     "ku": "KEMKIRIN",
     "tr": "çıkarma",
     "en": "subtraction",
@@ -1006,6 +1040,40 @@ export const ALL_CONCEPTS = [
         "icon": "⬇️",
         "formula": "45−23=22",
         "label": "libinhev"
+      }
+    }
+  },
+  {
+    "ku": "KEMKIRINA BI STANDINÊ",
+    "tr": "onluk bozarak çıkarma",
+    "en": "subtraction with regrouping",
+    "lv": "1-2",
+    "df": "Dema ku yekaniya hejmara duyem ji yekaniya hejmara yekem mezintir be, 1 dehanî ji dehaniyan tê standin û li yekaniyê tê zêdekirin.",
+    "ex": "42 − 27 = 15: ji 2 yekaniyan 7 dernakeve, em 1 dehanî distînin û dibe 12; 12−7=5.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "🔢",
+        "formula": "42−27=15",
+        "label": "bi standinê"
+      }
+    }
+  },
+  {
+    "ku": "KEMKIRINA BÊ STANDINÊ",
+    "tr": "onluk bozmadan çıkarma",
+    "en": "subtraction without regrouping",
+    "lv": "1",
+    "df": "Kemkirina ku her pêpilka hejmara yekem ji pêpilka hejmara duyem mezintir e û standin ne hewce ye.",
+    "ex": "48 − 23 = 25: 8−3=5, 4−2=2, standin ne hewce ye.",
+    "s": 2,
+    "visual": {
+      "type": "custom",
+      "params": {
+        "icon": "🔢",
+        "formula": "48−23=25",
+        "label": "bê standinê"
       }
     }
   },
