@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { SECTIONS, THEME, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { getSectionColor } from '@utils/helpers.js';
-import { IconCheck, IconX, IconSearch, IconVolume } from '@components/icons';
+import { IconCheck, IconX, IconSearch, IconVolume, IconChevronRight } from '@components/icons';
 
 // ── Pill (section filter button) ──────────────────────────────────────────────
 export function Pill({ label, isActive = false, color, onClick, children }) {
@@ -13,16 +13,16 @@ export function Pill({ label, isActive = false, color, onClick, children }) {
       role="tab"
       aria-selected={isActive}
       style={{
-        padding: `${SPACING.sm}px ${SPACING.md}px`,
-        minHeight: TOUCH_MIN,
+        padding: `6px 12px`,
+        minHeight: 36,
         borderRadius: RADIUS.full,
         cursor: 'pointer',
         fontFamily: 'inherit',
-        fontSize: FONT_SIZE.base,
+        fontSize: FONT_SIZE.sm,
         fontWeight: FONT_WEIGHT.semibold,
         transition: `all ${DURATION.normal}`,
-        border: isActive ? 'none' : ('1.5px solid ' + displayColor),
-        background: isActive ? displayColor : 'transparent',
+        border: 'none',
+        background: isActive ? displayColor : 'rgba(0,0,0,0.04)',
         color: isActive ? '#fff' : displayColor,
         outline: 'none',
         whiteSpace: 'nowrap',
@@ -51,6 +51,82 @@ export function Badge({ label, color, bgColor }) {
     }}>
       {label}
     </span>
+  );
+}
+
+// ── ConceptRow (Apple-style list row) ─────────────────────────────────────────
+export function ConceptRow({ concept, theme, isDark, onClick, isLast = false }) {
+  const t = theme || THEME.light;
+  const colors = getSectionColor(concept.s, isDark);
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: 'flex', alignItems: 'center', gap: SPACING.md,
+        width: '100%', padding: `12px ${SPACING.lg}px`,
+        minHeight: 56,
+        background: 'transparent',
+        border: 'none', borderBottom: isLast ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}`,
+        cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
+        WebkitTapHighlightColor: 'transparent',
+      }}
+    >
+      <div style={{
+        width: 38, height: 38, borderRadius: 10,
+        background: colors.bg,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontSize: '1.1rem', flexShrink: 0,
+      }}>
+        {SECTIONS[concept.s]?.icon}
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{
+          fontSize: FONT_SIZE.base, fontWeight: FONT_WEIGHT.semibold,
+          color: t.text, lineHeight: 1.3,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+        }}>
+          {concept.ku}
+        </div>
+        <div style={{
+          fontSize: FONT_SIZE.sm, color: t.textMuted,
+          fontWeight: FONT_WEIGHT.normal, lineHeight: 1.3,
+          overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
+        }}>
+          {concept.tr}
+        </div>
+      </div>
+      <IconChevronRight size={16} color={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} />
+    </button>
+  );
+}
+
+// ── ListSection (iOS grouped list container) ─────────────────────────────────
+export function ListSection({ children, theme }) {
+  const t = theme || THEME.light;
+  return (
+    <div style={{
+      background: t.surface,
+      borderRadius: RADIUS.xl,
+      border: `1px solid ${t.border}`,
+      overflow: 'hidden',
+    }}>
+      {children}
+    </div>
+  );
+}
+
+// ── SectionHeader (section group label) ──────────────────────────────────────
+export function SectionGroupHeader({ label, theme }) {
+  const t = theme || THEME.light;
+  return (
+    <div style={{
+      fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.extrabold,
+      color: t.textMuted, textTransform: 'uppercase',
+      letterSpacing: '0.06em',
+      padding: `${SPACING.lg}px ${SPACING.lg}px ${SPACING.sm}px`,
+    }}>
+      {label}
+    </div>
   );
 }
 

@@ -13,10 +13,10 @@ import {
   IconSearch, IconX, IconChevronDown, IconChevronRight,
   IconArrowLeft, IconArrowRight, IconArrowUp,
   IconBook, IconCards, IconQuizIcon, IconPuzzle, IconPencil, IconBarChart, IconHome,
-  IconCheck, IconVolume, IconVolumeMute, IconShuffle, IconLightbulb,
+  IconCheck, IconVolume, IconVolumeMute, IconLightbulb,
   IconRefresh, IconStar, IconTrophy, IconSun, IconMoon,
 } from '@components/icons';
-import { Pill, Badge, Card, ProgressBar, Modal, ToastContainer, EmptyState, SectionTag, ScoreCircle, SpeakButton } from '@components/ui';
+import { Badge, Card, Modal, ToastContainer, EmptyState, SectionTag, ScoreCircle, SpeakButton } from '@components/ui';
 import { ConceptVisual } from '@components/visuals';
 export default function FlashcardView({ theme, isDark, concepts, progress, setProgress, sounds, awardXP }) {
   const t = theme;
@@ -102,20 +102,11 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
     return () => window.removeEventListener('keydown', handleKey);
   }, [handleFlip, handlePrev, handleNext]);
 
-  const knownCount = concepts.filter(c => (flashcardBoxes[c.ku] || 0) >= LEITNER_KNOWN_BOX).length;
-  const learningCount = concepts.filter(c => (flashcardBoxes[c.ku] || 0) === 1).length;
-  const newCount = concepts.length - knownCount - learningCount;
-
   const directionOptions = [
     { value: 'ku-tr', label: 'Kurdî → Tirkî' },
     { value: 'tr-ku', label: 'Tirkî → Kurdî' },
     { value: 'ku-en', label: 'Kurdî → English' },
     { value: 'en-ku', label: 'English → Kurdî' },
-  ];
-  const filterOptions = [
-    { value: 'all', label: 'Hemû', count: concepts.length },
-    { value: 'learning', label: 'Fêrbûn', count: learningCount },
-    { value: 'known', label: 'Zanîn', count: knownCount },
   ];
 
   if (isComplete) {
@@ -152,34 +143,29 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'transparent' }}>
       {/* Controls */}
-      <div style={{ padding: '10px ' + SPACING.lg + 'px', background: isDark ? 'rgba(26,35,50,0.95)' : 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderBottom: '1px solid ' + (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)') }}>
-        {/* Direction */}
-        <div style={{ display: 'flex', gap: 6, overflowX: 'auto', marginBottom: SPACING.sm, scrollbarWidth: 'none' }}>
+      <div style={{ padding: '10px ' + SPACING.lg + 'px', background: isDark ? 'rgba(26,35,50,0.95)' : 'rgba(255,255,255,0.95)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)', borderBottom: '1px solid ' + (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'), display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <select
+          value={direction}
+          onChange={e => { setDirection(e.target.value); setIsFlipped(false); }}
+          style={{
+            padding: '6px 12px',
+            borderRadius: RADIUS.md,
+            border: '1px solid ' + t.border,
+            background: 'transparent',
+            color: t.text,
+            fontSize: FONT_SIZE.sm,
+            fontFamily: 'inherit',
+            cursor: 'pointer',
+            outline: 'none',
+          }}
+        >
           {directionOptions.map(opt => (
-            <Pill key={opt.value} label={opt.label} isActive={direction === opt.value} color={t.primary} onClick={() => { setDirection(opt.value); setIsFlipped(false); }} />
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
-        </div>
-        {/* Filter + progress */}
-        <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginBottom: SPACING.sm }}>
-          {filterOptions.map(opt => (
-            <button key={opt.value} onClick={() => setCardFilter(opt.value)} style={{
-              padding: '4px 10px', borderRadius: RADIUS.full, fontSize: '0.78rem', fontWeight: FONT_WEIGHT.semibold,
-              border: '1.5px solid ' + (cardFilter === opt.value ? t.primary : t.border),
-              background: cardFilter === opt.value ? t.primary : 'transparent',
-              color: cardFilter === opt.value ? t.textOnPrimary : t.textSecondary,
-              cursor: 'pointer', fontFamily: 'inherit',
-            }}>
-              {opt.label} <span style={{ opacity: 0.8 }}>({opt.count})</span>
-            </button>
-          ))}
-        </div>
-        {/* Progress bar */}
-        <div style={{ marginBottom: 4 }}>
-          <ProgressBar value={knownCount} max={concepts.length} color={t.success} bgColor={t.border} height={6} />
-        </div>
-        <div style={{ fontSize: '0.72rem', color: t.textMuted }}>
-          {knownCount} zanî · {learningCount} fêrbûn · {newCount} nû
-        </div>
+        </select>
+        <span style={{ fontSize: '0.85rem', fontWeight: FONT_WEIGHT.bold, color: t.textSecondary }}>
+          {currentIndex + 1} / {deckConcepts.length}
+        </span>
       </div>
 
       {/* Card */}
@@ -311,33 +297,9 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
             <IconArrowLeft size={18} color={t.text} />
           </button>
 
-          {/* Progress dots (max 7) */}
-          <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5 }}>
-            {deckConcepts.length <= 7 ? (
-              deckConcepts.map((_, i) => (
-                <div key={i} style={{
-                  width: i === currentIndex ? 20 : 7,
-                  height: 7, borderRadius: RADIUS.sm,
-                  background: i === currentIndex ? t.primary : i < currentIndex ? t.success : t.border,
-                  transition: 'all ' + DURATION.normal,
-                }} />
-              ))
-            ) : (
-              <span style={{ fontSize: '0.85rem', fontWeight: FONT_WEIGHT.bold, color: t.textSecondary }}>
-                {currentIndex + 1} / {deckConcepts.length}
-              </span>
-            )}
-          </div>
-
-          <button onClick={() => setIsShuffled(prev => !prev)} aria-label="Tevlihev bike" style={{
-            width: TOUCH_MIN - 2, height: TOUCH_MIN - 2, borderRadius: RADIUS.lg,
-            border: '1.5px solid ' + (isShuffled ? t.primary : t.border),
-            background: isShuffled ? t.primary : t.surface, cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            transition: 'all ' + DURATION.fast,
-          }}>
-            <IconShuffle size={18} color={isShuffled ? t.textOnPrimary : t.text} />
-          </button>
+          <span style={{ flex: 1, textAlign: 'center', fontSize: '0.85rem', fontWeight: FONT_WEIGHT.bold, color: t.textSecondary }}>
+            {currentIndex + 1} / {deckConcepts.length}
+          </span>
 
           <button onClick={handleNext} disabled={currentIndex >= deckConcepts.length - 1} aria-label="Pêş" style={{
             width: TOUCH_MIN - 2, height: TOUCH_MIN - 2, borderRadius: RADIUS.lg,

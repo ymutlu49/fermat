@@ -7,13 +7,11 @@ import {
 } from '@data';
 import { filterConcepts, getLevelColor, getSectionColor } from '@utils/helpers.js';
 import { useMediaQuery, useSpeech, useFavorites } from '@hooks';
-import { IconSearch, IconX, IconArrowLeft, IconArrowRight, IconArrowUp } from '@components/icons';
-import { IconStar } from '@components/icons';
-import { Pill, SectionTag, SpeakButton } from '@components/ui';
+import { IconSearch, IconX, IconArrowLeft, IconArrowRight } from '@components/icons';
+import { Pill, SectionTag, SpeakButton, ConceptRow, ListSection, SectionGroupHeader } from '@components/ui';
 import { ConceptVisual } from '@components/visuals';
 import { SYLLABLES, RELATED_CONCEPTS } from '@data';
-import { fuzzySearchConcepts, getDidYouMean, getAutocompleteSuggestions } from '@utils/fuzzySearch.js';
-import { exportConceptsAsPDF } from '@utils/exportPDF.js';
+import { fuzzySearchConcepts, getAutocompleteSuggestions } from '@utils/fuzzySearch.js';
 
 export default function DictionaryView({ theme, isDark, concepts, initialSection = null }) {
   const t = theme;
@@ -24,13 +22,9 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
 
   const [searchQuery, setSearchQuery]     = useState('');
   const [activeSectionId, setActiveSectionId] = useState(initialSection);
-  const [sortMode, setSortMode]           = useState('section');
   const [selectedConcept, setSelectedConcept] = useState(null);
   const [modalIdx, setModalIdx]           = useState(0);
-  const [showScrollTop, setShowScrollTop] = useState(false);
   const [showAutocomplete, setShowAutocomplete] = useState(false);
-  const [specialFilter, setSpecialFilter] = useState(null);
-  const [levelFilter, setLevelFilter] = useState(null);
   const scrollRef = useRef(null);
   const inputRef  = useRef(null);
 
@@ -41,53 +35,27 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
       if (activeSectionId !== null) results = results.filter(c => c.s === activeSectionId);
       return results;
     }
-    return filterConcepts(concepts, searchQuery, activeSectionId, sortMode);
-  }, [concepts, searchQuery, activeSectionId, sortMode]);
-
-  const didYouMean = useMemo(() => {
-    if (filteredConcepts.length === 0 && searchQuery.length >= 2) {
-      return getDidYouMean(concepts, searchQuery);
-    }
-    return [];
-  }, [filteredConcepts, searchQuery, concepts]);
+    return filterConcepts(concepts, searchQuery, activeSectionId, 'section');
+  }, [concepts, searchQuery, activeSectionId]);
 
   const suggestions = useMemo(() => {
     if (!showAutocomplete || searchQuery.length < 2) return [];
     return getAutocompleteSuggestions(concepts, searchQuery);
   }, [showAutocomplete, searchQuery, concepts]);
 
-  // Apply special filter (favorites / recents) and level filter
-  let finalConcepts = filteredConcepts;
-  if (specialFilter === 'favorites') {
-    finalConcepts = finalConcepts.filter(c => favorites.includes(c.ku + '_' + c.s));
-  }
-  if (specialFilter === 'recents') {
-    const recentKeys = recents;
-    finalConcepts = concepts.filter(c => recentKeys.includes(c.ku + '_' + c.s));
-  }
-  if (levelFilter) {
-    finalConcepts = finalConcepts.filter(c => {
-      if (levelFilter === 'P') return c.lv.startsWith('P');
-      if (levelFilter === '4+') return c.lv === '4+' || c.lv.startsWith('4');
-      return c.lv === levelFilter || c.lv.startsWith(levelFilter + '-') || c.lv.endsWith('-' + levelFilter);
+  const finalConcepts = filteredConcepts;
+
+  // Group concepts by section for list display
+  const groupedConcepts = useMemo(() => {
+    if (activeSectionId !== null) return null; // single section, no grouping needed
+    const groups = {};
+    finalConcepts.forEach(c => {
+      const sec = SECTIONS[c.s];
+      if (!groups[c.s]) groups[c.s] = { section: sec, concepts: [] };
+      groups[c.s].concepts.push(c);
     });
-  }
-
-  // Compute alphabet index from finalConcepts for quick-jump
-  const alphabetLetters = useMemo(() => {
-    const letters = new Set();
-    finalConcepts.forEach(c => { if (c.ku[0]) letters.add(c.ku[0].toUpperCase()); });
-    return [...letters].sort();
-  }, [finalConcepts]);
-
-  // Scroll-to-top detection
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const fn = () => setShowScrollTop(el.scrollTop > SCROLL_TOP_THRESHOLD);
-    el.addEventListener('scroll', fn);
-    return () => el.removeEventListener('scroll', fn);
-  }, []);
+    return Object.values(groups).filter(g => g.concepts.length > 0);
+  }, [finalConcepts, activeSectionId]);
 
   // Modal navigation helpers
   const openModal = useCallback((concept) => {
@@ -107,18 +75,6 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
     if (prev) { setSelectedConcept(prev); setModalIdx(i => i - 1); }
   }, [finalConcepts, modalIdx]);
 
-  const handleScrollTop = useCallback(() => {
-    scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-  }, []);
-
-  const sortOptions = [
-    { value: 'section', label: 'Beş' },
-    { value: 'az',      label: 'A-Z' },
-    { value: 'level',   label: 'Asta' },
-  ];
-
-  // Grid columns
-  const cols = isMobile ? 2 : isTablet ? 3 : 4;
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: 'transparent' }}>
@@ -204,109 +160,42 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
           )}
         </div>
 
-        {/* Section filter — monochrome pills */}
+        {/* Section filter pills */}
         <div style={{
           display: 'flex', gap: 5,
-          overflowX: 'auto', paddingBottom: SPACING.xs,
+          overflowX: 'auto', paddingBottom: 2,
           scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
         }}>
-          <Pill label="Bijarte" isActive={specialFilter === 'favorites'} color={t.textSecondary}
-            onClick={() => setSpecialFilter(specialFilter === 'favorites' ? null : 'favorites')} />
-          <Pill label="Hemû" isActive={activeSectionId === null && !specialFilter} color={t.primary} onClick={() => { setActiveSectionId(null); setSpecialFilter(null); }} />
+          <Pill label="Hemû" isActive={activeSectionId === null} color={t.primary} onClick={() => setActiveSectionId(null)} />
           {Object.entries(SECTIONS).map(([id, sec]) => (
             <Pill
               key={id}
               isActive={activeSectionId === parseInt(id)}
               color={t.primary}
-              onClick={() => { setActiveSectionId(parseInt(id)); setSpecialFilter(null); }}
+              onClick={() => setActiveSectionId(parseInt(id))}
             >
               {sec.short}
             </Pill>
           ))}
         </div>
-
-        {/* Sort + Level + Count — compact row */}
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: SPACING.xs + 1,
-          paddingTop: SPACING.xs,
-        }}>
-          {sortOptions.map(opt => (
-            <button key={opt.value} onClick={() => setSortMode(opt.value)}
-              style={{
-                padding: `3px ${SPACING.sm}px`, borderRadius: RADIUS.full,
-                fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
-                cursor: 'pointer', fontFamily: 'inherit',
-                background: sortMode === opt.value ? (isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.08)') : 'transparent',
-                color: sortMode === opt.value ? t.text : t.textMuted,
-                border: 'none',
-                transition: `all ${DURATION.fast}`,
-                WebkitTapHighlightColor: 'transparent',
-              }}
-            >
-              {opt.label}
-            </button>
-          ))}
-
-          {['P', '1', '2', '3', '4+'].map(lv => (
-            <button key={lv} onClick={() => setLevelFilter(levelFilter === lv ? null : lv)}
-              style={{
-                padding: `3px ${SPACING.sm - 2}px`, borderRadius: RADIUS.full,
-                fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
-                cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap',
-                background: levelFilter === lv ? t.primary : 'transparent',
-                color: levelFilter === lv ? '#fff' : t.textMuted,
-                border: 'none',
-                transition: `all ${DURATION.fast}`,
-              }}
-            >
-              {lv}
-            </button>
-          ))}
-
-          <span style={{ marginLeft: 'auto', fontSize: FONT_SIZE.xs, color: t.textMuted, fontWeight: FONT_WEIGHT.medium, whiteSpace: 'nowrap' }}>
-            {finalConcepts.length} têgeh
-          </span>
-          <button
-            onClick={() => {
-              if (finalConcepts.length > 50) {
-                alert('Ji kerema xwe beşek hilbijêre. Herî zêde 50 têgeh di carekê de tên daxistin.');
-                return;
-              }
-              exportConceptsAsPDF(finalConcepts);
-            }}
-            title="PDF derxe"
-            style={{
-              padding: `3px ${SPACING.sm}px`, borderRadius: RADIUS.full,
-              fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.medium,
-              cursor: 'pointer', fontFamily: 'inherit',
-              background: 'transparent', color: t.textMuted,
-              border: 'none',
-              transition: `all ${DURATION.fast}`,
-            }}
-          >
-            PDF
-          </button>
-        </div>
       </div>
 
-      {/* ── Card grid + alphabet bar ── */}
-      <div style={{ flex: 1, display: 'flex', overflow: 'hidden' }}>
-        <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.md}px ${px}px 80px` }}>
+      {/* ── Concept list ── */}
+      <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.sm}px ${px}px 80px` }}>
         {finalConcepts.length === 0 ? (
           <div style={{
             display: 'flex', flexDirection: 'column',
             alignItems: 'center', justifyContent: 'center',
             padding: '60px 20px', textAlign: 'center',
           }}>
-            <div style={{ fontSize: '3rem', marginBottom: SPACING.md }}>🔍</div>
             <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: t.text, marginBottom: 6 }}>
               Têgehek nehat dîtin
             </div>
-            <div style={{ fontSize: '0.85rem', color: t.textSecondary, marginBottom: 20 }}>
+            <div style={{ fontSize: FONT_SIZE.sm, color: t.textSecondary, marginBottom: 20 }}>
               Parzûnê biguherîne an lêgerînê paqij bike
             </div>
             <button
-              onClick={() => { setSearchQuery(''); setActiveSectionId(0); }}
+              onClick={() => { setSearchQuery(''); setActiveSectionId(null); }}
               style={{
                 padding: `10px 20px`, borderRadius: RADIUS.lg,
                 border: 'none', background: t.primary,
@@ -316,84 +205,44 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
             >
               Paqij bike
             </button>
-
-            {/* Did you mean */}
-            {didYouMean.length > 0 && (
-              <div style={{ textAlign: 'center', padding: SPACING.lg + 'px' }}>
-                <div style={{ fontSize: FONT_SIZE.sm, color: t.textMuted, marginBottom: SPACING.sm }}>
-                  Mebesta te ev bû?
-                </div>
-                <div style={{ display: 'flex', gap: SPACING.sm, justifyContent: 'center', flexWrap: 'wrap' }}>
-                  {didYouMean.map(c => (
-                    <button key={c.ku}
-                      onClick={() => setSearchQuery(c.ku)}
-                      style={{
-                        padding: `${SPACING.xs}px ${SPACING.md}px`, borderRadius: RADIUS.full,
-                        border: '1px solid ' + t.primary, background: 'transparent',
-                        color: t.primary, fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.semibold,
-                        cursor: 'pointer', fontFamily: 'inherit',
-                      }}
-                    >
-                      {c.ku}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
+        ) : activeSectionId !== null || searchQuery.length >= 2 ? (
+          /* Single section or search results — flat list */
+          <ListSection theme={t}>
+            {finalConcepts.map((concept, i) => (
+              <ConceptRow
+                key={concept.ku + '_' + concept.s}
+                concept={concept}
+                theme={t}
+                isDark={isDark}
+                onClick={() => openModal(concept)}
+                isLast={i === finalConcepts.length - 1}
+              />
+            ))}
+          </ListSection>
         ) : (
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: `repeat(${cols}, 1fr)`,
-            gap: isMobile ? 10 : 14,
-            maxWidth: isDesktop ? 1200 : '100%',
-            margin: '0 auto',
-          }}>
-            {finalConcepts.map((concept) => {
-              const colors   = getSectionColor(concept.s, isDark);
-              const lvColor  = getLevelColor(concept.lv);
-              return (
-                <ConceptCard
-                  key={concept.ku + '_' + concept.s}
-                  concept={concept}
-                  colors={colors}
-                  lvColor={lvColor}
-                  theme={t}
-                  isDark={isDark}
-                  isMobile={isMobile}
-                  onClick={() => openModal(concept)}
-                  speak={speak}
-                  isSpeaking={isSpeaking}
-                  isFavorite={isFavorite}
-                  toggleFavorite={toggleFavorite}
-                />
-              );
-            })}
+          /* All sections — grouped list */
+          <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.md, maxWidth: 600, margin: '0 auto' }}>
+            {groupedConcepts?.map(group => (
+              <div key={group.section.short}>
+                <SectionGroupHeader label={`${group.section.icon} ${group.section.short}`} theme={t} />
+                <ListSection theme={t}>
+                  {group.concepts.map((concept, i) => (
+                    <ConceptRow
+                      key={concept.ku + '_' + concept.s}
+                      concept={concept}
+                      theme={t}
+                      isDark={isDark}
+                      onClick={() => openModal(concept)}
+                      isLast={i === group.concepts.length - 1}
+                    />
+                  ))}
+                </ListSection>
+              </div>
+            ))}
           </div>
         )}
       </div>
-
-      </div>{/* close Card grid + alphabet bar wrapper */}
-
-      {/* ── Scroll to top ── */}
-      {showScrollTop && (
-        <button
-          onClick={handleScrollTop}
-          aria-label="Serê rûpelê"
-          style={{
-            position: 'absolute', bottom: 80, right: 20,
-            width: TOUCH_MIN, height: TOUCH_MIN, borderRadius: '50%',
-            background: t.primary, color: '#fff',
-            border: 'none', cursor: 'pointer',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.2)',
-            animation: `fadeIn ${DURATION.normal} ease-out`,
-            WebkitTapHighlightColor: 'transparent',
-          }}
-        >
-          <IconArrowUp size={ICON_SIZE.md} color="#fff" />
-        </button>
-      )}
 
       {/* ── Detail modal ── */}
       {selectedConcept && (
@@ -416,91 +265,6 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
         />
       )}
     </div>
-  );
-}
-
-/* ─── Concept Card (vibrant section colors) ───────────────────────────────── */
-function ConceptCard({ concept, colors, lvColor, theme: t, isDark, isMobile, onClick, speak, isSpeaking, isFavorite, toggleFavorite }) {
-  const [hovered, setHovered] = useState(false);
-  const visualSize = isMobile ? 72 : 88;
-  const isFav = isFavorite(concept.ku + '_' + concept.s);
-
-  return (
-    <button
-      onClick={onClick}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      style={{
-        background: t.surface,
-        borderRadius: RADIUS.xl,
-        border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
-        cursor: 'pointer',
-        textAlign: 'left',
-        fontFamily: 'inherit',
-        overflow: 'hidden',
-        display: 'flex', flexDirection: 'column',
-        boxShadow: hovered ? '0 2px 6px rgba(0,0,0,0.08)' : 'none',
-        transform: hovered ? 'translateY(-2px)' : 'none',
-        transition: 'all 0.18s ease',
-        WebkitTapHighlightColor: 'transparent',
-        userSelect: 'none',
-      }}
-    >
-      {/* Visual area */}
-      <div style={{
-        background: isDark ? 'rgba(255,255,255,0.03)' : 'rgba(0,0,0,0.02)',
-        padding: isMobile ? `${SPACING.sm}px` : `${SPACING.md}px`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        minHeight: isMobile ? 80 : 100,
-        position: 'relative',
-      }}>
-        {/* Level badge */}
-        <div style={{
-          position: 'absolute', top: 6, right: 7,
-          fontSize: '0.55rem', fontWeight: FONT_WEIGHT.bold,
-          color: t.textMuted, letterSpacing: '0.02em',
-        }}>
-          {concept.lv}
-        </div>
-        {concept.visual
-          ? <ConceptVisual visual={concept.visual} theme={t} size={visualSize} />
-          : (
-            <div style={{
-              width: visualSize, height: visualSize,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: isMobile ? '2rem' : '2.6rem',
-            }}>
-              {SECTIONS[concept.s]?.icon}
-            </div>
-          )
-        }
-      </div>
-
-      {/* Info */}
-      <div style={{
-        padding: isMobile ? `${SPACING.sm}px` : `10px`,
-        flex: 1, display: 'flex', flexDirection: 'column', gap: 3,
-      }}>
-        <div style={{
-          display: 'flex', alignItems: 'center', gap: 4,
-        }}>
-          <div style={{
-            fontSize: isMobile ? FONT_SIZE.sm : '0.82rem',
-            fontWeight: FONT_WEIGHT.bold, color: t.text,
-            lineHeight: 1.25, flex: 1,
-          }}>
-            {concept.ku}
-          </div>
-          <SpeakButton text={concept.ku} speak={speak} isSpeaking={isSpeaking} theme={t} size={24} />
-        </div>
-        <div style={{
-          fontSize: isMobile ? FONT_SIZE.xs : '0.7rem',
-          color: t.textMuted, fontWeight: FONT_WEIGHT.medium, lineHeight: 1.3,
-        }}>
-          {concept.tr}
-        </div>
-      </div>
-    </button>
   );
 }
 

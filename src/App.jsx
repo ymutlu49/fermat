@@ -10,7 +10,7 @@ import {
   IconVolume, IconVolumeMute, IconSun, IconMoon, IconMusic, IconMusicOff,
   IconHome, IconBook, IconCards, IconQuizIcon, IconPuzzle,
   IconPencil, IconBarChart, IconLightbulb, IconMessage, IconInfo,
-  IconMoreHorizontal, IconGamepad, IconMap, IconClipboard,
+  IconMoreHorizontal, IconGamepad, IconMap, IconClipboard, IconChevronRight,
 } from '@components/icons';
 import {
   SplashView, HomeView, DictionaryView, FlashcardView,
@@ -18,58 +18,6 @@ import {
   ConceptMapView, WorksheetView, FeedbackView, AboutView,
 } from '@views';
 import { trackEvent, trackSession } from '@utils/analytics.js';
-
-// ─── Background decoration — subtle, sparse pattern ─────────────────────────
-const BG_ITEMS = [
-  { t: '🔢', x:  5, y:  4, r: -10, s: 1.8 },
-  { t: '📐', x: 82, y:  6, r:  12, s: 1.6 },
-  { t: 'HEJMAR',    x: 12, y: 16, r:   6, s: 0.85 },
-  { t: 'SÊGOŞE',   x: 85, y: 18, r:  10, s: 0.85 },
-  { t: '➕', x:  4, y: 30, r:  14, s: 1.8 },
-  { t: 'PÎVANDIN',  x: 55, y: 28, r:  -5, s: 0.85 },
-  { t: '🎲', x: 90, y: 35, r:  12, s: 1.6 },
-  { t: 'KIRARÎ',    x: 20, y: 45, r:   8, s: 0.85 },
-  { t: '🔺', x: 75, y: 42, r: -12, s: 1.7 },
-  { t: 'HEJMARDAN', x: 30, y: 58, r:  -5, s: 0.85 },
-  { t: '⭐', x: 88, y: 55, r:   8, s: 1.6 },
-  { t: '🧮', x:  6, y: 70, r: -14, s: 1.6 },
-  { t: 'CÎYOMETRÎ', x: 65, y: 72, r:   6, s: 0.85 },
-  { t: '📖', x:  8, y: 84, r:  12, s: 1.5 },
-  { t: 'MATEMATÎK', x: 60, y: 86, r: -10, s: 0.85 },
-  { t: '🏆', x: 88, y: 92, r:  -6, s: 1.5 },
-];
-
-function BackgroundDecoration({ isDark }) {
-  const textColor = isDark ? 'rgba(78,205,196,0.04)' : 'rgba(15,118,110,0.03)';
-  const emojiOpacity = isDark ? 0.03 : 0.04;
-  return (
-    <div style={{
-      position: 'fixed', inset: 0, zIndex: 0,
-      overflow: 'hidden', pointerEvents: 'none',
-    }}>
-      {BG_ITEMS.map((item, i) => {
-        const isEmoji = /\p{Emoji}/u.test(item.t) && item.t.length <= 3;
-        return (
-          <span key={i} style={{
-            position: 'absolute',
-            left: item.x + '%', top: item.y + '%',
-            transform: `rotate(${item.r}deg)`,
-            fontSize: (isEmoji ? item.s * 1.2 : item.s) + 'rem',
-            color: isEmoji ? undefined : textColor,
-            opacity: isEmoji ? emojiOpacity : 1,
-            fontWeight: FONT_WEIGHT.black,
-            userSelect: 'none',
-            pointerEvents: 'none',
-            whiteSpace: 'nowrap',
-            letterSpacing: isEmoji ? 0 : '0.04em',
-          }}>
-            {item.t}
-          </span>
-        );
-      })}
-    </div>
-  );
-}
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
 const NAV_ITEMS = [
@@ -164,13 +112,10 @@ export default function App() {
       fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
       height: '100dvh',
       display: 'flex', flexDirection: 'column', overflow: 'hidden',
-      background: view === 'home'
-        ? (isDark ? '#0F1419' : '#F5F0EB')
-        : t.bg,
+      background: t.bg,
       color: t.text,
       transition: `background ${DURATION.normal}, color ${DURATION.normal}`,
     }}>
-      <BackgroundDecoration isDark={isDark} />
       <ToastContainer toasts={toasts} theme={theme} />
       <Confetti active={showConfetti} />
       <XPToast xp={xpToastData.xp} visible={xpToastData.visible} />
@@ -195,9 +140,8 @@ export default function App() {
             padding: isMobile
               ? `${SPACING.sm}px ${SPACING.md}px`
               : `${SPACING.sm + 2}px ${SPACING.lg}px`,
-            background: view === 'home' ? 'transparent' : t.surface,
-            borderBottom: view === 'home' ? 'none' : ('1px solid ' + t.border),
-            boxShadow: view === 'home' ? 'none' : '0 1px 4px rgba(0,0,0,0.04)',
+            background: t.surface,
+            borderBottom: '1px solid ' + t.border,
             flexShrink: 0, zIndex: 10,
             minHeight: isMobile ? TOUCH_MIN + 4 : TOUCH_MIN + 10,
           }}>
@@ -230,12 +174,6 @@ export default function App() {
 
             {/* Right actions */}
             <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.sm - 2 }}>
-              <IconBtn onClick={toggleMusic} label={isMusicOn ? 'Muzîkê daxe' : 'Muzîk veke'} theme={t}>
-                {isMusicOn
-                  ? <IconMusic size={ICON_SIZE.md - 2} color={t.primary} />
-                  : <IconMusicOff size={ICON_SIZE.md - 2} color={t.textMuted} />
-                }
-              </IconBtn>
               <IconBtn onClick={toggleSound} label={isSoundEnabled ? 'Dengê daxe' : 'Deng veke'} theme={t}>
                 {isSoundEnabled
                   ? <IconVolume size={ICON_SIZE.md - 2} color={t.textMuted} />
@@ -262,8 +200,6 @@ export default function App() {
                 theme={theme} isDark={isDark}
                 progress={progress}
                 setView={handleSetView}
-                setActiveSectionFilter={setActiveSectionFilter}
-                gamification={gamification}
               />
             )}
             {view === 'dict' && (
@@ -457,40 +393,44 @@ export default function App() {
 // ── Games Hub View ───────────────────────────────────────────────────────────
 function GamesHubView({ theme: t, isDark, isMobile, setView }) {
   const games = [
-    { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',     color: '#166534', colorEnd: '#15803D' },
-    { id: 'match', icon: IconPuzzle,   label: 'Cot Bike',  desc: 'Peyv û wateyan bide hev',   color: '#5B21B6', colorEnd: '#7C3AED' },
-    { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse',   color: '#1D4ED8', colorEnd: '#3B82F6' },
+    { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',  color: '#16A34A' },
+    { id: 'match', icon: IconPuzzle,   label: 'Cot Bike',  desc: 'Peyv û wateyan bide hev', color: '#7C3AED' },
+    { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse', color: '#1D4ED8' },
   ];
   return (
     <div style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.xl}px ${isMobile ? SPACING.md : SPACING.xl}px` }}>
       <div style={{ maxWidth: 480, margin: '0 auto' }}>
-        <div style={{ fontSize: FONT_SIZE.lg, fontWeight: FONT_WEIGHT.bold, color: t.text, marginBottom: SPACING.xl }}>
-          Lîstik
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.md }}>
-          {games.map(g => {
+        <div style={{
+          background: t.surface, borderRadius: RADIUS.xl,
+          border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
+          overflow: 'hidden',
+        }}>
+          {games.map((g, i) => {
             const Icon = g.icon;
             return (
               <button key={g.id} onClick={() => setView(g.id)} style={{
-                display: 'flex', alignItems: 'center', gap: SPACING.lg,
-                padding: `${SPACING.lg}px ${SPACING.xl}px`,
-                background: `linear-gradient(135deg, ${g.color}, ${g.colorEnd})`,
-                borderRadius: RADIUS.xl, border: 'none', cursor: 'pointer',
-                fontFamily: 'inherit', textAlign: 'left',
-                transition: `all ${DURATION.normal}`,
+                display: 'flex', alignItems: 'center', gap: SPACING.md, width: '100%',
+                padding: `${SPACING.lg}px`,
+                background: 'transparent',
+                borderBottom: i < games.length - 1 ? `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}` : 'none',
+                border: 'none', borderBottomStyle: i < games.length - 1 ? 'solid' : 'none',
+                borderBottomWidth: i < games.length - 1 ? 1 : 0,
+                borderBottomColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
                 WebkitTapHighlightColor: 'transparent',
               }}>
                 <div style={{
-                  width: 48, height: 48, borderRadius: RADIUS.lg,
-                  background: 'rgba(255,255,255,0.2)',
+                  width: 42, height: 42, borderRadius: 12,
+                  background: g.color + (isDark ? '20' : '10'),
                   display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
                 }}>
-                  <Icon size={24} color="#fff" />
+                  <Icon size={22} color={g.color} />
                 </div>
-                <div>
-                  <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: '#fff' }}>{g.label}</div>
-                  <div style={{ fontSize: FONT_SIZE.sm, color: 'rgba(255,255,255,0.8)', marginTop: 2 }}>{g.desc}</div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: t.text }}>{g.label}</div>
+                  <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>{g.desc}</div>
                 </div>
+                <IconChevronRight size={18} color={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} />
               </button>
             );
           })}

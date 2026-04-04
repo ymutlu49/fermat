@@ -105,50 +105,34 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
   const difficultyLabels = { 1: 'Asan', 2: 'Navîncî', 3: 'Dijwar' };
 
   if (quizPhase === 'start') {
-    const sessions = (progress || {}).sessions || [];
-    const lastSession = sessions[sessions.length - 1];
     return (
       <div style={{ flex: 1, overflow: 'auto', background: 'transparent', padding: `${SPACING.xl}px ${SPACING.lg}px` }}>
         <div style={{ maxWidth: 400, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: SPACING.xl }}>
-            <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, #166534, #15803D)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', marginBottom: SPACING.md }}><span style={{ fontSize: '1.8rem', filter: 'brightness(0) invert(1)' }}>❓</span></div>
             <div style={{ fontSize: '1.4rem', fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginBottom: SPACING.sm }}>Azmûn</div>
             <div style={{ fontSize: '0.9rem', color: t.textSecondary }}>Zanîna xwe biceribîne · {QUIZ_TOTAL_QUESTIONS} pirs</div>
           </div>
 
-          {lastSession && (
-            <div style={{ background: t.surface, borderRadius: '12px', padding: '14px', marginBottom: 20, border: '1px solid ' + t.border, textAlign: 'center' }}>
-              <div style={{ fontSize: FONT_SIZE.sm, color: t.textMuted, marginBottom: 6 }}>Encama dawî</div>
-              <ScoreCircle score={lastSession.correct} total={lastSession.total} theme={theme} />
-            </div>
-          )}
-
           <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: '0.8rem', fontWeight: FONT_WEIGHT.bold, color: t.textMuted, marginBottom: 10, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Alî</div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.sm }}>
-              {[
-                { value: 'ku-tr', label: 'Kurdî → Tirkî' },
-                { value: 'tr-ku', label: 'Tirkî → Kurdî' },
-                { value: 'ku-en', label: 'Kurdî → English' },
-                { value: 'en-ku', label: 'English → Kurdî' },
-              ].map(opt => (
-                <button key={opt.value} onClick={() => setDirection(opt.value)} style={{
-                  padding: `${SPACING.md}px ${SPACING.lg}px`, borderRadius: '12px', border: `1px solid ${direction === opt.value ? t.primary : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
-                  background: direction === opt.value ? t.primarySoft : t.surface,
-                  color: direction === opt.value ? t.primary : t.text,
-                  fontFamily: 'inherit', fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold, cursor: 'pointer',
-                  textAlign: 'left', transition: `all ${DURATION.fast}`,
-                }}>
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ background: t.surface, borderRadius: '12px', padding: `${SPACING.md}px ${SPACING.lg}px`, marginBottom: 20, border: '1px solid ' + t.border }}>
-            <div style={{ fontSize: '0.8rem', color: t.textMuted }}>
-              Asta niha: <strong style={{ color: t.primary }}>{difficultyLabels[difficulty]}</strong> · Asta bi xweberî tê guhertin
-            </div>
+            <select
+              value={direction}
+              onChange={e => setDirection(e.target.value)}
+              style={{
+                padding: '8px 12px',
+                borderRadius: 8,
+                border: `1px solid ${isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'}`,
+                background: 'transparent',
+                color: t.text,
+                fontSize: FONT_SIZE.sm,
+                fontFamily: 'inherit',
+                width: '100%',
+              }}
+            >
+              <option value="ku-tr">Kurdî → Tirkî</option>
+              <option value="tr-ku">Tirkî → Kurdî</option>
+              <option value="ku-en">Kurdî → English</option>
+              <option value="en-ku">English → Kurdî</option>
+            </select>
           </div>
 
           <button onClick={buildQuiz} style={{
