@@ -8,7 +8,7 @@ import {
 import { filterConcepts, getLevelColor, getSectionColor } from '@utils/helpers.js';
 import { useMediaQuery, useSpeech, useFavorites } from '@hooks';
 import { IconSearch, IconX, IconArrowLeft, IconArrowRight } from '@components/icons';
-import { Pill, SectionTag, SpeakButton, ConceptRow, ListSection, SectionGroupHeader } from '@components/ui';
+import { Pill, SectionTag, SpeakButton, ConceptRow, ListSection } from '@components/ui';
 import { ConceptVisual } from '@components/visuals';
 import { SYLLABLES, RELATED_CONCEPTS } from '@data';
 import { fuzzySearchConcepts, getAutocompleteSuggestions } from '@utils/fuzzySearch.js';
@@ -45,17 +45,6 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
 
   const finalConcepts = filteredConcepts;
 
-  // Group concepts by section for list display
-  const groupedConcepts = useMemo(() => {
-    if (activeSectionId !== null) return null; // single section, no grouping needed
-    const groups = {};
-    finalConcepts.forEach(c => {
-      const sec = SECTIONS[c.s];
-      if (!groups[c.s]) groups[c.s] = { section: sec, concepts: [] };
-      groups[c.s].concepts.push(c);
-    });
-    return Object.values(groups).filter(g => g.concepts.length > 0);
-  }, [finalConcepts, activeSectionId]);
 
   // Modal navigation helpers
   const openModal = useCallback((concept) => {
@@ -206,8 +195,8 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
               Paqij bike
             </button>
           </div>
-        ) : activeSectionId !== null || searchQuery.length >= 2 ? (
-          /* Single section or search results — flat list */
+        ) : (
+          /* Flat list — no section headers */
           <ListSection theme={t}>
             {finalConcepts.map((concept, i) => (
               <ConceptRow
@@ -220,27 +209,6 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
               />
             ))}
           </ListSection>
-        ) : (
-          /* All sections — grouped list */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.md, maxWidth: 600, margin: '0 auto' }}>
-            {groupedConcepts?.map(group => (
-              <div key={group.section.short}>
-                <SectionGroupHeader label={`${group.section.icon} ${group.section.short}`} theme={t} />
-                <ListSection theme={t}>
-                  {group.concepts.map((concept, i) => (
-                    <ConceptRow
-                      key={concept.ku + '_' + concept.s}
-                      concept={concept}
-                      theme={t}
-                      isDark={isDark}
-                      onClick={() => openModal(concept)}
-                      isLast={i === group.concepts.length - 1}
-                    />
-                  ))}
-                </ListSection>
-              </div>
-            ))}
-          </div>
         )}
       </div>
 
