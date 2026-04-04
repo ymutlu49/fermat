@@ -80,7 +80,7 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
 
   const difficultyOptions = [
     { pairs: 4, label: 'Asan', desc: '4 cot', color: t.success },
-    { pairs: 6, label: 'Navincî', desc: '6 cot', color: t.warning },
+    { pairs: 6, label: 'Navîncî', desc: '6 cot', color: t.warning },
     { pairs: 8, label: 'Dijwar', desc: '8 cot', color: t.error },
   ];
 

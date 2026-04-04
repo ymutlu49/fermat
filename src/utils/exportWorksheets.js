@@ -504,8 +504,8 @@ export function exportFillBlankWorksheet(concepts, options = {}) {
   }
 
   const html = wrapHTML(
-    'Cihe Vala Dagire',
-    'Penaseye bixwine, tegeha rast binivise',
+    'Cihê Vala Dagire',
+    'Penaseyê bixwîne, têgeha rast binivîse',
     bodyHtml,
     includeAnswerKey ? answerHtml : ''
   );
@@ -536,7 +536,7 @@ export function exportFlashcardSheet(concepts, options = {}) {
     // Front side: Kurdish terms
     bodyHtml += `
       <div style="margin-bottom:4px;">
-        <div style="text-align:center;font-size:11px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;">Ru - Pêş (Bibirre û biqelibîne)</div>
+        <div style="text-align:center;font-size:11px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;">Rû - Pêş (Bibirre û biqelibîne)</div>
         <div class="flash-grid">
           ${pageCards.map(c => `
             <div class="flash-card">
@@ -563,7 +563,7 @@ export function exportFlashcardSheet(concepts, options = {}) {
     bodyHtml += `
       <div class="page-break"></div>
       <div>
-        <div style="text-align:center;font-size:11px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;">Ru - Paş (Bersiv)</div>
+        <div style="text-align:center;font-size:11px;font-weight:700;color:#64748B;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.08em;">Rû - Paş (Bersiv)</div>
         <div class="flash-grid">
           ${mirroredCards.map(c => `
             <div class="flash-card">
@@ -578,7 +578,7 @@ export function exportFlashcardSheet(concepts, options = {}) {
   }
 
   const html = wrapHTML(
-    'Karten Hinbune',
+    'Kartên Hînbûnê',
     'Kartan çap bike, li ser xetên bişkokî bibirre',
     bodyHtml
   );

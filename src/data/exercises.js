@@ -20,10 +20,10 @@ export const EXERCISES = [
   },
   {
     id: 'h03', s: 1, lv: 'P-1',
-    q: 'Di hejmara 47 de reqema dehiyê çi ye?',
+    q: 'Di hejmara 47 de jimareya dehiyê çi ye?',
     opts: ['7', '4', '47', '11'],
     ans: 1,
-    explain: 'Di hejmara 47 de reqema dehiyê 4 e (çar dehî = 40).',
+    explain: 'Di hejmara 47 de jimareya dehiyê 4 e (çar dehî = 40).',
   },
   {
     id: 'h04', s: 1, lv: '1-2',
@@ -41,10 +41,10 @@ export const EXERCISES = [
   },
   {
     id: 'h06', s: 1, lv: '1-2',
-    q: 'Di hejmara 321 de reqema sedan çi ye?',
+    q: 'Di hejmara 321 de jimareya sedan çi ye?',
     opts: ['1', '2', '3', '4'],
     ans: 2,
-    explain: 'Di hejmara 321 de: sed = 3, dehî = 2, yekî = 1. Ji ber vê reqema sedan 3 e.',
+    explain: 'Di hejmara 321 de: sed = 3, dehî = 2, yekî = 1. Ji ber vê jimareya sedan 3 e.',
   },
   {
     id: 'h07', s: 1, lv: '2-3',

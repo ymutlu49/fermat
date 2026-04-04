@@ -470,7 +470,7 @@ export default function ConceptMapView({ theme, isDark, concepts }) {
                   color: t.textMuted, marginBottom: SPACING.xs,
                   textTransform: 'uppercase', letterSpacing: '0.04em',
                 }}>
-                  Danasîn
+                  Penase
                 </div>
                 <div style={{
                   fontSize: FONT_SIZE.base, color: t.text,
