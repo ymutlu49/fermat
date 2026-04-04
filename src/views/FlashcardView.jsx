@@ -174,8 +174,8 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
         </div>
       </div>
 
-      {/* Card */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px 16px' }}
+      {/* Card area */}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'auto', padding: '16px 16px 8px' }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {/* 3D flip card */}
         <div
@@ -183,12 +183,12 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
           role="button" aria-label="Bişitilîne"
           tabIndex={0} onKeyDown={e => (e.key === ' ' || e.key === 'Enter') && handleFlip()}
           style={{
-            width: '100%', maxWidth: 520, height: 340,
-            perspective: '1000px', cursor: 'pointer', marginBottom: 20,
+            width: '100%', maxWidth: 520, height: 260,
+            perspective: '1000px', cursor: 'pointer', flexShrink: 0,
           }}
         >
           <div style={{
-            position: 'relative', width: '100%', height: 340,
+            position: 'relative', width: '100%', height: 260,
             transformStyle: 'preserve-3d',
             transition: 'transform ' + FLIP_DURATION_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1)',
             transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0)',
@@ -216,7 +216,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               {/* Concept visual on card front */}
               {currentConcept.visual && (
                 <div style={{ marginBottom: SPACING.md }}>
-                  <ConceptVisual visual={currentConcept.visual} theme={theme} size={110} />
+                  <ConceptVisual visual={currentConcept.visual} theme={theme} size={80} />
                 </div>
               )}
               <div style={{ display: 'flex', alignItems: 'center', gap: 6, opacity: 0.6 }}>
@@ -267,19 +267,19 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
 
         {/* Rating buttons (visible after flip) */}
         {isFlipped && (
-          <div style={{ display: 'flex', gap: SPACING.sm, width: '100%', maxWidth: 520, animation: 'fadeInUp ' + DURATION.normal + ' ease-out' }}>
+          <div style={{ display: 'flex', gap: SPACING.sm, width: '100%', maxWidth: 520, marginTop: SPACING.md, flexShrink: 0, animation: 'fadeInUp ' + DURATION.normal + ' ease-out' }}>
             {[
               { box: 0, label: 'Nizanim', color: t.error, bg: t.error + '12' },
               { box: 1, label: 'Fêr dibim', color: t.warning, bg: t.warning + '15' },
               { box: 2, label: 'Dizanim', color: t.success, bg: t.success + '12' },
             ].map(btn => (
               <button key={btn.box} onClick={() => handleRate(btn.box)} style={{
-                flex: 1, padding: '13px ' + SPACING.sm + 'px', borderRadius: RADIUS.xl,
+                flex: 1, padding: '10px ' + SPACING.sm + 'px', borderRadius: RADIUS.xl,
                 border: '1.5px solid ' + btn.color + '40',
                 background: btn.bg,
                 color: btn.color, cursor: 'pointer',
                 fontFamily: 'inherit', fontSize: '0.82rem', fontWeight: FONT_WEIGHT.extrabold,
-                transition: 'all ' + DURATION.fast, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 5,
+                transition: 'all ' + DURATION.fast, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
               }}
               onMouseEnter={e => { e.currentTarget.style.background = btn.color + '25'; e.currentTarget.style.borderColor = btn.color; e.currentTarget.style.transform = 'scale(1.04)'; }}
               onMouseLeave={e => { e.currentTarget.style.background = btn.bg; e.currentTarget.style.borderColor = btn.color + '60'; e.currentTarget.style.transform = 'scale(1)'; }}
@@ -291,7 +291,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
         )}
 
         {/* Navigation */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: 14 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: SPACING.md, flexShrink: 0, width: '100%', maxWidth: 520 }}>
           <button onClick={handlePrev} disabled={currentIndex === 0} aria-label="Berê" style={{
             width: TOUCH_MIN - 2, height: TOUCH_MIN - 2, borderRadius: RADIUS.lg,
             border: '1px solid ' + t.border,
