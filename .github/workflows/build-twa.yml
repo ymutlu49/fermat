@@ -1,0 +1,45 @@
+name: Build TWA Android AAB
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Set SDK path
+        run: echo "sdk.dir=$ANDROID_HOME" > android-twa/local.properties
+
+      - name: Build unsigned AAB
+        working-directory: android-twa
+        run: |
+          chmod +x gradlew
+          ./gradlew bundleRelease --no-daemon
+
+      - name: Sign AAB with jarsigner
+        run: |
+          jarsigner -verbose -sigalg SHA256withRSA -digestalg SHA-256 \
+            -keystore android-twa/upload-key.p12 \
+            -storetype PKCS12 \
+            -storepass android -keypass android \
+            android-twa/app/build/outputs/bundle/release/app-release.aab \
+            ferhenga
+
+      - name: Verify signature
+        run: jarsigner -verify android-twa/app/build/outputs/bundle/release/app-release.aab
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: ferhenga-matematike-aab
+          path: android-twa/app/build/outputs/bundle/release/*.aab
