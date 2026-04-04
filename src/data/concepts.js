@@ -24,7 +24,7 @@ export const ALL_CONCEPTS = [
     "tr": "rakam",
     "en": "digit",
     "lv": "1-2",
-    "df": "Deh sembolên (0, 1, 2, 3, 4, 5, 6, 7, 8, 9) ku hemû hejmaran pê tên nivîsandin.",
+    "df": "Deh sembolên (0, 1, 2, 3, 4, 5, 6, 7, 8, 9) ku hemû hejmaran pê tên nivisandin.",
     "ex": "Di hejmara 25 de du jimare hene: 2 û 5.",
     "s": 1,
     "visual": {
@@ -422,7 +422,7 @@ export const ALL_CONCEPTS = [
     "en": "comparison",
     "lv": "1-2",
     "df": "Hevberkirina du hejmaran ji bo dîtina ya mezîn an ya biçûk.",
-    "ex": "5 ji 3 mezîntir e: 5 > 3.",
+    "ex": "5 ji 3 mezintir e: 5 > 3.",
     "s": 1,
     "visual": {
       "type": "compare",
@@ -560,7 +560,7 @@ export const ALL_CONCEPTS = [
     "tr": "artan",
     "en": "increasing",
     "lv": "2-3",
-    "df": "Hejmarên ku her diçe mezîntir dibin.",
+    "df": "Hejmarên ku her diçe mezintir dibin.",
     "ex": "Rêzeya zêdedêr: 3, 6, 9, 12...",
     "s": 1,
     "visual": {
@@ -577,7 +577,7 @@ export const ALL_CONCEPTS = [
     "tr": "artan dizi",
     "en": "increasing sequence",
     "lv": "2-3",
-    "df": "Rêza hejmaran ku her diçe mezîntir dibe.",
+    "df": "Rêza hejmaran ku her diçe mezintir dibe.",
     "ex": "10, 20, 30, 40 — rêzeya zêdedêr.",
     "s": 1,
     "visual": {
@@ -744,7 +744,7 @@ export const ALL_CONCEPTS = [
     "tr": "dört işlem",
     "en": "four operations",
     "lv": "1-2",
-    "df": "Zêdekirin, kemkirin, carkirin û parîn.",
+    "df": "Zêdekirin, kemkirin, carkirin û parkirin.",
     "ex": "Çar kirarî ev in: zêdekirin (+), kemkirin (−), carkirin (×) û parkirin (÷).",
     "s": 2,
     "visual": {
@@ -2335,7 +2335,7 @@ export const ALL_CONCEPTS = [
     "tr": "zihinden işlem",
     "en": "mental calculation",
     "lv": "2-4",
-    "df": "Hesabkirina bêyî nivîsandin an amûran.",
+    "df": "Hesabkirina bêyî nivisandin an amûran.",
     "ex": "25 + 10 = 35 bi bîrkarî tê hesabkirin, bêyî kaxez û pênûsê.",
     "s": 0,
     "visual": {
@@ -2636,7 +2636,7 @@ export const ALL_CONCEPTS = [
     "tr": "olumlu/pozitif",
     "en": "positive",
     "lv": "4+",
-    "df": "Hejmara ku ji sifirê mezîntir e.",
+    "df": "Hejmara ku ji sifirê mezintir e.",
     "ex": "+5 hejmara erênî ye.",
     "s": 0,
     "visual": {
@@ -2686,7 +2686,7 @@ export const ALL_CONCEPTS = [
     "en": "right / left",
     "lv": "P-1",
     "df": "Aliyên rastê û çepê.",
-    "ex": "Bi destê xwe yê rastê binivîse.",
+    "ex": "Bi destê xwe yê rastê binivise.",
     "s": 9,
     "visual": {
       "type": "coordinate",
