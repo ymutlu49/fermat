@@ -115,32 +115,97 @@ export function ConceptRow({ concept, theme, isDark, onClick, isLast = false, Vi
   );
 }
 
-// ── ListSection (iOS grouped list container) ─────────────────────────────────
-export function ListSection({ children, theme }) {
+// ── PageContainer (unified page wrapper — 520px max, centered) ───────────────
+export function PageContainer({ children, noPadTop = false }) {
+  return (
+    <div style={{ flex: 1, overflowY: 'auto' }}>
+      <div style={{
+        maxWidth: 520, margin: '0 auto',
+        padding: `${noPadTop ? 0 : 24}px 16px 80px`,
+      }}>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+// ── SectionCard (grouped list container — 16px radius) ───────────────────────
+export function SectionCard({ children, theme, style = {} }) {
   const t = theme || THEME.light;
   return (
     <div style={{
       background: t.surface,
-      borderRadius: RADIUS.xl,
+      borderRadius: 16,
       border: `1px solid ${t.border}`,
       overflow: 'hidden',
+      ...style,
     }}>
       {children}
     </div>
   );
 }
 
-// ── SectionHeader (section group label) ──────────────────────────────────────
-export function SectionGroupHeader({ label, theme }) {
+// Keep ListSection as alias for backward compat
+export const ListSection = SectionCard;
+
+// ── SectionTitle (uppercase group label) ─────────────────────────────────────
+export function SectionTitle({ children, theme }) {
   const t = theme || THEME.light;
   return (
     <div style={{
-      fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.extrabold,
+      fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
       color: t.textMuted, textTransform: 'uppercase',
       letterSpacing: '0.06em',
-      padding: `${SPACING.lg}px ${SPACING.lg}px ${SPACING.sm}px`,
+      padding: '24px 0 8px',
     }}>
-      {label}
+      {children}
+    </div>
+  );
+}
+
+// ── ActionRow (navigation row — icon + text + desc + chevron) ────────────────
+export function ActionRow({ icon: Icon, iconColor, label, desc, onClick, theme, isDark, isLast = false }) {
+  const t = theme || THEME.light;
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        display: 'flex', alignItems: 'center', gap: 12,
+        width: '100%', padding: '12px 16px', minHeight: 56,
+        background: 'transparent', border: 'none',
+        borderBottom: isLast ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}`,
+        cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
+        WebkitTapHighlightColor: 'transparent',
+      }}
+    >
+      <div style={{
+        width: 40, height: 40, borderRadius: 10,
+        background: (iconColor || '#0F4C5C') + (isDark ? '20' : '10'),
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        flexShrink: 0,
+      }}>
+        <Icon size={20} color={iconColor || '#0F4C5C'} />
+      </div>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.semibold, color: t.text }}>{label}</div>
+        {desc && <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>{desc}</div>}
+      </div>
+      <IconChevronRight size={16} color={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'} />
+    </button>
+  );
+}
+
+// ── StatRow (label + value row) ──────────────────────────────────────────────
+export function StatRow({ label, value, theme, isDark, isLast = false }) {
+  const t = theme || THEME.light;
+  return (
+    <div style={{
+      display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+      padding: '12px 16px',
+      borderBottom: isLast ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}`,
+    }}>
+      <span style={{ fontSize: FONT_SIZE.base, color: t.text }}>{label}</span>
+      <span style={{ fontSize: FONT_SIZE.base, fontWeight: FONT_WEIGHT.semibold, color: t.textSecondary }}>{value}</span>
     </div>
   );
 }

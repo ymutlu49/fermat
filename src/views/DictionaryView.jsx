@@ -70,13 +70,14 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
 
       {/* ── Search & Filters (unified compact header) ── */}
       <div style={{
-        padding: `${SPACING.sm + 2}px ${px}px ${SPACING.xs + 2}px`,
+        padding: `${SPACING.sm + 2}px 16px ${SPACING.xs + 2}px`,
         background: isDark ? 'rgba(26,35,50,0.95)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(8px)',
         WebkitBackdropFilter: 'blur(8px)',
         borderBottom: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
         flexShrink: 0,
       }}>
+      <div style={{ maxWidth: 520, margin: '0 auto' }}>
         {/* Search bar */}
         <div style={{ position: 'relative', marginBottom: SPACING.sm }}>
           <div style={{
@@ -167,10 +168,12 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
             </Pill>
           ))}
         </div>
-      </div>
+      </div>{/* /max-width */}
+      </div>{/* /header */}
 
       {/* ── Concept list ── */}
-      <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.sm}px ${px}px 80px` }}>
+      <div ref={scrollRef} style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.sm}px 16px 80px` }}>
+      <div style={{ maxWidth: 520, margin: '0 auto' }}>
         {finalConcepts.length === 0 ? (
           <div style={{
             display: 'flex', flexDirection: 'column',
@@ -211,7 +214,8 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
             ))}
           </ListSection>
         )}
-      </div>
+      </div>{/* /max-width */}
+      </div>{/* /scroll */}
 
       {/* ── Detail modal ── */}
       {selectedConcept && (

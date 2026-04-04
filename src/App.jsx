@@ -4,7 +4,7 @@ import '@/styles/animations.css';
 
 import { ALL_CONCEPTS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
 import { useTheme, useSoundManager, useToast, useMediaQuery, usePersistedState, useGamification, useHashRouter, useBackgroundMusic } from '@hooks';
-import { ToastContainer } from '@components/ui';
+import { ToastContainer, PageContainer, SectionCard, ActionRow } from '@components/ui';
 import { Confetti, AchievementPopup, XPToast } from '@components/Confetti.jsx';
 import {
   IconVolume, IconVolumeMute, IconSun, IconMoon, IconMusic, IconMusicOff,
@@ -194,7 +194,7 @@ export default function App() {
               />
             )}
             {view === 'games' && (
-              <GamesHubView theme={theme} isDark={isDark} isMobile={isMobile} setView={handleSetView} />
+              <GamesHubView theme={theme} isDark={isDark} setView={handleSetView} />
             )}
             {view === 'quiz' && (
               <QuizGame
@@ -223,7 +223,7 @@ export default function App() {
               />
             )}
             {view === 'more' && (
-              <MoreHubView theme={theme} isDark={isDark} isMobile={isMobile} setView={handleSetView} />
+              <MoreHubView theme={theme} isDark={isDark} setView={handleSetView} />
             )}
             {view === 'exercise' && (
               <ExerciseView
@@ -333,57 +333,26 @@ export default function App() {
 }
 
 // ── Games Hub View ───────────────────────────────────────────────────────────
-function GamesHubView({ theme: t, isDark, isMobile, setView }) {
+function GamesHubView({ theme: t, isDark, setView }) {
   const games = [
     { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',  color: '#16A34A' },
     { id: 'match', icon: IconPuzzle,   label: 'Cot Bike',  desc: 'Peyv û wateyan bide hev', color: '#7C3AED' },
     { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse', color: '#1D4ED8' },
   ];
   return (
-    <div style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.xl}px ${isMobile ? SPACING.md : SPACING.xl}px` }}>
-      <div style={{ maxWidth: 480, margin: '0 auto' }}>
-        <div style={{
-          background: t.surface, borderRadius: RADIUS.xl,
-          border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
-          overflow: 'hidden',
-        }}>
-          {games.map((g, i) => {
-            const Icon = g.icon;
-            return (
-              <button key={g.id} onClick={() => setView(g.id)} style={{
-                display: 'flex', alignItems: 'center', gap: SPACING.md, width: '100%',
-                padding: `${SPACING.lg}px`,
-                background: 'transparent',
-                borderBottom: i < games.length - 1 ? `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}` : 'none',
-                border: 'none', borderBottomStyle: i < games.length - 1 ? 'solid' : 'none',
-                borderBottomWidth: i < games.length - 1 ? 1 : 0,
-                borderBottomColor: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
-                cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
-                WebkitTapHighlightColor: 'transparent',
-              }}>
-                <div style={{
-                  width: 42, height: 42, borderRadius: 12,
-                  background: g.color + (isDark ? '20' : '10'),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}>
-                  <Icon size={22} color={g.color} />
-                </div>
-                <div style={{ flex: 1 }}>
-                  <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: t.text }}>{g.label}</div>
-                  <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>{g.desc}</div>
-                </div>
-                <IconChevronRight size={18} color={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} />
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+    <PageContainer>
+      <SectionCard theme={t}>
+        {games.map((g, i) => (
+          <ActionRow key={g.id} icon={g.icon} iconColor={g.color} label={g.label} desc={g.desc}
+            onClick={() => setView(g.id)} theme={t} isDark={isDark} isLast={i === games.length - 1} />
+        ))}
+      </SectionCard>
+    </PageContainer>
   );
 }
 
 // ── More Hub View ────────────────────────────────────────────────────────────
-function MoreHubView({ theme: t, isDark, isMobile, setView }) {
+function MoreHubView({ theme: t, isDark, setView }) {
   const items = [
     { id: 'exercise',   icon: IconLightbulb, label: 'Hîndarî',              desc: 'Temrîn û pratîk',    color: '#0E7490' },
     { id: 'conceptmap', icon: IconMap,        label: 'Nexşeya Têgehan',      desc: 'Têgehan bi nexşeyê bibîne', color: '#7E22CE' },
@@ -392,41 +361,14 @@ function MoreHubView({ theme: t, isDark, isMobile, setView }) {
     { id: 'feedback',   icon: IconMessage,    label: 'Pêşniyar û Serrastkirin', desc: 'Pêşniyarên xwe bişîne', color: '#059669' },
   ];
   return (
-    <div style={{ flex: 1, overflowY: 'auto', padding: `${SPACING.xl}px ${isMobile ? SPACING.md : SPACING.xl}px` }}>
-      <div style={{ maxWidth: 480, margin: '0 auto' }}>
-        <div style={{ fontSize: FONT_SIZE.lg, fontWeight: FONT_WEIGHT.bold, color: t.text, marginBottom: SPACING.xl }}>
-          Zêdetir
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: SPACING.sm }}>
-          {items.map(item => {
-            const Icon = item.icon;
-            return (
-              <button key={item.id} onClick={() => setView(item.id)} style={{
-                display: 'flex', alignItems: 'center', gap: SPACING.md,
-                padding: `${SPACING.md}px ${SPACING.lg}px`,
-                background: t.surface, borderRadius: RADIUS.lg,
-                border: `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'}`,
-                cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
-                transition: `all ${DURATION.normal}`,
-                WebkitTapHighlightColor: 'transparent',
-              }}>
-                <div style={{
-                  width: 40, height: 40, borderRadius: RADIUS.md,
-                  background: item.color + (isDark ? '25' : '10'),
-                  display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
-                }}>
-                  <Icon size={20} color={item.color} />
-                </div>
-                <div>
-                  <div style={{ fontSize: FONT_SIZE.base, fontWeight: FONT_WEIGHT.semibold, color: t.text }}>{item.label}</div>
-                  <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>{item.desc}</div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </div>
+    <PageContainer>
+      <SectionCard theme={t}>
+        {items.map((item, i) => (
+          <ActionRow key={item.id} icon={item.icon} iconColor={item.color} label={item.label} desc={item.desc}
+            onClick={() => setView(item.id)} theme={t} isDark={isDark} isLast={i === items.length - 1} />
+        ))}
+      </SectionCard>
+    </PageContainer>
   );
 }
 
