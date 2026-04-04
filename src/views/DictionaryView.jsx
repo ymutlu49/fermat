@@ -206,6 +206,7 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
                 isDark={isDark}
                 onClick={() => openModal(concept)}
                 isLast={i === finalConcepts.length - 1}
+                VisualComponent={ConceptVisual}
               />
             ))}
           </ListSection>

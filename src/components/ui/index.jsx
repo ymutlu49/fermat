@@ -54,31 +54,37 @@ export function Badge({ label, color, bgColor }) {
   );
 }
 
-// ── ConceptRow (Apple-style list row) ─────────────────────────────────────────
-export function ConceptRow({ concept, theme, isDark, onClick, isLast = false }) {
+// ── ConceptRow (list row with visual thumbnail) ──────────────────────────────
+export function ConceptRow({ concept, theme, isDark, onClick, isLast = false, VisualComponent }) {
   const t = theme || THEME.light;
   const colors = getSectionColor(concept.s, isDark);
+  const hasVisual = concept.visual && VisualComponent;
   return (
     <button
       onClick={onClick}
       style={{
         display: 'flex', alignItems: 'center', gap: SPACING.md,
-        width: '100%', padding: `12px ${SPACING.lg}px`,
-        minHeight: 56,
+        width: '100%', padding: `10px ${SPACING.lg}px`,
+        minHeight: 64,
         background: 'transparent',
         border: 'none', borderBottom: isLast ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}`,
         cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
         WebkitTapHighlightColor: 'transparent',
       }}
     >
+      {/* Thumbnail — concept visual or section emoji */}
       <div style={{
-        width: 38, height: 38, borderRadius: 10,
+        width: 44, height: 44, borderRadius: 10,
         background: colors.bg,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
-        fontSize: '1.1rem', flexShrink: 0,
+        flexShrink: 0, overflow: 'hidden',
       }}>
-        {SECTIONS[concept.s]?.icon}
+        {hasVisual
+          ? <VisualComponent visual={concept.visual} theme={t} size={36} />
+          : <span style={{ fontSize: '1.3rem' }}>{SECTIONS[concept.s]?.icon}</span>
+        }
       </div>
+      {/* Text */}
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{
           fontSize: FONT_SIZE.base, fontWeight: FONT_WEIGHT.semibold,
@@ -92,10 +98,19 @@ export function ConceptRow({ concept, theme, isDark, onClick, isLast = false }) 
           fontWeight: FONT_WEIGHT.normal, lineHeight: 1.3,
           overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
         }}>
-          {concept.tr}
+          {concept.tr}{concept.en ? ` · ${concept.en}` : ''}
         </div>
       </div>
-      <IconChevronRight size={16} color={isDark ? 'rgba(255,255,255,0.2)' : 'rgba(0,0,0,0.2)'} />
+      {/* Level badge + chevron */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.sm, flexShrink: 0 }}>
+        <span style={{
+          fontSize: FONT_SIZE.xs, color: t.textMuted,
+          fontWeight: FONT_WEIGHT.medium,
+        }}>
+          {concept.lv}
+        </span>
+        <IconChevronRight size={14} color={isDark ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)'} />
+      </div>
     </button>
   );
 }
