@@ -4,7 +4,7 @@ import { useMediaQuery } from '@hooks';
 import { IconChevronRight } from '@components/icons';
 
 // ── Google Form URL — bunu kendi form URL'nizle değiştirin ──────────────────
-const GOOGLE_FORM_URL = 'https://forms.gle/PLACEHOLDER';
+const GOOGLE_FORM_URL = 'https://forms.gle/47vidk9tgbYN5siQA';
 
 const FEEDBACK_TYPES = [
   { id: 'bug',  label: 'Xeletî',   desc: 'Pirsgirêkek rapor bike',     color: '#EF4444' },
