@@ -235,7 +235,7 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
                   key={card.id}
                   onClick={() => handleCardClick(card)}
                   style={{
-                    aspectRatio: '1',
+                    minHeight: 72,
                     borderRadius: RADIUS.lg,
                     cursor: isVisible ? 'default' : 'pointer',
                     fontFamily: 'inherit',
