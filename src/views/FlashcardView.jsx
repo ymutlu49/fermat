@@ -180,7 +180,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
         {/* 3D flip card */}
         <div
           onClick={handleFlip}
-          role="button" aria-label="Bişitilîne"
+          role="button" aria-label="Kartê bişitilîne"
           tabIndex={0} onKeyDown={e => (e.key === ' ' || e.key === 'Enter') && handleFlip()}
           style={{
             width: '100%', maxWidth: 520, height: 260,
@@ -226,7 +226,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
                 </span>
               </div>
               <div style={{ position: 'absolute', bottom: SPACING.md, right: SPACING.lg, fontSize: '0.7rem', color: sectionColors.text, opacity: 0.5 }}>
-                Lê bixe ji bo bişitilîne
+                Lê bixe ↻
               </div>
             </div>
             {/* Back */}
