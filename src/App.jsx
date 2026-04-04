@@ -103,8 +103,7 @@ export default function App() {
   }, [gamification, sounds]);
 
   // ── Derived layout values ─────────────────────────────────────────────────
-  const showNavLabels = true; // Always show labels with 6 tabs
-  const navHeight = isMobile ? 52 : 56;
+  const navHeight = isMobile ? 50 : 52;
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
@@ -137,53 +136,28 @@ export default function App() {
           {/* Top bar */}
           <header style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: isMobile
-              ? `${SPACING.sm}px ${SPACING.md}px`
-              : `${SPACING.sm + 2}px ${SPACING.lg}px`,
+            padding: `${SPACING.sm}px ${isMobile ? SPACING.md : SPACING.lg}px`,
             background: t.surface,
             borderBottom: '1px solid ' + t.border,
             flexShrink: 0, zIndex: 10,
-            minHeight: isMobile ? TOUCH_MIN + 4 : TOUCH_MIN + 10,
+            minHeight: TOUCH_MIN,
           }}>
-            {/* Logo + title */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? SPACING.sm : SPACING.sm + 2 }}>
-              <img
-                src={import.meta.env.BASE_URL + 'favicon.svg'}
-                alt="FerMat"
-                style={{
-                  width: isMobile ? 32 : 36,
-                  height: isMobile ? 32 : 36,
-                  borderRadius: RADIUS.md,
-                  flexShrink: 0,
-                }}
-              />
-              <div style={{ lineHeight: 1.15 }}>
-                <div style={{
-                  fontSize: isMobile ? '0.8rem' : FONT_SIZE.base,
-                  fontWeight: FONT_WEIGHT.extrabold, color: t.text,
-                }}>
-                  {VIEW_TITLES[view] || 'FerMat'}
-                </div>
-                {isDesktop && view === 'home' && (
-                  <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>
-                    Pêşdibistanî – Dibistana Seretayî
-                  </div>
-                )}
-              </div>
+            <div style={{
+              fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: t.text,
+            }}>
+              {VIEW_TITLES[view] || 'FerMat'}
             </div>
-
-            {/* Right actions */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: SPACING.sm - 2 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <IconBtn onClick={toggleSound} label={isSoundEnabled ? 'Dengê daxe' : 'Deng veke'} theme={t}>
                 {isSoundEnabled
-                  ? <IconVolume size={ICON_SIZE.md - 2} color={t.textMuted} />
-                  : <IconVolumeMute size={ICON_SIZE.md - 2} color={t.textMuted} />
+                  ? <IconVolume size={18} color={t.textMuted} />
+                  : <IconVolumeMute size={18} color={t.textMuted} />
                 }
               </IconBtn>
               <IconBtn onClick={toggleTheme} label={isDark ? 'Ronahîyê veke' : 'Tarîyê veke'} theme={t}>
                 {isDark
-                  ? <IconSun size={ICON_SIZE.md - 2} color={t.warning} />
-                  : <IconMoon size={ICON_SIZE.md - 2} color={t.textSecondary} />
+                  ? <IconSun size={18} color={t.textMuted} />
+                  : <IconMoon size={18} color={t.textMuted} />
                 }
               </IconBtn>
             </div>
@@ -304,7 +278,6 @@ export default function App() {
               display: 'flex',
               background: t.surface,
               borderTop: '1px solid ' + t.border,
-              boxShadow: '0 -1px 8px rgba(0,0,0,0.06)',
               flexShrink: 0,
               zIndex: 10,
               paddingBottom: 'env(safe-area-inset-bottom, 0px)',
@@ -315,7 +288,6 @@ export default function App() {
                 || (item.id === 'games' && GAMES_VIEWS.includes(view))
                 || (item.id === 'more' && MORE_VIEWS.includes(view));
               const Icon = item.icon;
-              const activeColor = item.color;
               return (
                 <button
                   key={item.id}
@@ -329,57 +301,27 @@ export default function App() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: isMobile
-                      ? `${SPACING.sm + 2}px ${SPACING.xs - 2}px`
-                      : `${SPACING.sm - 1}px ${SPACING.xs - 2}px ${SPACING.sm + 1}px`,
+                    padding: `${SPACING.sm}px 0`,
                     minHeight: navHeight,
-                    background: isActive
-                      ? (isDark ? activeColor + '18' : activeColor + '0C')
-                      : 'none',
+                    background: 'none',
                     border: 'none',
                     cursor: 'pointer',
-                    color: isActive ? activeColor : t.textMuted,
-                    transition: `all ${DURATION.fast}`,
-                    position: 'relative',
+                    color: isActive ? t.primary : t.textMuted,
                     fontFamily: 'inherit',
                     WebkitTapHighlightColor: 'transparent',
                     userSelect: 'none',
                   }}
                 >
-                  {/* Active indicator */}
-                  {isActive && (
-                    <span style={{
-                      position: 'absolute',
-                      top: 0, left: '50%',
-                      transform: 'translateX(-50%)',
-                      width: ICON_SIZE.xl, height: 3,
-                      borderRadius: `0 0 ${RADIUS.sm}px ${RADIUS.sm}px`,
-                      background: activeColor,
-                    }} />
-                  )}
-
-                  {/* Icon */}
-                  <span style={{
-                    display: 'flex',
-                    transform: isActive ? 'scale(1.15)' : 'scale(1)',
-                    transition: `transform ${DURATION.fast}`,
-                    marginBottom: showNavLabels ? SPACING.xs - 1 : 0,
-                  }}>
-                    <Icon size={ICON_SIZE.md} color={isActive ? activeColor : t.textMuted} />
+                  <span style={{ display: 'flex', marginBottom: 3 }}>
+                    <Icon size={20} color={isActive ? t.primary : t.textMuted} />
                   </span>
-
-                  {/* Label — hidden on mobile */}
-                  {showNavLabels && (
-                    <span style={{
-                      fontSize: '0.6rem',
-                      fontWeight: isActive ? FONT_WEIGHT.bold : FONT_WEIGHT.medium,
-                      letterSpacing: '-0.01em',
-                      lineHeight: 1,
-                      color: isActive ? activeColor : t.textMuted,
-                    }}>
-                      {item.label}
-                    </span>
-                  )}
+                  <span style={{
+                    fontSize: '0.58rem',
+                    fontWeight: isActive ? FONT_WEIGHT.bold : FONT_WEIGHT.medium,
+                    lineHeight: 1,
+                  }}>
+                    {item.label}
+                  </span>
                 </button>
               );
             })}
@@ -495,7 +437,7 @@ function IconBtn({ children, onClick, label, theme: t }) {
       onClick={onClick}
       aria-label={label}
       style={{
-        width: TOUCH_MIN, height: TOUCH_MIN,
+        width: 36, height: 36,
         borderRadius: '50%',
         border: 'none',
         background: 'transparent',
@@ -503,7 +445,6 @@ function IconBtn({ children, onClick, label, theme: t }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         color: t.textMuted,
         flexShrink: 0,
-        transition: `background ${DURATION.fast}`,
         WebkitTapHighlightColor: 'transparent',
       }}
     >
