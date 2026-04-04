@@ -290,14 +290,15 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
           <div style={{ width: 40, height: 4, borderRadius: 2, background: t.border }} />
         </div>
 
-        {/* Visual hero */}
+        {/* Visual hero — fixed height */}
         <div style={{
           background: colors.bg,
           display: 'flex', justifyContent: 'center', alignItems: 'center',
-          padding: isMobile ? `${SPACING.lg}px ${SPACING.lg}px ${SPACING.md}px` : `20px 20px ${SPACING.lg}px`,
+          height: isMobile ? 150 : 180,
+          overflow: 'hidden',
         }}>
           {concept.visual
-            ? <ConceptVisual visual={concept.visual} theme={t} size={visualSize} />
+            ? <ConceptVisual visual={concept.visual} theme={t} size={isMobile ? 120 : 150} />
             : <span style={{ fontSize: isMobile ? '3.5rem' : '5rem' }}>{SECTIONS[concept.s]?.icon}</span>
           }
         </div>
@@ -312,7 +313,7 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
               marginBottom: 5,
             }}>
               <div style={{
-                fontSize: isMobile ? '1.5rem' : '1.8rem',
+                fontSize: concept.ku.length > 25 ? '1rem' : concept.ku.length > 18 ? '1.2rem' : isMobile ? '1.5rem' : '1.8rem',
                 fontWeight: FONT_WEIGHT.black, color: colors.text, lineHeight: 1.15,
               }}>
                 {concept.ku}

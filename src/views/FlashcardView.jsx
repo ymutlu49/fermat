@@ -183,19 +183,19 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
           role="button" aria-label="Bişitilîne"
           tabIndex={0} onKeyDown={e => (e.key === ' ' || e.key === 'Enter') && handleFlip()}
           style={{
-            width: '100%', maxWidth: 520, minHeight: 280,
+            width: '100%', maxWidth: 520, height: 340,
             perspective: '1000px', cursor: 'pointer', marginBottom: 20,
           }}
         >
           <div style={{
-            position: 'relative', width: '100%', minHeight: 280,
+            position: 'relative', width: '100%', height: 340,
             transformStyle: 'preserve-3d',
             transition: 'transform ' + FLIP_DURATION_MS + 'ms cubic-bezier(0.4, 0, 0.2, 1)',
             transform: isFlipped ? 'rotateY(180deg)' : 'rotateY(0)',
           }}>
             {/* Front */}
             <div style={{
-              position: 'absolute', width: '100%', minHeight: 280,
+              position: 'absolute', width: '100%', height: '100%',
               backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
               borderRadius: RADIUS.xl,
               background: sectionColors.bg,
@@ -207,7 +207,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               <div style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.bold, color: sectionColors.text, marginBottom: SPACING.lg, textTransform: 'uppercase', letterSpacing: '0.06em', opacity: 0.7 }}>
                 {directionOptions.find(d => d.value === direction)?.label.split('→')[0].trim()}
               </div>
-              <div style={{ fontSize: '1.75rem', fontWeight: FONT_WEIGHT.extrabold, color: sectionColors.text, lineHeight: 1.3, marginBottom: SPACING.sm }}>
+              <div style={{ fontSize: getCardText(currentConcept, 'front').length > 25 ? '1.1rem' : getCardText(currentConcept, 'front').length > 18 ? '1.3rem' : '1.75rem', fontWeight: FONT_WEIGHT.extrabold, color: sectionColors.text, lineHeight: 1.3, marginBottom: SPACING.sm }}>
                 {getCardText(currentConcept, 'front')}
               </div>
               <div style={{ marginBottom: SPACING.lg }}>
@@ -231,7 +231,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
             </div>
             {/* Back */}
             <div style={{
-              position: 'absolute', width: '100%', minHeight: 280,
+              position: 'absolute', width: '100%', height: '100%',
               backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden',
               transform: 'rotateY(180deg)',
               borderRadius: RADIUS.xl,
@@ -239,7 +239,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               borderTop: '1px solid ' + t.border,
               border: '1px solid ' + t.border,
               display: 'flex', flexDirection: 'column', padding: '20px', textAlign: 'left',
-              boxShadow: t.cardShadow,
+              boxShadow: t.cardShadow, overflowY: 'auto',
             }}>
               <div style={{ fontSize: '1.5rem', fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginBottom: SPACING.xs, textAlign: 'center' }}>
                 {getCardText(currentConcept, 'back')}
