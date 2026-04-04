@@ -760,7 +760,7 @@ export const ALL_CONCEPTS = [
     "tr": "toplama",
     "en": "addition",
     "lv": "1",
-    "df": "Kirarîya ku du an zêdetir hejmaran li hev dike.",
+    "df": "Kirarîya ku du an zêdetir hejmaran li hev dike; ji vê kirarîyê re komkirin jî tê gotin.",
     "ex": "3 + 2 = 5: zêdebar 3 û 2 ne, zêdok 5 e.",
     "s": 2,
     "visual": {
@@ -841,11 +841,45 @@ export const ALL_CONCEPTS = [
     }
   },
   {
+    "ku": "ZÊDEKIRINA LIREXHEV",
+    "tr": "yatay toplama",
+    "en": "horizontal addition",
+    "lv": "1",
+    "df": "Zêdekirina ku hejmar li rex hev tên nivîsandin: 3 + 2 = 5.",
+    "ex": "3 + 2 = 5 zêdekirina lirexhev e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "add",
+        "a": 3,
+        "b": 2
+      }
+    }
+  },
+  {
+    "ku": "ZÊDEKIRINA LIBINHEV",
+    "tr": "dikey toplama",
+    "en": "vertical addition",
+    "lv": "1-2",
+    "df": "Zêdekirina ku hejmar li bin hev tên nivîsandin û ji yekaniyê dest pê dike.",
+    "ex": "  23\n+ 14\n  37",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "add",
+        "a": 23,
+        "b": 14
+      }
+    }
+  },
+  {
     "ku": "KEMKIRIN",
     "tr": "çıkarma",
     "en": "subtraction",
     "lv": "1",
-    "df": "Kirarîya ku hejmarekî ji hejmarekî din derdixe.",
+    "df": "Kirarîya ku hejmarekî ji hejmarekî din derdixe; ji vê kirarîyê re derxistin jî tê gotin.",
     "ex": "5 − 2 = 3: kembar 5 e, kemker 2 e, kemok 3 e.",
     "s": 2,
     "visual": {
@@ -938,6 +972,40 @@ export const ALL_CONCEPTS = [
         "op": "sub",
         "a": 6,
         "b": 2
+      }
+    }
+  },
+  {
+    "ku": "KEMKIRINA LIREXHEV",
+    "tr": "yatay çıkarma",
+    "en": "horizontal subtraction",
+    "lv": "1",
+    "df": "Kemkirina ku hejmar li rex hev tên nivîsandin: 5 − 2 = 3.",
+    "ex": "5 − 2 = 3 kemkirina lirexhev e.",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 5,
+        "b": 2
+      }
+    }
+  },
+  {
+    "ku": "KEMKIRINA LIBINHEV",
+    "tr": "dikey çıkarma",
+    "en": "vertical subtraction",
+    "lv": "1-2",
+    "df": "Kemkirina ku hejmar li bin hev tên nivîsandin û ji yekaniyê dest pê dike.",
+    "ex": "  45\n− 23\n  22",
+    "s": 2,
+    "visual": {
+      "type": "operation",
+      "params": {
+        "op": "sub",
+        "a": 45,
+        "b": 23
       }
     }
   },
@@ -1612,7 +1680,7 @@ export const ALL_CONCEPTS = [
     "en": "circle (circumference)",
     "lv": "2-3",
     "df": "Teşeya gilover ku hemû xalên derdorê ji navendê wekhev dûr in.",
-    "ex": "Derdora saetê gilovêr e.",
+    "ex": "Derdora demjimêrê gilovêr e.",
     "s": 4,
     "visual": {
       "type": "circle",
@@ -1916,7 +1984,7 @@ export const ALL_CONCEPTS = [
     "tr": "zaman",
     "en": "time",
     "lv": "2",
-    "df": "Dirêjahîya bûyerekê di navbera destpêk û dawîyê de; saet, deqe û saniye yekeyên demê ne.",
+    "df": "Dirêjahîya bûyerekê di navbera destpêk û dawîyê de; demjimêr, deqe û saniye yekeyên demê ne.",
     "ex": "Ji destpêka dersê heta dawîya wê, 40 deqe dem derbas bû.",
     "s": 5,
     "visual": {
@@ -1928,12 +1996,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "SAET",
+    "ku": "DEMJIMÊR",
     "tr": "saat",
     "en": "hour/clock",
     "lv": "2",
-    "df": "Yekeya demê ku 60 deqe ye; rojek 24 saet e.",
-    "ex": "Şanîdera saetê li ser 3 e, saet 3 e.",
+    "df": "Amûra ku demê nîşan dide; rojek 24 demjimêr e, her demjimêrek 60 deqe ye.",
+    "ex": "Şanîdera demjimêrê li ser 3 e, demjimêr 3 e.",
     "s": 5,
     "visual": {
       "type": "clock",
@@ -1948,8 +2016,8 @@ export const ALL_CONCEPTS = [
     "tr": "dakika",
     "en": "minute",
     "lv": "2",
-    "df": "Yekeya demê ku 60 saniye ye; 1 saet = 60 deqe ye.",
-    "ex": "1 saet = 60 deqe ye; dersê me her roj 40 deqe dom dike.",
+    "df": "Yekeya demê ku 60 saniye ye; 1 demjimêr = 60 deqe ye.",
+    "ex": "1 demjimêr = 60 deqe ye; dersê me her roj 40 deqe dom dike.",
     "s": 5,
     "visual": {
       "type": "clock",
@@ -1960,12 +2028,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "ŞANÎDERA SAETÊ",
+    "ku": "ŞANÎDERA DEMJIMÊRÊ",
     "tr": "akrep (kısa ibre)",
     "en": "hour hand",
     "lv": "2",
-    "df": "Milê saetê yê kurt ku saetan nîşan dide.",
-    "ex": "Şanîdera saetê li ser 6 ye, saet 6 e.",
+    "df": "Milê demjimêrê yê kurt ku demjimêran nîşan dide.",
+    "ex": "Şanîdera demjimêrê li ser 6 ye, demjimêr 6 e.",
     "s": 5,
     "visual": {
       "type": "clock",
@@ -1980,7 +2048,7 @@ export const ALL_CONCEPTS = [
     "tr": "yelkovan (uzun ibre)",
     "en": "minute hand",
     "lv": "2",
-    "df": "Milê saetê yê dirêj ku deqeyan nîşan dide.",
+    "df": "Milê demjimêrê yê dirêj ku deqeyan nîşan dide.",
     "ex": "Şanîdera deqeyê li ser 6 ye, 30 deqe ye.",
     "s": 5,
     "visual": {
