@@ -1,9 +1,8 @@
 import { useState, useCallback, useRef } from 'react';
 
-const API_URL = 'https://kurdish-tts-proxy.y-mutlu.workers.dev';
-const SPEAKER_ID = 'kurmanji_72'; // Female Kurmanji voice
+const HF_API = 'https://amedcj-kmr-tts.hf.space/gradio_api';
 
-// Cache for audio blobs to avoid re-fetching
+// Cache for audio blobs
 const audioCache = new Map();
 
 // Kurdish number words
@@ -37,18 +36,13 @@ function numberToKurdish(n) {
   return String(n);
 }
 
-/**
- * Replace digit sequences in text with Kurdish words
- */
 function convertNumbersToKurdish(text) {
   return text.replace(/-?\d+([.,]\d+)?/g, (match) => {
-    // Handle decimal numbers (e.g. 3,14 or 3.14)
     const decSep = match.includes(',') ? ',' : match.includes('.') ? '.' : null;
     if (decSep) {
       const [intPart, decPart] = match.split(decSep);
       const intWord = numberToKurdish(Math.abs(parseInt(intPart, 10)));
       const prefix = intPart.startsWith('-') ? 'negatîf ' : '';
-      // Read decimal digits one by one
       const decWords = decPart.split('').map(d => ONES[parseInt(d, 10)]).join(' ');
       return prefix + intWord + ' niqte ' + decWords;
     }
@@ -57,45 +51,47 @@ function convertNumbersToKurdish(text) {
 }
 
 /**
- * Fetch Kurdish TTS audio from KurdishTTS.com API
+ * Fetch Kurdish TTS audio from HuggingFace Gradio API (amedcj/kmr_tts)
  */
 async function fetchKurdishAudio(text) {
-  // Convert numbers to Kurdish words before sending to TTS
   const kurdishText = convertNumbersToKurdish(text);
-
-  // Check cache first
   const cacheKey = kurdishText.trim().toLowerCase();
-  if (audioCache.has(cacheKey)) {
-    return audioCache.get(cacheKey);
-  }
+  if (audioCache.has(cacheKey)) return audioCache.get(cacheKey);
 
-  const response = await fetch(API_URL, {
+  // Step 1: Submit the request
+  const callRes = await fetch(HF_API + '/call/text_to_speech', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      text: kurdishText,
-      speaker_id: SPEAKER_ID,
-    }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ data: [kurdishText] }),
   });
+  if (!callRes.ok) throw new Error('TTS call failed: ' + callRes.status);
+  const { event_id } = await callRes.json();
 
-  if (!response.ok) {
-    throw new Error(`TTS API error: ${response.status}`);
-  }
+  // Step 2: Get the result (SSE stream)
+  const resultRes = await fetch(HF_API + '/call/text_to_speech/' + event_id);
+  if (!resultRes.ok) throw new Error('TTS result failed: ' + resultRes.status);
+  const sseText = await resultRes.text();
 
-  const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
+  // Parse SSE: find the "data:" line with the JSON payload
+  const dataMatch = sseText.match(/^data:\s*(.+)$/m);
+  if (!dataMatch) throw new Error('No data in TTS response');
+  const payload = JSON.parse(dataMatch[1]);
+  const audioUrl = payload[0]?.url;
+  if (!audioUrl) throw new Error('No audio URL in TTS response');
 
-  // Cache the result
-  audioCache.set(cacheKey, url);
+  // Step 3: Fetch the audio file
+  const audioRes = await fetch(audioUrl);
+  if (!audioRes.ok) throw new Error('Audio fetch failed: ' + audioRes.status);
+  const blob = await audioRes.blob();
+  const blobUrl = URL.createObjectURL(blob);
 
-  return url;
+  audioCache.set(cacheKey, blobUrl);
+  return blobUrl;
 }
 
 /**
  * Text-to-Speech hook for Kurdish Kurmanji.
- * Uses KurdishTTS.com API for native Kurmanji pronunciation.
+ * Uses HuggingFace amedcj/kmr_tts for native Kurmanji pronunciation.
  * Falls back to browser TTS if API fails.
  */
 export function useSpeech() {
@@ -105,44 +101,29 @@ export function useSpeech() {
   const speak = useCallback(async (text, { slow = false } = {}) => {
     if (!text) return;
 
-    // Stop any current playback
     if (audioRef.current) {
       audioRef.current.pause();
       audioRef.current = null;
     }
     window.speechSynthesis?.cancel();
-
     setIsSpeaking(true);
 
     try {
-      // Try Kurdish TTS API
       const audioUrl = await fetchKurdishAudio(text);
       const audio = new Audio(audioUrl);
       audio.playbackRate = slow ? 0.75 : 1.0;
       audioRef.current = audio;
-
-      audio.onended = () => {
-        setIsSpeaking(false);
-        audioRef.current = null;
-      };
-      audio.onerror = () => {
-        setIsSpeaking(false);
-        audioRef.current = null;
-      };
-
+      audio.onended = () => { setIsSpeaking(false); audioRef.current = null; };
+      audio.onerror = () => { setIsSpeaking(false); audioRef.current = null; };
       await audio.play();
     } catch (err) {
       console.warn('Kurdish TTS API failed, falling back to browser TTS:', err);
-      // Fallback to browser TTS with Turkish voice
       fallbackSpeak(text, slow);
     }
   }, []);
 
   const stop = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     window.speechSynthesis?.cancel();
     setIsSpeaking(false);
   }, []);
@@ -150,29 +131,19 @@ export function useSpeech() {
   return { speak, stop, isSpeaking, isSupported: true };
 }
 
-/**
- * Fallback: Browser TTS with Turkish voice
- */
 function fallbackSpeak(text, slow) {
   if (!window.speechSynthesis) return;
-
   let s = convertNumbersToKurdish(text);
-  s = s.replace(/[Êê]/g, 'e');
-  s = s.replace(/Î/g, 'İ');
-  s = s.replace(/î/g, 'i');
-  s = s.replace(/[Ûû]/g, 'u');
-  s = s.replace(/[Xx]/g, 'h');
-  s = s.replace(/[Ww]/g, 'v');
-  s = s.replace(/[Qq]/g, 'k');
-
+  s = s.replace(/[Êê]/g, 'e').replace(/Î/g, 'İ').replace(/î/g, 'i');
+  s = s.replace(/[Ûû]/g, 'u').replace(/[Xx]/g, 'h');
+  s = s.replace(/[Ww]/g, 'v').replace(/[Qq]/g, 'k');
   const utterance = new SpeechSynthesisUtterance(s);
   utterance.lang = 'tr-TR';
   utterance.rate = slow ? 0.7 : 0.85;
   utterance.pitch = 1.0;
-
   const voices = speechSynthesis.getVoices();
-  const turkishVoice = voices.find(v => v.lang === 'tr-TR' || v.lang.startsWith('tr'));
-  if (turkishVoice) utterance.voice = turkishVoice;
-
+  const trVoice = voices.find(v => v.lang === 'tr-TR' || v.lang.startsWith('tr'));
+  if (trVoice) utterance.voice = trVoice;
+  utterance.onend = () => {};
   speechSynthesis.speak(utterance);
 }
