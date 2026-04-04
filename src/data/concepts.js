@@ -849,11 +849,11 @@ export const ALL_CONCEPTS = [
     "ex": "3 + 2 = 5 zêdekirina lirexhev e.",
     "s": 2,
     "visual": {
-      "type": "operation",
+      "type": "custom",
       "params": {
-        "op": "add",
-        "a": 3,
-        "b": 2
+        "icon": "➡️",
+        "formula": "3 + 2 = 5",
+        "label": "lirexhev"
       }
     }
   },
@@ -866,11 +866,11 @@ export const ALL_CONCEPTS = [
     "ex": "  23\n+ 14\n  37",
     "s": 2,
     "visual": {
-      "type": "operation",
+      "type": "custom",
       "params": {
-        "op": "add",
-        "a": 23,
-        "b": 14
+        "icon": "⬇️",
+        "formula": "23+14=37",
+        "label": "libinhev"
       }
     }
   },
@@ -984,11 +984,11 @@ export const ALL_CONCEPTS = [
     "ex": "5 − 2 = 3 kemkirina lirexhev e.",
     "s": 2,
     "visual": {
-      "type": "operation",
+      "type": "custom",
       "params": {
-        "op": "sub",
-        "a": 5,
-        "b": 2
+        "icon": "➡️",
+        "formula": "5 − 2 = 3",
+        "label": "lirexhev"
       }
     }
   },
@@ -1001,11 +1001,11 @@ export const ALL_CONCEPTS = [
     "ex": "  45\n− 23\n  22",
     "s": 2,
     "visual": {
-      "type": "operation",
+      "type": "custom",
       "params": {
-        "op": "sub",
-        "a": 45,
-        "b": 23
+        "icon": "⬇️",
+        "formula": "45−23=22",
+        "label": "libinhev"
       }
     }
   },
