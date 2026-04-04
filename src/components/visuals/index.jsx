@@ -1404,7 +1404,105 @@ export function AreaModelVisual({ params = {}, theme, size = 160 }) {
   );
 }
 
-// ─── 25. CustomVisual ────────────────────────────────────────────────────────
+// ─── 25a. RegroupingVisual (eldeli toplama / onluk bozma) ───────────────────
+export function RegroupingVisual({ params = {}, theme, size = 160 }) {
+  const uid = useId().replace(/:/g, '');
+  const c = vColors(theme);
+  const { op = 'add', a = 18, b = 24, carry = true } = params;
+  const result = op === 'add' ? a + b : a - b;
+  const opSym = op === 'add' ? '+' : '−';
+  const opColor = op === 'add' ? c.fill3 : c.fill5;
+  const carryColor = op === 'add' ? '#E76F51' : '#3B82F6';
+
+  const cx = size / 2;
+  const startY = size * 0.15;
+  const rowH = size * 0.18;
+  const digitW = size * 0.14;
+  const fs = size * 0.12;
+  const fsSmall = size * 0.07;
+
+  const aStr = String(a).padStart(2, ' ');
+  const bStr = String(b).padStart(2, ' ');
+  const maxLen = Math.max(aStr.length, bStr.length, String(result).length);
+  const rPad = String(result).padStart(maxLen, ' ');
+  const rightX = cx + digitW * 0.9;
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
+      aria-label={`${a} ${opSym} ${b} = ${result}`}>
+      <defs>
+        <ShadowDef id={`${uid}_sh`} blur={1.5} opacity={0.12} />
+        {carry && (
+          <marker id={`${uid}_arr`} markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,1 L5,3 L0,5 Z" fill={carryColor} />
+          </marker>
+        )}
+      </defs>
+
+      {/* Card bg */}
+      <rect x={size*0.1} y={size*0.06} width={size*0.8} height={size*0.74}
+        rx={size*0.06} fill={c.white} stroke={c.line} strokeWidth={1}
+        filter={`url(#${uid}_sh)`} />
+
+      {/* Carry indicator */}
+      {carry && op === 'add' && (
+        <>
+          <path d={`M${rightX} ${startY + rowH*0.3} Q${rightX - digitW*0.5} ${startY - rowH*0.1} ${rightX - digitW} ${startY + rowH*0.3}`}
+            fill="none" stroke={carryColor} strokeWidth={1.3} strokeDasharray="3 2"
+            markerEnd={`url(#${uid}_arr)`} />
+          <text x={rightX - digitW} y={startY + rowH*0.22}
+            textAnchor="middle" fontSize={fsSmall} fontWeight={800} fill={carryColor}>1</text>
+        </>
+      )}
+      {carry && op === 'sub' && (
+        <>
+          <path d={`M${rightX - digitW} ${startY + rowH*0.3} Q${rightX - digitW*0.5} ${startY - rowH*0.1} ${rightX} ${startY + rowH*0.3}`}
+            fill="none" stroke={carryColor} strokeWidth={1.3} strokeDasharray="3 2"
+            markerEnd={`url(#${uid}_arr)`} />
+          <line x1={rightX - digitW - digitW*0.15} y1={startY + rowH*0.5}
+            x2={rightX - digitW + digitW*0.15} y2={startY + rowH*0.8}
+            stroke={carryColor} strokeWidth={1.2} />
+        </>
+      )}
+
+      {/* Row 1: first number */}
+      {aStr.split('').map((d, i) => (
+        <text key={`a${i}`} x={rightX - (aStr.length - 1 - i) * digitW} y={startY + rowH}
+          textAnchor="middle" fontSize={fs} fontWeight={700} fill={c.text}
+          fontFamily="'Inter',system-ui,monospace">{d}</text>
+      ))}
+
+      {/* Row 2: operator + second number */}
+      <text x={rightX - maxLen * digitW + digitW*0.15} y={startY + rowH*2}
+        textAnchor="middle" fontSize={fs} fontWeight={800} fill={opColor}
+        fontFamily="'Inter',system-ui,monospace">{opSym}</text>
+      {bStr.split('').map((d, i) => (
+        <text key={`b${i}`} x={rightX - (bStr.length - 1 - i) * digitW} y={startY + rowH*2}
+          textAnchor="middle" fontSize={fs} fontWeight={700} fill={c.text}
+          fontFamily="'Inter',system-ui,monospace">{d}</text>
+      ))}
+
+      {/* Line */}
+      <line x1={size*0.16} y1={startY + rowH*2.28} x2={size*0.84} y2={startY + rowH*2.28}
+        stroke={c.text} strokeWidth={1.8} />
+
+      {/* Row 3: result */}
+      {rPad.split('').map((d, i) => (
+        <text key={`r${i}`} x={rightX - (rPad.length - 1 - i) * digitW} y={startY + rowH*3.15}
+          textAnchor="middle" fontSize={fs} fontWeight={800} fill={opColor}
+          fontFamily="'Inter',system-ui,monospace">{d}</text>
+      ))}
+
+      {/* Label */}
+      <text x={cx} y={size * 0.92} textAnchor="middle"
+        fontSize={fsSmall} fontWeight={600} fill={c.dim}>
+        {carry ? (op === 'add' ? 'didestdemayî' : 'bi standinê') : (op === 'add' ? 'bêdestdemayî' : 'bê standinê')}
+      </text>
+    </svg>
+  );
+}
+
+// ─── 25b. CustomVisual ──────────────────────────────────────────────────────
 export function CustomVisual({ params = {}, theme, size = 160 }) {
   const c = vColors(theme);
   const { icon = '🔢', label = '', formula = '' } = params;
@@ -1469,6 +1567,7 @@ export function ConceptVisual({ visual, theme, size = 160 }) {
       case 'number_grid':    return <NumberGridVisual params={p} theme={t} size={size} />;
       case 'arrow_sequence': return <ArrowSequenceVisual params={p} theme={t} size={size} />;
       case 'area_model':     return <AreaModelVisual params={p} theme={t} size={size} />;
+      case 'regrouping':     return <RegroupingVisual params={p} theme={t} size={size} />;
       default:               return <CustomVisual params={p} theme={t} size={size} />;
     }
   };

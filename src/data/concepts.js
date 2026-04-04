@@ -883,11 +883,12 @@ export const ALL_CONCEPTS = [
     "ex": "18 + 24 = 42: 8+4=12, em 2 dinivîsin û 1 di dest de dimîne.",
     "s": 2,
     "visual": {
-      "type": "custom",
+      "type": "regrouping",
       "params": {
-        "icon": "🔢",
-        "formula": "18+24=42",
-        "label": "didestdemayî"
+        "op": "add",
+        "a": 18,
+        "b": 24,
+        "carry": true
       }
     }
   },
@@ -900,11 +901,12 @@ export const ALL_CONCEPTS = [
     "ex": "23 + 14 = 37: 3+4=7, 2+1=3, tiştek di dest de namîne.",
     "s": 2,
     "visual": {
-      "type": "custom",
+      "type": "regrouping",
       "params": {
-        "icon": "🔢",
-        "formula": "23+14=37",
-        "label": "bêdestdemayî"
+        "op": "add",
+        "a": 23,
+        "b": 14,
+        "carry": false
       }
     }
   },
@@ -1052,11 +1054,12 @@ export const ALL_CONCEPTS = [
     "ex": "42 − 27 = 15: ji 2 yekaniyan 7 dernakeve, em 1 dehanî distînin û dibe 12; 12−7=5.",
     "s": 2,
     "visual": {
-      "type": "custom",
+      "type": "regrouping",
       "params": {
-        "icon": "🔢",
-        "formula": "42−27=15",
-        "label": "bi standinê"
+        "op": "sub",
+        "a": 42,
+        "b": 27,
+        "carry": true
       }
     }
   },
@@ -1069,11 +1072,12 @@ export const ALL_CONCEPTS = [
     "ex": "48 − 23 = 25: 8−3=5, 4−2=2, standin ne hewce ye.",
     "s": 2,
     "visual": {
-      "type": "custom",
+      "type": "regrouping",
       "params": {
-        "icon": "🔢",
-        "formula": "48−23=25",
-        "label": "bê standinê"
+        "op": "sub",
+        "a": 48,
+        "b": 23,
+        "carry": false
       }
     }
   },
