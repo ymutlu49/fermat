@@ -27,9 +27,9 @@ export const TOUCH_MIN = 44;
 // ── Color themes ────────────────────────────────────────────────────────────
 export const THEME = {
   light: {
-    primary: '#0F4C5C', primaryLight: '#1A6B7F', primarySoft: '#E8F4F8',
-    accent: '#E76F51', accentHover: '#D4573B', accentSoft: '#FFF0EC',
-    success: '#2D6A4F', successLight: '#D8F3DC',
+    primary: '#0D9488', primaryLight: '#14B8A6', primarySoft: '#E6FAF8',
+    accent: '#EA580C', accentHover: '#C2410C', accentSoft: '#FFF0EC',
+    success: '#15803D', successLight: '#DCFCE7',
     warning: '#E9C46A', warningLight: '#FFF8E1',
     error: '#E63946', errorLight: '#FFE8EA',
     bg: '#FAFBFC', surface: '#FFFFFF', surfaceHover: '#F5F7FA',
@@ -41,8 +41,8 @@ export const THEME = {
     navShadow: '0 -1px 4px rgba(0,0,0,0.05)',
   },
   dark: {
-    primary: '#4ECDC4', primaryLight: '#6EE7DE', primarySoft: '#0D2B2A',
-    accent: '#FF6B6B', accentHover: '#FF5252', accentSoft: '#2B1A1A',
+    primary: '#2DD4BF', primaryLight: '#5EEAD4', primarySoft: '#0D2B2A',
+    accent: '#FB923C', accentHover: '#F97316', accentSoft: '#2B1A1A',
     success: '#52B788', successLight: '#1A2F25',
     warning: '#F4D35E', warningLight: '#2B2614',
     error: '#FF6B6B', errorLight: '#2B1A1A',

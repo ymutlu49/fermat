@@ -20,13 +20,14 @@ import {
 import { trackEvent, trackSession } from '@utils/analytics.js';
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
+// Logo colors: Teal #0D9488, Coral #EA580C, Green #15803D, Dark #0F4C5C
 const NAV_ITEMS = [
-  { id: 'home',     icon: IconHome,      label: 'Malper',    color: '#0F766E' },
-  { id: 'dict',     icon: IconBook,      label: 'Ferheng',   color: '#2563EB' },
-  { id: 'flash',    icon: IconCards,     label: 'Fêrbûn',    color: '#EA580C' },
-  { id: 'games',    icon: IconGamepad,   label: 'Lîstik',    color: '#16A34A' },
-  { id: 'stats',    icon: IconBarChart,  label: 'Agahî',     color: '#B45309' },
-  { id: 'more',     icon: IconMoreHorizontal, label: 'Zêdetir', color: '#64748B' },
+  { id: 'home',     icon: IconHome,      label: 'Malper' },
+  { id: 'dict',     icon: IconBook,      label: 'Ferheng' },
+  { id: 'flash',    icon: IconCards,     label: 'Fêrbûn' },
+  { id: 'games',    icon: IconGamepad,   label: 'Lîstik' },
+  { id: 'stats',    icon: IconBarChart,  label: 'Agahî' },
+  { id: 'more',     icon: IconMoreHorizontal, label: 'Zêdetir' },
 ];
 
 // Views that belong to "games" and "more" hub tabs
@@ -136,28 +137,27 @@ export default function App() {
           {/* Top bar */}
           <header style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: `${SPACING.sm}px ${isMobile ? SPACING.md : SPACING.lg}px`,
-            background: t.surface,
-            borderBottom: '1px solid ' + t.border,
+            padding: `0 ${isMobile ? SPACING.md : SPACING.lg}px`,
+            background: isDark ? '#0F4C5C' : '#0F4C5C',
             flexShrink: 0, zIndex: 10,
-            minHeight: TOUCH_MIN,
+            minHeight: 48,
           }}>
             <div style={{
-              fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: t.text,
+              fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: '#FFFFFF',
             }}>
               {VIEW_TITLES[view] || 'FerMat'}
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <IconBtn onClick={toggleSound} label={isSoundEnabled ? 'Dengê daxe' : 'Deng veke'} theme={t}>
                 {isSoundEnabled
-                  ? <IconVolume size={18} color={t.textMuted} />
-                  : <IconVolumeMute size={18} color={t.textMuted} />
+                  ? <IconVolume size={18} color="rgba(255,255,255,0.7)" />
+                  : <IconVolumeMute size={18} color="rgba(255,255,255,0.5)" />
                 }
               </IconBtn>
               <IconBtn onClick={toggleTheme} label={isDark ? 'Ronahîyê veke' : 'Tarîyê veke'} theme={t}>
                 {isDark
-                  ? <IconSun size={18} color={t.textMuted} />
-                  : <IconMoon size={18} color={t.textMuted} />
+                  ? <IconSun size={18} color="rgba(255,255,255,0.7)" />
+                  : <IconMoon size={18} color="rgba(255,255,255,0.7)" />
                 }
               </IconBtn>
             </div>
@@ -280,7 +280,8 @@ export default function App() {
               borderTop: '1px solid ' + t.border,
               flexShrink: 0,
               zIndex: 10,
-              paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+              padding: `4px 8px`,
+              paddingBottom: `calc(4px + env(safe-area-inset-bottom, 0px))`,
             }}
           >
             {NAV_ITEMS.map(item => {
@@ -288,6 +289,7 @@ export default function App() {
                 || (item.id === 'games' && GAMES_VIEWS.includes(view))
                 || (item.id === 'more' && MORE_VIEWS.includes(view));
               const Icon = item.icon;
+              const activeColor = '#0D9488'; // Logo teal
               return (
                 <button
                   key={item.id}
@@ -301,23 +303,27 @@ export default function App() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: `${SPACING.sm}px 0`,
+                    padding: `6px 0`,
                     minHeight: navHeight,
-                    background: 'none',
+                    background: isActive
+                      ? (isDark ? 'rgba(13,148,136,0.15)' : 'rgba(13,148,136,0.08)')
+                      : 'none',
+                    borderRadius: 12,
                     border: 'none',
                     cursor: 'pointer',
-                    color: isActive ? t.primary : t.textMuted,
                     fontFamily: 'inherit',
                     WebkitTapHighlightColor: 'transparent',
                     userSelect: 'none',
+                    transition: `background ${DURATION.fast}`,
                   }}
                 >
                   <span style={{ display: 'flex', marginBottom: 3 }}>
-                    <Icon size={20} color={isActive ? t.primary : t.textMuted} />
+                    <Icon size={20} color={isActive ? activeColor : t.textMuted} />
                   </span>
                   <span style={{
                     fontSize: '0.58rem',
                     fontWeight: isActive ? FONT_WEIGHT.bold : FONT_WEIGHT.medium,
+                    color: isActive ? activeColor : t.textMuted,
                     lineHeight: 1,
                   }}>
                     {item.label}
@@ -335,9 +341,9 @@ export default function App() {
 // ── Games Hub View ───────────────────────────────────────────────────────────
 function GamesHubView({ theme: t, isDark, setView }) {
   const games = [
-    { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',  color: '#16A34A' },
-    { id: 'match', icon: IconPuzzle,   label: 'Cot Bike',  desc: 'Peyv û wateyan bide hev', color: '#7C3AED' },
-    { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse', color: '#1D4ED8' },
+    { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',  color: '#15803D' },
+    { id: 'match', icon: IconPuzzle,   label: 'Cot Bike',  desc: 'Peyv û wateyan bide hev', color: '#0D9488' },
+    { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse', color: '#EA580C' },
   ];
   return (
     <PageContainer>

@@ -4,10 +4,11 @@ import { ALL_CONCEPTS, LEITNER_KNOWN_BOX, FONT_SIZE, FONT_WEIGHT } from '@data';
 import { ScoreCircle, PageContainer, SectionCard, ActionRow } from '@components/ui';
 import { IconBook, IconCards, IconGamepad } from '@components/icons';
 
+// Logo colors: Teal, Coral, Green
 const ACTIONS = [
-  { id: 'dict',  icon: IconBook,    label: 'Ferheng',  desc: 'Hemû têgehan bibîne', color: '#2563EB' },
+  { id: 'dict',  icon: IconBook,    label: 'Ferheng',  desc: 'Hemû têgehan bibîne', color: '#0D9488' },
   { id: 'flash', icon: IconCards,   label: 'Fêrbûn',   desc: 'Bi kartan fêr bibe',  color: '#EA580C' },
-  { id: 'games', icon: IconGamepad, label: 'Lîstik',   desc: 'Azmûn, cot bike...',  color: '#16A34A' },
+  { id: 'games', icon: IconGamepad, label: 'Lîstik',   desc: 'Azmûn, cot bike...',  color: '#15803D' },
 ];
 
 export default function HomeView({ theme, isDark, progress, setView }) {
