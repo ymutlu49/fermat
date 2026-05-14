@@ -1,0 +1,15 @@
+node_modules
+dist
+build
+coverage
+*.lock
+package-lock.json
+.git
+android-twa
+keys
+*.pem
+*.keystore
+*.aab
+*.apk
+public/sw.js
+src/data/concepts.js
