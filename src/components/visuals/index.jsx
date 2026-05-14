@@ -577,9 +577,22 @@ export function GeometryVisual({ visual, params = {}, theme, size = 160 }) {
   const cx = size / 2, cy = size * 0.47;
   const s = size * 0.36;
 
+  // Shared gradient + shadow definitions used by every shape variant below.
+  // Body gradient lifts flat fills off the surface; sphereGrad makes vertex
+  // dots feel like physical pins instead of stickers.
   const mkSvg = (content, ariaLabel) => (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={ariaLabel}>
       <defs>
+        <linearGradient id={`${uid}_body`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.85)} />
+          <stop offset="100%" stopColor={c.soft1} />
+        </linearGradient>
+        <linearGradient id={`${uid}_stroke`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor={c.fill1} />
+          <stop offset="100%" stopColor={darken(c.fill1, 0.15)} />
+        </linearGradient>
+        <SphereGradient id={`${uid}_vert`} base={c.fill1} cx="32%" cy="28%" />
+        <RichShadow id={`${uid}_rich`} near={1.2} far={3} />
         <marker id={`${uid}_al`} markerWidth="7" markerHeight="7" refX="3.5" refY="3.5" orient="auto">
           <path d="M0,0.5 L6.5,3.5 L0,6.5 Z" fill={c.fill1} />
         </marker>
@@ -592,12 +605,20 @@ export function GeometryVisual({ visual, params = {}, theme, size = 160 }) {
     </svg>
   );
 
+  // Helper: a sphere-look vertex point
+  const vertex = (key, x, y, r = 4) => (
+    <g key={key} filter={`url(#${uid}_rich)`}>
+      <circle cx={x} cy={y} r={r} fill={c.fill1} />
+      <circle cx={x} cy={y} r={r} fill={`url(#${uid}_vert)`} />
+    </g>
+  );
+
   if (type === 'point') {
     return mkSvg(<>
       <line x1={cx-s} y1={cy} x2={cx+s} y2={cy} stroke={c.line} strokeWidth={1} strokeDasharray="5,4" />
       <line x1={cx} y1={cy-s} x2={cx} y2={cy+s} stroke={c.line} strokeWidth={1} strokeDasharray="5,4" />
-      <circle cx={cx} cy={cy} r={7} fill={c.fill1} filter={`url(#${uid}_sh)`} />
-      <text x={cx+12} y={cy-10} fontSize={12} fontWeight={700} fill={c.fill1}>A</text>
+      {vertex('p', cx, cy, 8)}
+      <text x={cx+14} y={cy-12} fontSize={13} fontWeight={800} fill={c.fill1}>A</text>
     </>, 'xal');
   }
   if (type === 'line') {
@@ -609,19 +630,19 @@ export function GeometryVisual({ visual, params = {}, theme, size = 160 }) {
   }
   if (type === 'segment') {
     return mkSvg(<>
-      <line x1={22} y1={cy} x2={size-22} y2={cy} stroke={c.fill1} strokeWidth={2.5} />
-      <circle cx={22} cy={cy} r={5} fill={c.fill1} />
-      <circle cx={size-22} cy={cy} r={5} fill={c.fill1} />
-      <text x={22} y={cy-12} fontSize={11} fontWeight={700} fill={c.fill1}>A</text>
-      <text x={size-22} y={cy-12} fontSize={11} fontWeight={700} fill={c.fill1}>B</text>
+      <line x1={22} y1={cy} x2={size-22} y2={cy} stroke={`url(#${uid}_stroke)`} strokeWidth={3} strokeLinecap="round" />
+      {vertex('a', 22, cy, 5.5)}
+      {vertex('b', size-22, cy, 5.5)}
+      <text x={22} y={cy-14} fontSize={11} fontWeight={800} fill={c.fill1}>A</text>
+      <text x={size-22} y={cy-14} fontSize={11} fontWeight={800} fill={c.fill1}>B</text>
     </>, 'beş');
   }
   if (type === 'ray') {
     return mkSvg(<>
-      <line x1={22} y1={cy} x2={size-18} y2={cy} stroke={c.fill1} strokeWidth={2.5}
+      <line x1={22} y1={cy} x2={size-18} y2={cy} stroke={`url(#${uid}_stroke)`} strokeWidth={3} strokeLinecap="round"
         markerEnd={`url(#${uid}_al)`} />
-      <circle cx={22} cy={cy} r={5} fill={c.fill1} />
-      <text x={22} y={cy-12} fontSize={11} fontWeight={700} fill={c.fill1}>A</text>
+      {vertex('a', 22, cy, 5.5)}
+      <text x={22} y={cy-14} fontSize={11} fontWeight={800} fill={c.fill1}>A</text>
     </>, 'tîr');
   }
   if (type === 'parallel') {
@@ -655,42 +676,57 @@ export function GeometryVisual({ visual, params = {}, theme, size = 160 }) {
     }
     const pStr = pts.map(p => p.join(',')).join(' ');
     return mkSvg(<>
-      <polygon points={pStr} fill={c.soft1} stroke={c.fill1} strokeWidth={2.5}
-        filter={`url(#${uid}_sh)`} strokeLinejoin="round" />
+      <g filter={`url(#${uid}_rich)`}>
+        <polygon points={pStr} fill={`url(#${uid}_body)`} stroke={`url(#${uid}_stroke)`} strokeWidth={2.5}
+          strokeLinejoin="round" />
+      </g>
       {type === 'right_triangle' && (
-        <rect x={pts[0][0]} y={pts[0][1]} width={10} height={10}
-          fill="none" stroke={c.fill1} strokeWidth={1.8} />
+        <rect x={pts[0][0]} y={pts[0][1]} width={12} height={12}
+          fill="none" stroke={c.fill1} strokeWidth={1.8} strokeOpacity={0.55} />
       )}
-      {pts.map((p, i) => (
-        <circle key={i} cx={p[0]} cy={p[1]} r={4} fill={c.fill1} />
-      ))}
+      {pts.map((p, i) => vertex(`v${i}`, p[0], p[1], 4.5))}
     </>, 'sêgoşe');
   }
   if (type === 'quadrilateral' || type === 'square' || type === 'rectangle') {
     const rw = type === 'rectangle' ? s * 1.55 : s * 0.92;
     const rh = s * 0.92;
     return mkSvg(<>
-      <rect x={cx-rw/2} y={cy-rh/2} width={rw} height={rh}
-        fill={c.soft1} stroke={c.fill1} strokeWidth={2.5} rx={type === 'quadrilateral' ? 3 : 0}
-        filter={`url(#${uid}_sh)`} />
+      <g filter={`url(#${uid}_rich)`}>
+        <rect x={cx-rw/2} y={cy-rh/2} width={rw} height={rh}
+          fill={`url(#${uid}_body)`} stroke={`url(#${uid}_stroke)`} strokeWidth={2.5}
+          rx={type === 'quadrilateral' ? 4 : 0} strokeLinejoin="round" />
+      </g>
       {type === 'square' && <>
-        {/* Equal side marks */}
-        <line x1={cx-rw/2+4} y1={cy-4} x2={cx-rw/2+11} y2={cy-4} stroke={c.fill1} strokeWidth={2} />
-        <line x1={cx+rw/2-11} y1={cy-4} x2={cx+rw/2-4} y2={cy-4} stroke={c.fill1} strokeWidth={2} />
-        <line x1={cx-4} y1={cy-rh/2+4} x2={cx-4} y2={cy-rh/2+11} stroke={c.fill1} strokeWidth={2} />
-        <line x1={cx-4} y1={cy+rh/2-11} x2={cx-4} y2={cy+rh/2-4} stroke={c.fill1} strokeWidth={2} />
+        {/* Equal side ticks */}
+        <line x1={cx-rw/2+4} y1={cy-4} x2={cx-rw/2+11} y2={cy-4} stroke={c.fill1} strokeWidth={2} strokeLinecap="round" />
+        <line x1={cx+rw/2-11} y1={cy-4} x2={cx+rw/2-4} y2={cy-4} stroke={c.fill1} strokeWidth={2} strokeLinecap="round" />
+        <line x1={cx-4} y1={cy-rh/2+4} x2={cx-4} y2={cy-rh/2+11} stroke={c.fill1} strokeWidth={2} strokeLinecap="round" />
+        <line x1={cx-4} y1={cy+rh/2-11} x2={cx-4} y2={cy+rh/2-4} stroke={c.fill1} strokeWidth={2} strokeLinecap="round" />
       </>}
+      {/* Corner vertices */}
+      {vertex('c1', cx-rw/2, cy-rh/2, 3.5)}
+      {vertex('c2', cx+rw/2, cy-rh/2, 3.5)}
+      {vertex('c3', cx+rw/2, cy+rh/2, 3.5)}
+      {vertex('c4', cx-rw/2, cy+rh/2, 3.5)}
     </>, type === 'square' ? 'çargoşe' : type === 'rectangle' ? 'tîrêj' : 'çargoşe');
   }
   if (type === 'circle') {
     const { showRadius = true } = params;
     return mkSvg(<>
-      <circle cx={cx} cy={cy} r={s} fill={c.soft1} stroke={c.fill1} strokeWidth={2.5}
-        filter={`url(#${uid}_sh)`} />
-      <circle cx={cx} cy={cy} r={4} fill={c.fill1} />
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={cx} cy={cy} r={s} fill={`url(#${uid}_body)`}
+          stroke={`url(#${uid}_stroke)`} strokeWidth={2.5} />
+      </g>
+      {/* Glossy specular arc top-left */}
+      <path
+        d={`M ${cx - s * 0.55},${cy - s * 0.65} A ${s * 0.85},${s * 0.85} 0 0,1 ${cx + s * 0.20},${cy - s * 0.85}`}
+        stroke="#fff" strokeWidth={s * 0.14} strokeLinecap="round"
+        fill="none" opacity="0.30"
+      />
+      {vertex('o', cx, cy, 4)}
       {showRadius && <>
         <line x1={cx} y1={cy} x2={cx+s} y2={cy} stroke={c.fill2} strokeWidth={1.8} strokeDasharray="5,3" />
-        <text x={cx+s/2} y={cy-8} textAnchor="middle" fontSize={11} fontWeight={700} fill={c.fill2}>r</text>
+        <text x={cx+s/2} y={cy-10} textAnchor="middle" fontSize={11} fontWeight={800} fill={c.fill2}>r</text>
       </>}
     </>, 'xemberî');
   }
@@ -702,111 +738,167 @@ export function GeometryVisual({ visual, params = {}, theme, size = 160 }) {
     const x3 = cx + len * Math.cos(-rad), y3 = cy + len * Math.sin(-rad);
     const arcR = len * 0.38;
     const large = degrees > 180 ? 1 : 0;
+    // Filled arc using coral gradient so the angle wedge reads as a real surface
     return mkSvg(<>
-      <circle cx={cx} cy={cy} r={5} fill={c.fill1} />
-      <line x1={cx} y1={cy} x2={x2} y2={y2} stroke={c.fill1} strokeWidth={2.5} />
-      <line x1={cx} y1={cy} x2={x3} y2={y3} stroke={c.fill1} strokeWidth={2.5} />
-      <path d={`M${cx+arcR},${cy} A${arcR},${arcR} 0 ${large},1 ${cx+arcR*Math.cos(-rad)},${cy+arcR*Math.sin(-rad)}`}
-        fill={c.soft2} stroke={c.fill2} strokeWidth={2} opacity={0.9} />
+      <line x1={cx} y1={cy} x2={x2} y2={y2} stroke={`url(#${uid}_stroke)`} strokeWidth={2.8} strokeLinecap="round" />
+      <line x1={cx} y1={cy} x2={x3} y2={y3} stroke={`url(#${uid}_stroke)`} strokeWidth={2.8} strokeLinecap="round" />
+      <path
+        d={`M${cx},${cy} L${cx+arcR},${cy} A${arcR},${arcR} 0 ${large},1 ${cx+arcR*Math.cos(-rad)},${cy+arcR*Math.sin(-rad)} Z`}
+        fill={c.soft2}
+        stroke={c.fill2}
+        strokeWidth={1.5}
+        opacity={0.92}
+      />
+      {vertex('o', cx, cy, 5)}
       <text x={cx + arcR * 1.55 * Math.cos(-rad / 2)}
         y={cy + arcR * 1.55 * Math.sin(-rad / 2) + 4}
-        textAnchor="middle" fontSize={11} fontWeight={800} fill={c.fill2}>{degrees}°</text>
+        textAnchor="middle" fontSize={12} fontWeight={800} fill={c.fill2}>{degrees}°</text>
     </>, `${degrees} derece goşe`);
   }
   // Default triangle
   const pts = [[cx, cy-s], [cx-s, cy+s*0.72], [cx+s, cy+s*0.72]];
   return mkSvg(<>
-    <polygon points={pts.map(p=>p.join(',')).join(' ')}
-      fill={c.soft1} stroke={c.fill1} strokeWidth={2.5}
-      filter={`url(#${uid}_sh)`} strokeLinejoin="round" />
+    <g filter={`url(#${uid}_rich)`}>
+      <polygon points={pts.map(p=>p.join(',')).join(' ')}
+        fill={`url(#${uid}_body)`} stroke={`url(#${uid}_stroke)`} strokeWidth={2.5}
+        strokeLinejoin="round" />
+    </g>
+    {pts.map((p, i) => vertex(`v${i}`, p[0], p[1], 4))}
   </>, 'şekl');
 }
 
 // ─── 8. Geometry3DVisual ─────────────────────────────────────────────────────
+// Polished: 3D primitives wear face-specific gradients (top brightest, sides
+// graduated) plus a top-left specular highlight that sells the "lit from
+// above" illusion. Ground shadow ellipses anchor each shape on the surface.
 export function Geometry3DVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { shape = 'cube' } = params;
   const cx = size / 2, cy = size * 0.48, s = size * 0.30;
 
+  // Pre-compute palette stops for face shading
+  const topLight  = lighten(c.fill1, 0.35);
+  const sideMid   = c.fill1;
+  const sideDark  = darken(c.fill1, 0.20);
+
   const mkSvg = (content) => (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={shape}>
       <defs>
-        <ShadowDef id={`${uid}_sh`} blur={4} opacity={0.2} />
-        <linearGradient id={`${uid}_topGrad`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor={c.fill1} stopOpacity={0.55} />
-          <stop offset="100%" stopColor={c.fill1} stopOpacity={0.2} />
+        <RichShadow id={`${uid}_rich`} near={1.5} far={4} />
+        <linearGradient id={`${uid}_top`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor={topLight} />
+          <stop offset="100%" stopColor={sideMid} />
         </linearGradient>
-        <linearGradient id={`${uid}_rightGrad`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor={c.fill1} stopOpacity={0.25} />
-          <stop offset="100%" stopColor={c.fill1} stopOpacity={0.08} />
+        <linearGradient id={`${uid}_side`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%"   stopColor={sideMid} />
+          <stop offset="100%" stopColor={sideDark} />
         </linearGradient>
-        <radialGradient id={`${uid}_sphGrad`} cx="38%" cy="32%" r="62%">
-          <stop offset="0%" stopColor={c.white} stopOpacity={0.7} />
-          <stop offset="60%" stopColor={c.fill1} stopOpacity={0.6} />
-          <stop offset="100%" stopColor={c.fill1} stopOpacity={0.95} />
+        <linearGradient id={`${uid}_front`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.15)} />
+          <stop offset="100%" stopColor={sideMid} />
+        </linearGradient>
+        <radialGradient id={`${uid}_sphere`} cx="32%" cy="28%" r="68%">
+          <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.85" />
+          <stop offset="20%"  stopColor={topLight} stopOpacity="0.85" />
+          <stop offset="60%"  stopColor={c.fill1} />
+          <stop offset="100%" stopColor={sideDark} />
         </radialGradient>
       </defs>
+      {/* Ground shadow */}
+      <ellipse cx={cx} cy={cy + s + 8} rx={s * 0.95} ry={s * 0.14}
+        fill="#000" opacity="0.14" />
       {content}
     </svg>
   );
 
   if (shape === 'cube') {
-    const d = s * 0.52; // depth
+    const d = s * 0.52;
+    const x1 = cx - s,  y1 = cy - s * 0.65 + d;     // front-top-left
+    const x2 = cx + s,  y2 = y1;                    // front-top-right
+    const x3 = cx + s,  y3 = cy + s * 0.65 + d;     // front-bottom-right
+    const x4 = cx - s,  y4 = y3;                    // front-bottom-left
+    const x1b = x1 + d, y1b = y1 - d;               // back-top-left
+    const x2b = x2 + d, y2b = y2 - d;               // back-top-right
+    const x3b = x3 + d, y3b = y3 - d;               // back-bottom-right
     return mkSvg(<>
-      {/* Front face */}
-      <rect x={cx-s} y={cy-s*0.65+d} width={s*2} height={s*1.32}
-        fill={c.soft1} stroke={c.fill1} strokeWidth={1.8} filter={`url(#${uid}_sh)`} />
-      {/* Top face */}
-      <polygon
-        points={`${cx-s},${cy-s*0.65+d} ${cx-s+d},${cy-s*0.65} ${cx+s+d},${cy-s*0.65} ${cx+s},${cy-s*0.65+d}`}
-        fill={`url(#${uid}_topGrad)`} stroke={c.fill1} strokeWidth={1.8} />
-      {/* Right face */}
-      <polygon
-        points={`${cx+s},${cy-s*0.65+d} ${cx+s+d},${cy-s*0.65} ${cx+s+d},${cy+s*0.65} ${cx+s},${cy+s*0.65+d}`}
-        fill={`url(#${uid}_rightGrad)`} stroke={c.fill1} strokeWidth={1.8} />
+      <g filter={`url(#${uid}_rich)`}>
+        {/* Right face */}
+        <polygon points={`${x2},${y2} ${x2b},${y2b} ${x3b},${y3b} ${x3},${y3}`}
+          fill={`url(#${uid}_side)`} stroke={sideDark} strokeWidth={0.6} strokeLinejoin="round" />
+        {/* Top face */}
+        <polygon points={`${x1},${y1} ${x1b},${y1b} ${x2b},${y2b} ${x2},${y2}`}
+          fill={`url(#${uid}_top)`} stroke={sideMid} strokeWidth={0.6} strokeLinejoin="round" />
+        {/* Front face */}
+        <polygon points={`${x1},${y1} ${x2},${y2} ${x3},${y3} ${x4},${y4}`}
+          fill={`url(#${uid}_front)`} stroke={sideMid} strokeWidth={0.6} strokeLinejoin="round" />
+      </g>
+      {/* Top-left specular */}
+      <polygon points={`${x1+3},${y1+3} ${x1+s*0.5},${y1+3} ${x1+s*0.5},${y1+8} ${x1+3},${y1+8}`}
+        fill="#fff" opacity="0.18" />
     </>);
   }
   if (shape === 'sphere') {
     return mkSvg(<>
-      <circle cx={cx} cy={cy} r={s*1.05} fill={`url(#${uid}_sphGrad)`}
-        stroke={c.fill1} strokeWidth={1.8} filter={`url(#${uid}_sh)`} />
-      <ellipse cx={cx} cy={cy} rx={s*1.05} ry={s*0.32}
-        fill="none" stroke={c.fill1} strokeWidth={1.2} strokeDasharray="5,3" opacity={0.5} />
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={cx} cy={cy} r={s * 1.05} fill={`url(#${uid}_sphere)`} />
+      </g>
+      {/* Specular highlight */}
+      <ellipse cx={cx - s * 0.34} cy={cy - s * 0.40} rx={s * 0.30} ry={s * 0.18}
+        fill="#fff" opacity="0.55" />
+      {/* Equator hint (dashed) */}
+      <ellipse cx={cx} cy={cy} rx={s * 1.05} ry={s * 0.32}
+        fill="none" stroke={sideDark} strokeWidth={1} strokeDasharray="4,3" opacity="0.40" />
     </>);
   }
   if (shape === 'cylinder') {
     return mkSvg(<>
-      <rect x={cx-s*0.85} y={cy-s} width={s*1.7} height={s*2}
-        fill={c.soft1} stroke={c.fill1} strokeWidth={1.8} />
-      <ellipse cx={cx} cy={cy+s} rx={s*0.85} ry={s*0.28}
-        fill={c.soft1} stroke={c.fill1} strokeWidth={1.8} />
-      <ellipse cx={cx} cy={cy-s} rx={s*0.85} ry={s*0.28}
-        fill={`url(#${uid}_topGrad)`} stroke={c.fill1} strokeWidth={1.8} />
+      <g filter={`url(#${uid}_rich)`}>
+        {/* Side */}
+        <rect x={cx - s * 0.85} y={cy - s} width={s * 1.7} height={s * 2}
+          fill={`url(#${uid}_side)`} stroke={sideMid} strokeWidth={0.8} />
+        {/* Bottom ellipse (visible behind body for closed look) */}
+        <ellipse cx={cx} cy={cy + s} rx={s * 0.85} ry={s * 0.28}
+          fill={sideDark} stroke={sideDark} strokeWidth={0.8} />
+        {/* Top ellipse */}
+        <ellipse cx={cx} cy={cy - s} rx={s * 0.85} ry={s * 0.28}
+          fill={`url(#${uid}_top)`} stroke={sideMid} strokeWidth={0.8} />
+      </g>
+      {/* Vertical specular stripe on the left side of body */}
+      <rect x={cx - s * 0.70} y={cy - s + 4} width={s * 0.18} height={s * 2 - 8}
+        fill="#fff" opacity="0.18" rx={2} />
     </>);
   }
   if (shape === 'cone') {
     return mkSvg(<>
-      <polygon points={`${cx},${cy-s*1.15} ${cx-s},${cy+s*0.82} ${cx+s},${cy+s*0.82}`}
-        fill={c.soft1} stroke={c.fill1} strokeWidth={1.8}
-        strokeLinejoin="round" filter={`url(#${uid}_sh)`} />
-      <ellipse cx={cx} cy={cy+s*0.82} rx={s} ry={s*0.3}
-        fill={`url(#${uid}_topGrad)`} stroke={c.fill1} strokeWidth={1.8} />
+      <g filter={`url(#${uid}_rich)`}>
+        <polygon points={`${cx},${cy - s * 1.15} ${cx - s},${cy + s * 0.82} ${cx + s},${cy + s * 0.82}`}
+          fill={`url(#${uid}_front)`} stroke={sideMid} strokeWidth={0.8} strokeLinejoin="round" />
+        <ellipse cx={cx} cy={cy + s * 0.82} rx={s} ry={s * 0.30}
+          fill={`url(#${uid}_top)`} stroke={sideMid} strokeWidth={0.8} />
+      </g>
+      {/* Specular stripe down the left slope */}
+      <path d={`M ${cx - s * 0.6},${cy - s * 0.4} L ${cx - s * 0.85},${cy + s * 0.6}`}
+        stroke="#fff" strokeWidth={s * 0.10} strokeLinecap="round" opacity="0.25" />
     </>);
   }
   // Prism (default)
   return mkSvg(<>
-    <polygon
-      points={`${cx},${cy-s*0.95} ${cx-s*0.85},${cy+s*0.52} ${cx+s*0.85},${cy+s*0.52}`}
-      fill={c.soft1} stroke={c.fill1} strokeWidth={1.8}
-      strokeLinejoin="round" filter={`url(#${uid}_sh)`} />
-    <polygon
-      points={`${cx+s*0.85},${cy+s*0.52} ${cx+s*0.85+s*0.4},${cy+s*0.18} ${cx+s*0.4},${cy-s*1.3} ${cx},${cy-s*0.95}`}
-      fill={`url(#${uid}_rightGrad)`} stroke={c.fill1} strokeWidth={1.8} />
+    <g filter={`url(#${uid}_rich)`}>
+      <polygon
+        points={`${cx},${cy - s * 0.95} ${cx - s * 0.85},${cy + s * 0.52} ${cx + s * 0.85},${cy + s * 0.52}`}
+        fill={`url(#${uid}_front)`} stroke={sideMid} strokeWidth={0.8} strokeLinejoin="round" />
+      <polygon
+        points={`${cx + s * 0.85},${cy + s * 0.52} ${cx + s * 0.85 + s * 0.4},${cy + s * 0.18} ${cx + s * 0.4},${cy - s * 1.3} ${cx},${cy - s * 0.95}`}
+        fill={`url(#${uid}_side)`} stroke={sideMid} strokeWidth={0.8} strokeLinejoin="round" />
+    </g>
   </>);
 }
 
 // ─── 9. CoordinateVisual ─────────────────────────────────────────────────────
+// Polished: axes wear a subtle gradient stroke that fades toward the arrowhead;
+// the plotted point is a glossy sphere; dashed coordinate lines pulse softly
+// toward each axis to show projection.
 export function CoordinateVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
@@ -814,25 +906,50 @@ export function CoordinateVisual({ params = {}, theme, size = 160 }) {
   const w = size, h = size;
   const cx = w * 0.40, cy = h * 0.55;
 
+  // Shared sphere highlight used by points
+  const SphereDot = ({ x, y, r = 7, color = c.fill1 }) => (
+    <g filter={`url(#${uid}_rich)`}>
+      <circle cx={x} cy={y} r={r} fill={color} />
+      <circle cx={x} cy={y} r={r} fill={`url(#${uid}_sphereGen)`} />
+      <ellipse cx={x - r * 0.32} cy={y - r * 0.38} rx={r * 0.32} ry={r * 0.20}
+        fill="#fff" opacity="0.55" />
+    </g>
+  );
+
   if (direction === 'inside_outside') {
     return (
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} role="img" aria-label="nav û derve">
-        <circle cx={cx} cy={cy} r={42} fill="none" stroke={c.line} strokeWidth={2} strokeDasharray="5,3" />
-        <circle cx={cx} cy={cy} r={22} fill={c.soft1} stroke={c.fill1} strokeWidth={2.5} />
-        <text x={cx} y={cy+4} textAnchor="middle" fontSize={9} fontWeight={700} fill={c.fill1}>nav</text>
-        <text x={cx+52} y={cy-18} fontSize={9} fontWeight={700} fill={c.muted}>derve</text>
-        <line x1={cx+22} y1={cy-8} x2={cx+42} y2={cy-24} stroke={c.muted} strokeWidth={1} strokeDasharray="3,2" />
+        <defs>
+          <RichShadow id={`${uid}_rich`} near={1} far={2.5} />
+          <SphereGradient id={`${uid}_sphereGen`} base={c.fill1} cx="32%" cy="28%" />
+          <radialGradient id={`${uid}_inner`} cx="40%" cy="36%" r="65%">
+            <stop offset="0%" stopColor={lighten(c.fill1, 0.40)} />
+            <stop offset="100%" stopColor={c.fill1} />
+          </radialGradient>
+        </defs>
+        <circle cx={cx} cy={cy} r={44} fill="none" stroke={c.line} strokeWidth={2} strokeDasharray="5,3" />
+        <g filter={`url(#${uid}_rich)`}>
+          <circle cx={cx} cy={cy} r={24} fill={`url(#${uid}_inner)`} stroke={darken(c.fill1, 0.1)} strokeWidth={2} />
+        </g>
+        <text x={cx} y={cy + 4} textAnchor="middle" fontSize={10} fontWeight={800} fill={c.white}>nav</text>
+        <text x={cx + 54} y={cy - 22} fontSize={10} fontWeight={700} fill={c.muted}>derve</text>
+        <line x1={cx + 24} y1={cy - 10} x2={cx + 46} y2={cy - 24} stroke={c.muted} strokeWidth={1} strokeDasharray="3,2" />
       </svg>
     );
   }
   if (direction === 'near_far') {
     return (
       <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} role="img" aria-label="nêzîk û dûr">
-        <circle cx={cx} cy={cy} r={12} fill={c.fill1} />
-        <circle cx={cx+60} cy={cy} r={12} fill={c.fill1} opacity={0.38} />
-        <line x1={cx+12} y1={cy} x2={cx+48} y2={cy} stroke={c.fill2} strokeWidth={2} strokeDasharray="4,3" />
-        <text x={cx} y={cy+26} textAnchor="middle" fontSize={9} fontWeight={700} fill={c.fill1}>nêzîk</text>
-        <text x={cx+60} y={cy+26} textAnchor="middle" fontSize={9} fontWeight={700} fill={c.muted}>dûr</text>
+        <defs>
+          <RichShadow id={`${uid}_rich`} near={1} far={2.5} />
+          <SphereGradient id={`${uid}_sphereGen`} base={c.fill1} cx="32%" cy="28%" />
+          <SphereGradient id={`${uid}_sphereFar`} base={c.fill1} cx="32%" cy="28%" />
+        </defs>
+        <SphereDot x={cx} y={cy} r={13} />
+        <g opacity="0.42"><SphereDot x={cx + 64} y={cy} r={13} /></g>
+        <line x1={cx + 14} y1={cy} x2={cx + 50} y2={cy} stroke={c.fill2} strokeWidth={2} strokeDasharray="4,3" />
+        <text x={cx} y={cy + 28} textAnchor="middle" fontSize={10} fontWeight={800} fill={c.fill1}>nêzîk</text>
+        <text x={cx + 64} y={cy + 28} textAnchor="middle" fontSize={10} fontWeight={700} fill={c.muted}>dûr</text>
       </svg>
     );
   }
@@ -841,10 +958,10 @@ export function CoordinateVisual({ params = {}, theme, size = 160 }) {
   if (showGrid) {
     for (let i = -3; i <= 3; i++) {
       gridElems.push(
-        <line key={`gx${i}`} x1={cx+i*22} y1={12} x2={cx+i*22} y2={h-12}
-          stroke={c.line} strokeWidth={0.5} opacity={0.6} />,
-        <line key={`gy${i}`} x1={12} y1={cy+i*22} x2={w-12} y2={cy+i*22}
-          stroke={c.line} strokeWidth={0.5} opacity={0.6} />
+        <line key={`gx${i}`} x1={cx + i * 22} y1={12} x2={cx + i * 22} y2={h - 12}
+          stroke={c.line} strokeWidth={0.5} opacity={0.4} />,
+        <line key={`gy${i}`} x1={12} y1={cy + i * 22} x2={w - 12} y2={cy + i * 22}
+          stroke={c.line} strokeWidth={0.5} opacity={0.4} />
       );
     }
   }
@@ -852,44 +969,66 @@ export function CoordinateVisual({ params = {}, theme, size = 160 }) {
   const dirElems = [];
   if (direction === 'above_below') {
     dirElems.push(
-      <text key="above" x={cx+8} y={cy-28} fontSize={11} fontWeight={700} fill={c.fill1}>↑ Ser</text>,
-      <text key="below" x={cx+8} y={cy+34} fontSize={11} fontWeight={700} fill={c.fill2}>↓ Bin</text>
+      <text key="above" x={cx + 8} y={cy - 28} fontSize={11} fontWeight={800} fill={c.fill1}>↑ Ser</text>,
+      <text key="below" x={cx + 8} y={cy + 34} fontSize={11} fontWeight={800} fill={c.fill2}>↓ Bin</text>
     );
   } else if (direction === 'left_right') {
     dirElems.push(
-      <text key="right" x={cx+22} y={cy-10} fontSize={11} fontWeight={700} fill={c.fill1}>Rast →</text>,
-      <text key="left" x={14} y={cy-10} fontSize={11} fontWeight={700} fill={c.fill2}>← Çep</text>
+      <text key="right" x={cx + 22} y={cy - 10} fontSize={11} fontWeight={800} fill={c.fill1}>Rast →</text>,
+      <text key="left" x={14} y={cy - 10} fontSize={11} fontWeight={800} fill={c.fill2}>← Çep</text>
     );
   } else {
-    // Default: dot at (2,3)
+    // Default: plotted point at (2, 3) with projection lines
+    const px = cx + 44, py = cy - 44;
     dirElems.push(
-      <circle key="dot" cx={cx+44} cy={cy-44} r={6} fill={c.fill2} />,
-      <text key="coord" x={cx+52} y={cy-48} fontSize={9} fontWeight={700} fill={c.fill2}>(2,3)</text>,
-      <line key="dx" x1={cx+44} y1={cy} x2={cx+44} y2={cy-44} stroke={c.fill2} strokeWidth={1} strokeDasharray="3,2" opacity={0.5} />,
-      <line key="dy" x1={cx} y1={cy-44} x2={cx+44} y2={cy-44} stroke={c.fill2} strokeWidth={1} strokeDasharray="3,2" opacity={0.5} />
+      <line key="dx" x1={px} y1={cy} x2={px} y2={py} stroke={c.fill2} strokeWidth={1.2} strokeDasharray="3,2" opacity={0.55} />,
+      <line key="dy" x1={cx} y1={py} x2={px} y2={py} stroke={c.fill2} strokeWidth={1.2} strokeDasharray="3,2" opacity={0.55} />,
+      <SphereDot key="dot" x={px} y={py} r={7} color={c.fill2} />,
+      <g key="lbl" transform={`translate(${px + 12}, ${py - 12})`}>
+        <rect x={-2} y={-9} width={32} height={16} rx={8} fill={c.fill2} opacity="0.12" />
+        <text x={14} y={2} textAnchor="middle" dominantBaseline="middle"
+          fontSize={9} fontWeight={800} fill={c.fill2}>(2,3)</text>
+      </g>
     );
   }
 
   return (
     <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} role="img" aria-label="koordînat">
       <defs>
+        <RichShadow id={`${uid}_rich`} near={1} far={2.5} />
+        <SphereGradient id={`${uid}_sphereGen`} base={c.fill2} cx="32%" cy="28%" />
+        <linearGradient id={`${uid}_axisX`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stopColor={c.line} />
+          <stop offset="80%" stopColor={c.muted} />
+        </linearGradient>
+        <linearGradient id={`${uid}_axisY`} x1="0%" y1="100%" x2="0%" y2="0%">
+          <stop offset="0%" stopColor={c.line} />
+          <stop offset="80%" stopColor={c.muted} />
+        </linearGradient>
         <marker id={`${uid}_ca`} markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
           <path d="M0,0.5 L5.5,3 L0,5.5 Z" fill={c.muted} />
         </marker>
       </defs>
       {gridElems}
-      <line x1={14} y1={cy} x2={w-12} y2={cy} stroke={c.muted} strokeWidth={1.8}
-        markerEnd={`url(#${uid}_ca)`} />
-      <line x1={cx} y1={h-14} x2={cx} y2={12} stroke={c.muted} strokeWidth={1.8}
-        markerEnd={`url(#${uid}_ca)`} />
-      <text x={w-10} y={cy-5} fontSize={9} fill={c.muted}>x</text>
-      <text x={cx+5} y={16} fontSize={9} fill={c.muted}>y</text>
+      {/* Axes with subtle baseline shadow */}
+      <line x1={14} y1={cy + 1.5} x2={w - 12} y2={cy + 1.5} stroke="#000" strokeWidth={0.6} opacity="0.08" />
+      <line x1={14} y1={cy} x2={w - 12} y2={cy} stroke={`url(#${uid}_axisX)`} strokeWidth={2}
+        strokeLinecap="round" markerEnd={`url(#${uid}_ca)`} />
+      <line x1={cx} y1={h - 14} x2={cx} y2={12} stroke={`url(#${uid}_axisY)`} strokeWidth={2}
+        strokeLinecap="round" markerEnd={`url(#${uid}_ca)`} />
+      <text x={w - 10} y={cy - 5} fontSize={10} fontWeight={700} fill={c.muted}>x</text>
+      <text x={cx + 5} y={16} fontSize={10} fontWeight={700} fill={c.muted}>y</text>
+      {/* Origin dot */}
+      <circle cx={cx} cy={cy} r={2.5} fill={c.muted} />
       {dirElems}
     </svg>
   );
 }
 
 // ─── 10. SymmetryVisual ──────────────────────────────────────────────────────
+// Polished: two mirror-image wings — left wears the logo teal gradient, right
+// the coral gradient — so symmetry reads as "the same shape, reflected across
+// the axis". A glowing axis underscores the reflection plane.
 export function SymmetryVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
@@ -897,17 +1036,50 @@ export function SymmetryVisual({ params = {}, theme, size = 160 }) {
   const showLabel = params.label !== false;
   return (
     <svg width={size} height={h} viewBox={`0 0 ${size} ${h}`} role="img" aria-label="sîmetrî">
-      <defs><ShadowDef id={`${uid}_sh`} blur={3} opacity={0.15} /></defs>
-      {/* Left wing */}
-      <path d={`M${cx},${h*0.22} Q${cx-46},${h*0.08} ${cx-56},${h*0.44} Q${cx-46},${h*0.68} ${cx},${h*0.72}`}
-        fill={c.soft1} stroke={c.fill1} strokeWidth={2} filter={`url(#${uid}_sh)`} />
-      {/* Right wing */}
-      <path d={`M${cx},${h*0.22} Q${cx+46},${h*0.08} ${cx+56},${h*0.44} Q${cx+46},${h*0.68} ${cx},${h*0.72}`}
-        fill={c.soft2} stroke={c.fill2} strokeWidth={2} filter={`url(#${uid}_sh)`} />
-      {/* Axis */}
-      <line x1={cx} y1={h*0.08} x2={cx} y2={h*0.86}
-        stroke={c.muted} strokeWidth={1.8} strokeDasharray="6,3" />
-      {showLabel && <text x={cx} y={h*0.92} textAnchor="middle" fontSize={10} fill={c.muted}>sîmetrî</text>}
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={1.5} far={3.5} />
+        <radialGradient id={`${uid}_leftG`} cx="65%" cy="40%" r="80%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.25)} />
+          <stop offset="100%" stopColor={c.fill1} />
+        </radialGradient>
+        <radialGradient id={`${uid}_rightG`} cx="35%" cy="40%" r="80%">
+          <stop offset="0%"   stopColor={lighten(c.fill2, 0.25)} />
+          <stop offset="100%" stopColor={c.fill2} />
+        </radialGradient>
+        <linearGradient id={`${uid}_axisG`} x1="50%" y1="0%" x2="50%" y2="100%">
+          <stop offset="0%"   stopColor={c.muted} stopOpacity="0" />
+          <stop offset="15%"  stopColor={c.fill1} stopOpacity="0.6" />
+          <stop offset="50%"  stopColor={c.fill1} />
+          <stop offset="85%"  stopColor={c.fill1} stopOpacity="0.6" />
+          <stop offset="100%" stopColor={c.muted} stopOpacity="0" />
+        </linearGradient>
+      </defs>
+      <g filter={`url(#${uid}_rich)`}>
+        {/* Left wing */}
+        <path d={`M${cx},${h * 0.22} Q${cx - 48},${h * 0.06} ${cx - 58},${h * 0.44} Q${cx - 48},${h * 0.70} ${cx},${h * 0.74}`}
+          fill={`url(#${uid}_leftG)`} stroke={darken(c.fill1, 0.10)} strokeWidth={1.2} strokeOpacity="0.5"
+          strokeLinejoin="round" />
+        {/* Right wing — mirror */}
+        <path d={`M${cx},${h * 0.22} Q${cx + 48},${h * 0.06} ${cx + 58},${h * 0.44} Q${cx + 48},${h * 0.70} ${cx},${h * 0.74}`}
+          fill={`url(#${uid}_rightG)`} stroke={darken(c.fill2, 0.10)} strokeWidth={1.2} strokeOpacity="0.5"
+          strokeLinejoin="round" />
+      </g>
+      {/* Wing highlights (top-left specular) */}
+      <ellipse cx={cx - 32} cy={h * 0.26} rx="14" ry="5" fill="#fff" opacity="0.30" transform={`rotate(-25 ${cx - 32} ${h * 0.26})`} />
+      <ellipse cx={cx + 32} cy={h * 0.26} rx="14" ry="5" fill="#fff" opacity="0.30" transform={`rotate(25 ${cx + 32} ${h * 0.26})`} />
+      {/* Axis — gradient stroke fades at top/bottom */}
+      <line x1={cx} y1={h * 0.06} x2={cx} y2={h * 0.88}
+        stroke={`url(#${uid}_axisG)`} strokeWidth={2.4} strokeDasharray="5,3" strokeLinecap="round" />
+      {/* Axis end markers */}
+      <circle cx={cx} cy={h * 0.06} r="2" fill={c.fill1} opacity="0.6" />
+      <circle cx={cx} cy={h * 0.88} r="2" fill={c.fill1} opacity="0.6" />
+      {showLabel && (
+        <g transform={`translate(${cx}, ${h * 0.94})`}>
+          <rect x="-30" y="-9" width="60" height="16" rx="8" fill={c.fill1} opacity="0.10" />
+          <text x="0" y="1" textAnchor="middle" dominantBaseline="middle"
+            fontSize={10} fontWeight={800} fill={c.fill1}>sîmetrî</text>
+        </g>
+      )}
     </svg>
   );
 }

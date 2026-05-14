@@ -659,7 +659,7 @@ export function exportConceptMapWorksheet(concepts, sectionName, options = {}) {
 
   const html = wrapHTML(
     'Nexşeya Netemam',
-    'Nexşeya kavramî bi peyvên kêm temam bike',
+    'Nexşeya têgehan bi peyvên kêm temam bike',
     bodyHtml,
     includeAnswerKey ? answerHtml : ''
   );
