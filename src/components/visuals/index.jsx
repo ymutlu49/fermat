@@ -1429,46 +1429,77 @@ export function ClockVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 14. BarChartVisual ──────────────────────────────────────────────────────
+// Polished: each bar wears a vertical gradient (lighter top → fuller bottom),
+// rests on a soft floor shadow, and carries a thin specular stripe down the
+// left edge to mimic a moulded plastic block. Y-axis gridlines + axis stroke
+// give the chart a "data viz" finish.
 export function BarChartVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { values = [3, 5, 2, 4], labels = [] } = params;
   const maxV = Math.max(...values, 1);
-  const padL = 22, padB = 24, padT = 12, padR = 8;
+  const padL = 24, padB = 26, padT = 14, padR = 10;
   const chartW = size - padL - padR;
   const chartH = size - padB - padT;
-  const barW = chartW / values.length - 5;
-  const colors = [c.fill1, c.fill2, c.fill3, c.fill4, c.fill5, c.fill6];
-  // Grid lines
+  const barW = chartW / values.length - 6;
+  const baseColors = [c.fill1, c.fill2, c.fill3, c.fill4, c.fill5, c.fill6];
+
+  // Unique gradient def per palette colour
+  const gradDefs = baseColors.map((col, i) => (
+    <linearGradient key={i} id={`${uid}_g${i}`} x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stopColor={lighten(col, 0.22)} />
+      <stop offset="100%" stopColor={col} />
+    </linearGradient>
+  ));
+
+  // Y-axis gridlines
   const gridLines = [0.25, 0.5, 0.75, 1.0].map(f => {
     const y = padT + chartH * (1 - f);
     return (
-      <line key={f} x1={padL} y1={y} x2={size-padR} y2={y}
-        stroke={c.line} strokeWidth={0.5} strokeDasharray="4,3" opacity={0.7} />
+      <line key={f} x1={padL} y1={y} x2={size - padR} y2={y}
+        stroke={c.line} strokeWidth={0.5} strokeDasharray="4,3" opacity={0.55} />
     );
   });
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="bar chart">
-      <defs><ShadowDef id={`${uid}_sh`} blur={2} opacity={0.15} /></defs>
-      {/* Axes */}
-      <line x1={padL} y1={padT} x2={padL} y2={size-padB} stroke={c.muted} strokeWidth={1.8} />
-      <line x1={padL} y1={size-padB} x2={size-padR} y2={size-padB} stroke={c.muted} strokeWidth={1.8} />
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={2.2} opacityNear={0.18} opacityFar={0.08} />
+        {gradDefs}
+      </defs>
+
+      {/* Grid + axes */}
       {gridLines}
+      <line x1={padL} y1={padT} x2={padL} y2={size - padB} stroke={c.muted} strokeWidth={1.6} strokeLinecap="round" />
+      <line x1={padL} y1={size - padB} x2={size - padR} y2={size - padB} stroke={c.muted} strokeWidth={1.6} strokeLinecap="round" />
+
+      {/* Bars */}
       {values.map((v, i) => {
         const barH = (v / maxV) * chartH;
-        const x = padL + 3 + i * (barW + 5);
+        const x = padL + 4 + i * (barW + 6);
         const y = padT + chartH - barH;
-        const col = colors[i % colors.length];
+        const gradId = `${uid}_g${i % baseColors.length}`;
+        const col = baseColors[i % baseColors.length];
         return (
           <g key={i}>
-            <rect x={x} y={y} width={barW} height={barH}
-              fill={col} rx={4} opacity={0.88}
-              filter={`url(#${uid}_sh)`} />
-            <text x={x + barW/2} y={y - 4} textAnchor="middle"
-              fontSize={9} fontWeight={800} fill={col}>{v}</text>
+            {/* Bar body with gradient + rich shadow */}
+            <g filter={`url(#${uid}_rich)`}>
+              <rect x={x} y={y} width={barW} height={barH}
+                fill={`url(#${gradId})`} rx={4} stroke={darken(col, 0.12)}
+                strokeWidth={0.5} strokeOpacity={0.40} />
+            </g>
+            {/* Left specular stripe — sells the moulded plastic look */}
+            <rect x={x + 2} y={y + 3} width={2} height={Math.max(0, barH - 6)}
+              fill="#fff" opacity="0.30" rx={1} />
+            {/* Value badge on top */}
+            <text x={x + barW / 2} y={y - 5} textAnchor="middle"
+              fontSize={9.5} fontWeight={800} fill={col}>{v}</text>
+            {/* Category label */}
             {labels[i] && (
-              <text x={x + barW/2} y={Math.min(size-padB+13, size - 4)} textAnchor="middle"
-                fontSize={7} fill={c.dim}>{labels[i].length > 6 ? labels[i].slice(0, 5) + '…' : labels[i]}</text>
+              <text x={x + barW / 2} y={Math.min(size - padB + 14, size - 4)}
+                textAnchor="middle" fontSize={7.5} fontWeight={600} fill={c.dim}>
+                {labels[i].length > 6 ? labels[i].slice(0, 5) + '…' : labels[i]}
+              </text>
             )}
           </g>
         );
@@ -1478,90 +1509,195 @@ export function BarChartVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 15. PieChartVisual ──────────────────────────────────────────────────────
+// Polished: each slice has its own radial gradient (centre brighter, edge
+// darker) for a glossy disc finish; white slice separators run from centre
+// to rim; a specular arc on top-left + ground shadow ellipse give the pie a
+// real physical disc presence. Legend pills sit underneath when space allows.
 export function PieChartVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { slices = [30, 45, 25] } = params;
-  const cx = size * 0.44, cy = size * 0.46, r = size * 0.36;
+  const cx = size * 0.50, cy = size * 0.44, r = size * 0.34;
   const total = slices.reduce((a, b) => a + b, 0);
-  const colors = [c.fill1, c.fill2, c.fill3, c.fill4, c.fill5, c.fill6];
+  const baseColors = [c.fill1, c.fill2, c.fill3, c.fill4, c.fill5, c.fill6];
+
+  // Build slice paths + per-slice gradient defs
   let startAngle = -Math.PI / 2;
-  const paths = slices.map((s, i) => {
+  const sliceData = slices.map((s, i) => {
     const angle = (s / total) * 2 * Math.PI;
     const x1 = cx + r * Math.cos(startAngle), y1 = cy + r * Math.sin(startAngle);
     const x2 = cx + r * Math.cos(startAngle + angle), y2 = cy + r * Math.sin(startAngle + angle);
     const large = angle > Math.PI ? 1 : 0;
     const midA = startAngle + angle / 2;
-    const labelR = Math.min(r + 16, size * 0.46);
+    const labelR = r * 0.62;
     const lx = cx + labelR * Math.cos(midA), ly = cy + labelR * Math.sin(midA);
-    // Clamp label within viewBox
-    const clampedLx = Math.max(14, Math.min(lx, size - 14));
-    const clampedLy = Math.max(10, Math.min(ly, size - 6));
-    const d = `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z`;
-    const pct = Math.round(s / total * 100);
+    const startA = startAngle;
     startAngle += angle;
-    return (
-      <g key={i}>
-        <path d={d} fill={colors[i % colors.length]} stroke={c.white} strokeWidth={2} opacity={0.9} />
-        {pct >= 8 && (
-          <text x={clampedLx} y={clampedLy} textAnchor="middle" fontSize={8} fontWeight={700}
-            fill={colors[i % colors.length]}>{pct}%</text>
-        )}
-      </g>
-    );
+    const col = baseColors[i % baseColors.length];
+    return {
+      d: `M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z`,
+      col, pct: Math.round(s / total * 100),
+      lx, ly, midA, startA,
+    };
   });
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="pie chart">
-      <defs><ShadowDef id={`${uid}_sh`} blur={4} opacity={0.2} /></defs>
-      <g filter={`url(#${uid}_sh)`}>{paths}</g>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={1.5} far={4} />
+        {sliceData.map((sl, i) => (
+          <radialGradient key={i} id={`${uid}_s${i}`} cx="40%" cy="36%" r="70%">
+            <stop offset="0%"   stopColor={lighten(sl.col, 0.25)} />
+            <stop offset="60%"  stopColor={sl.col} />
+            <stop offset="100%" stopColor={darken(sl.col, 0.12)} />
+          </radialGradient>
+        ))}
+      </defs>
+
+      {/* Ground shadow under disc */}
+      <ellipse cx={cx} cy={cy + r + 4} rx={r * 0.85} ry={r * 0.10}
+        fill="#000" opacity="0.12" />
+
+      {/* Slices with rich shadow */}
+      <g filter={`url(#${uid}_rich)`}>
+        {sliceData.map((sl, i) => (
+          <path key={i} d={sl.d} fill={`url(#${uid}_s${i})`} />
+        ))}
+      </g>
+
+      {/* Glossy specular arc on top-left of the disc */}
+      <path
+        d={`M ${cx - r * 0.55},${cy - r * 0.65} A ${r * 0.85},${r * 0.85} 0 0,1 ${cx + r * 0.20},${cy - r * 0.85}`}
+        stroke="#fff" strokeWidth={r * 0.16} strokeLinecap="round"
+        fill="none" opacity="0.30"
+      />
+
+      {/* White slice separators */}
+      {sliceData.map((sl, i) => {
+        const x = cx + r * Math.cos(sl.startA), y = cy + r * Math.sin(sl.startA);
+        return (
+          <line key={`sep${i}`} x1={cx} y1={cy} x2={x} y2={y}
+            stroke="#fff" strokeWidth={1.6} opacity="0.90" />
+        );
+      })}
+
+      {/* Centre cap */}
+      <circle cx={cx} cy={cy} r={3.5} fill={c.white}
+        stroke={c.muted} strokeOpacity="0.35" strokeWidth={0.5} />
+
+      {/* Percentage labels inside slices, only when slice large enough */}
+      {sliceData.map((sl, i) => sl.pct >= 10 && (
+        <text key={`l${i}`} x={sl.lx} y={sl.ly + 3} textAnchor="middle"
+          fontSize={10} fontWeight={800} fill="#fff"
+          style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.30))' }}>
+          {sl.pct}%
+        </text>
+      ))}
     </svg>
   );
 }
 
 // ─── 16. TableVisual ─────────────────────────────────────────────────────────
+// Polished: header row wears a logo-teal gradient with a subtle highlight
+// stripe (like a book heading), body cells alternate between surface and
+// soft1 tint (zebra stripe). Outer container has rounded corners + drop
+// shadow so the table looks like a printed card.
 export function TableVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { rows = 3, cols = 3, data = [] } = params;
-  const cellW = (size - 20) / cols, cellH = (size * 0.72 - 10) / (rows + 1);
-  const startX = 10, startY = size * 0.10;
-  const cells = [];
-  for (let r = -1; r < rows; r++) {
-    for (let col = 0; col < cols; col++) {
-      const x = startX + col * cellW, y = startY + (r + 1) * cellH;
-      const isHeader = r === -1;
-      cells.push(
-        <rect key={`bg${r}${col}`} x={x+0.5} y={y+0.5}
-          width={cellW-1} height={cellH-1}
-          fill={isHeader ? c.fill1 : r % 2 === 0 ? c.bg : c.soft1}
-          rx={isHeader && col === 0 ? 4 : isHeader && col === cols-1 ? 4 : 0} />
-      );
-      if (data[r] && data[r][col]) {
-        cells.push(
-          <text key={`t${r}${col}`} x={x + cellW/2} y={y + cellH/2 + 4}
-            textAnchor="middle" fontSize={8} fontWeight={isHeader ? 700 : 400}
-            fill={isHeader ? c.white : c.text}>{data[r][col]}</text>
-        );
-      }
-    }
-  }
+  const padX = 12, padY = size * 0.10;
+  const tableW = size - padX * 2;
+  const cellH = (size - padY - 12) / (rows + 1);
+  const cellW = tableW / cols;
+  const startX = padX;
+  const startY = padY;
+  const radius = 6;
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="tablo">
-      <defs><ShadowDef id={`${uid}_sh`} blur={3} opacity={0.12} /></defs>
-      <rect x={startX} y={startY} width={size-20} height={cellH*(rows+1)}
-        fill="none" stroke={c.line} strokeWidth={1} rx={4}
-        filter={`url(#${uid}_sh)`} />
-      {cells}
-      {/* Grid lines */}
-      {Array.from({length: rows}, (_, i) => (
-        <line key={`hl${i}`} x1={startX} y1={startY + (i+1)*cellH}
-          x2={startX + size - 20} y2={startY + (i+1)*cellH}
-          stroke={c.line} strokeWidth={0.6} />
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={1.5} far={3.5} />
+        <linearGradient id={`${uid}_head`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.18)} />
+          <stop offset="100%" stopColor={c.fill1} />
+        </linearGradient>
+        <linearGradient id={`${uid}_body`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.bg, 0.05)} />
+          <stop offset="100%" stopColor={c.bg} />
+        </linearGradient>
+        {/* Clip path to round table corners */}
+        <clipPath id={`${uid}_clip`}>
+          <rect x={startX} y={startY} width={tableW} height={cellH * (rows + 1)} rx={radius} />
+        </clipPath>
+      </defs>
+
+      {/* Drop-shadowed body */}
+      <g filter={`url(#${uid}_rich)`}>
+        <rect x={startX} y={startY} width={tableW} height={cellH * (rows + 1)}
+          fill={`url(#${uid}_body)`} rx={radius} />
+      </g>
+
+      {/* Cells (clipped to rounded outline) */}
+      <g clipPath={`url(#${uid}_clip)`}>
+        {/* Header row */}
+        <rect x={startX} y={startY} width={tableW} height={cellH}
+          fill={`url(#${uid}_head)`} />
+        {/* Header inner highlight */}
+        <rect x={startX + 1} y={startY + 1} width={tableW - 2} height={cellH * 0.35}
+          fill="#fff" opacity="0.22" />
+
+        {/* Zebra stripe body rows */}
+        {Array.from({ length: rows }, (_, r) => (
+          r % 2 === 0 ? null : (
+            <rect key={`zb${r}`}
+              x={startX} y={startY + (r + 1) * cellH}
+              width={tableW} height={cellH}
+              fill={c.soft1} opacity="0.55" />
+          )
+        ))}
+      </g>
+
+      {/* Container border (subtle) */}
+      <rect x={startX} y={startY} width={tableW} height={cellH * (rows + 1)}
+        fill="none" stroke={c.line} strokeWidth={0.6} rx={radius} opacity="0.5" />
+
+      {/* Grid lines (horizontal between rows) */}
+      {Array.from({ length: rows }, (_, i) => (
+        <line key={`hl${i}`}
+          x1={startX} y1={startY + (i + 1) * cellH}
+          x2={startX + tableW} y2={startY + (i + 1) * cellH}
+          stroke={c.line} strokeWidth={0.5} opacity="0.40" />
       ))}
-      {Array.from({length: cols-1}, (_, i) => (
-        <line key={`vl${i}`} x1={startX + (i+1)*cellW} y1={startY}
-          x2={startX + (i+1)*cellW} y2={startY + cellH*(rows+1)}
-          stroke={c.line} strokeWidth={0.6} />
+      {/* Grid lines (vertical between cols) */}
+      {Array.from({ length: cols - 1 }, (_, i) => (
+        <line key={`vl${i}`}
+          x1={startX + (i + 1) * cellW} y1={startY + cellH * 0.55}
+          x2={startX + (i + 1) * cellW} y2={startY + cellH * (rows + 1)}
+          stroke={c.line} strokeWidth={0.5} opacity="0.30" />
+      ))}
+
+      {/* Cell text */}
+      {Array.from({ length: rows + 1 }, (_, r) => (
+        Array.from({ length: cols }, (_, col) => {
+          const isHeader = r === 0;
+          const dataR = r - 1;
+          const x = startX + col * cellW + cellW / 2;
+          const y = startY + r * cellH + cellH / 2 + 3;
+          const text = isHeader
+            ? (data[-1] && data[-1][col]) || ''
+            : (data[dataR] && data[dataR][col]) || '';
+          if (!text) return null;
+          return (
+            <text key={`t${r}${col}`} x={x} y={y} textAnchor="middle"
+              fontSize={isHeader ? 9 : 8.5}
+              fontWeight={isHeader ? 800 : 600}
+              fill={isHeader ? '#fff' : c.text}
+              letterSpacing={isHeader ? '0.04em' : '0'}>
+              {text}
+            </text>
+          );
+        })
       ))}
     </svg>
   );
