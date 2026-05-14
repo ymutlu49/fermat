@@ -1,20 +1,30 @@
 // ─── FerMat — Visual library shared helpers ──────────────────────
-// All visuals consume these primitives. Never access theme.xyz directly
-// inside a visual — always go through vColors(theme).
+// Every SVG visual consumes vColors(theme) for its palette so we can keep
+// the look consistent and theme-aware. The palette deliberately mirrors the
+// logo identity:
+//
+//   Logo:  teal #0D9488 · coral #EA580C · green #15803D · dark #0F4C5C
+//
+// fill1–fill3 carry the brand identity. fill4/fill5 are semantic (warning,
+// error) — kept because some visuals signal "careful" or "wrong" states.
+// fill6 is reserved for the purple-leaning sections (CIHÎ, CEBÎRÎ) so they
+// keep their visual identity in concept thumbnails.
 
-// Maps a theme object to the consistent color palette used by every SVG visual.
 export function vColors(t) {
   const isDark = t && (t.bg === '#0F1419' || t.bg === '#111827' || t.bg === '#1a1a2e');
   return {
-    fill1:  t?.primary   || '#0F4C5C',
-    fill2:  t?.accent    || t?.warning  || '#E8773A',
-    fill3:  t?.success   || '#22C55E',
-    fill4:  t?.warning   || '#F59E0B',
-    fill5:  t?.error     || '#EF4444',
-    fill6:  '#8B5CF6',
-    soft1:  isDark ? '#1a3340' : '#E0F2FE',
-    soft2:  isDark ? '#3d1f15' : '#FFF3EC',
-    soft3:  isDark ? '#1a3022' : '#DCFCE7',
+    // Brand fills — logo palette anchors
+    fill1:  t?.primary   || '#0D9488',   // logo teal
+    fill2:  t?.accent    || '#EA580C',   // logo coral
+    fill3:  t?.success   || '#15803D',   // logo green
+    fill4:  t?.warning   || '#D97706',   // semantic warning amber
+    fill5:  t?.error     || '#DC2626',   // semantic error red
+    fill6:  '#7E22CE',                    // section purple (CIHÎ/CEBÎRÎ identity)
+    // Soft tinted backgrounds — derived from logo palette
+    soft1:  isDark ? '#0E2E33' : '#E0F4F2',   // teal tint
+    soft2:  isDark ? '#2E1A12' : '#FCEFE7',   // coral tint
+    soft3:  isDark ? '#142A1D' : '#E1F4E8',   // green tint
+    // Surface, text, line — from theme with sensible fallbacks
     bg:     t?.surface   || '#FFFFFF',
     line:   t?.border    || '#D1D5DB',
     text:   t?.text      || '#111827',

@@ -1384,7 +1384,8 @@ export function RegroupingVisual({ params = {}, theme, size = 160 }) {
   const result = op === 'add' ? a + b : a - b;
   const opSym = op === 'add' ? '+' : '−';
   const opColor = op === 'add' ? c.fill3 : c.fill5;
-  const carryColor = op === 'add' ? '#E76F51' : '#3B82F6';
+  // Carry/borrow indicator uses logo palette (coral for add, dark teal for sub)
+  const carryColor = op === 'add' ? c.fill2 : c.fill1;
 
   const cx = size / 2;
   const startY = size * 0.15;
