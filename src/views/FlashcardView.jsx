@@ -152,30 +152,51 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
         <select
           value={direction}
           onChange={e => { setDirection(e.target.value); setIsFlipped(false); }}
+          aria-label="Direction"
           style={{
-            padding: '6px 12px',
-            borderRadius: RADIUS.md,
-            border: '1px solid ' + t.border,
-            background: 'transparent',
-            color: t.text,
+            padding: '8px 32px 8px 14px',
+            borderRadius: 99,
+            border: '1px solid ' + (isDark ? 'rgba(13,148,136,0.30)' : 'rgba(13,148,136,0.20)'),
+            background: (isDark ? 'rgba(13,148,136,0.10)' : 'rgba(13,148,136,0.06)') +
+              ' url("data:image/svg+xml;utf8,<svg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%2712%27 viewBox=%270 0 24 24%27 fill=%27none%27 stroke=%27%230D9488%27 stroke-width=%273%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27><polyline points=%276 9 12 15 18 9%27/></svg>") no-repeat right 12px center',
+            color: '#0D9488',
             fontSize: FONT_SIZE.sm,
+            fontWeight: FONT_WEIGHT.semibold,
             fontFamily: 'inherit',
             cursor: 'pointer',
             outline: 'none',
+            appearance: 'none',
+            WebkitAppearance: 'none',
+            MozAppearance: 'none',
           }}
         >
           {directionOptions.map(opt => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
           ))}
         </select>
-        <span style={{ fontSize: '0.85rem', fontWeight: FONT_WEIGHT.bold, color: t.textSecondary }}>
+        <span style={{
+          fontSize: '0.78rem',
+          fontWeight: FONT_WEIGHT.bold,
+          color: t.textMuted,
+          letterSpacing: '0.02em',
+          padding: '4px 10px',
+          borderRadius: 99,
+          background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+        }}>
           {currentIndex + 1} / {deckConcepts.length}
         </span>
         </div>
       </div>
 
-      {/* Card area */}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', overflowY: 'auto', padding: '16px 16px 8px' }}
+      {/* Card area — vertically centred so the card sits in the middle of the
+          viewport rather than hugging the top. overflowY keeps scrolling intact
+          if the deck/back text gets long. */}
+      <div style={{
+        flex: 1, display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center',
+        overflowY: 'auto', padding: '16px 16px 24px',
+        gap: 14,
+      }}
         onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {/* 3D flip card */}
         <div
@@ -225,8 +246,21 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
                   {SECTIONS[currentConcept.s]?.name.split(' ')[0]}
                 </span>
               </div>
-              <div style={{ position: 'absolute', bottom: SPACING.md, right: SPACING.lg, fontSize: '0.7rem', color: sectionColors.text, opacity: 0.5 }}>
-                Lê bixe ↻
+              <div style={{
+                position: 'absolute', bottom: 10, right: 12,
+                fontSize: '0.65rem',
+                fontWeight: FONT_WEIGHT.semibold,
+                color: sectionColors.text,
+                background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.55)',
+                backdropFilter: 'blur(6px)',
+                WebkitBackdropFilter: 'blur(6px)',
+                padding: '4px 10px',
+                borderRadius: 99,
+                border: `1px solid ${sectionColors.accent}30`,
+                letterSpacing: '0.02em',
+                display: 'inline-flex', alignItems: 'center', gap: 4,
+              }}>
+                <span aria-hidden="true">↻</span> Lê bixe
               </div>
             </div>
             {/* Back */}
@@ -265,56 +299,97 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
           </div>
         </div>
 
-        {/* Rating buttons (visible after flip) */}
+        {/* Rating buttons (visible after flip) — emoji prefix + dot indicator */}
         {isFlipped && (
-          <div style={{ display: 'flex', gap: SPACING.sm, width: '100%', maxWidth: 520, marginTop: SPACING.md, flexShrink: 0, animation: 'fadeInUp ' + DURATION.normal + ' ease-out' }}>
+          <div style={{
+            display: 'flex', gap: 8, width: '100%', maxWidth: 520,
+            flexShrink: 0, animation: 'fadeInUp ' + DURATION.normal + ' ease-out',
+          }}>
             {[
-              { box: 0, label: 'Nizanim', color: t.error, bg: t.error + '12' },
-              { box: 1, label: 'Fêr dibim', color: t.warning, bg: t.warning + '15' },
-              { box: 2, label: 'Dizanim', color: t.success, bg: t.success + '12' },
+              { box: 0, label: 'Nizanim',   emoji: '😕', color: t.error,   bg: t.error + '12' },
+              { box: 1, label: 'Fêr dibim', emoji: '🤔', color: t.warning, bg: t.warning + '15' },
+              { box: 2, label: 'Dizanim',   emoji: '😊', color: t.success, bg: t.success + '12' },
             ].map(btn => (
               <button key={btn.box} onClick={() => handleRate(btn.box)} style={{
-                flex: 1, padding: '10px ' + SPACING.sm + 'px', borderRadius: RADIUS.xl,
+                flex: 1, padding: '12px 8px', borderRadius: 14,
                 border: '1.5px solid ' + btn.color + '40',
                 background: btn.bg,
                 color: btn.color, cursor: 'pointer',
                 fontFamily: 'inherit', fontSize: '0.82rem', fontWeight: FONT_WEIGHT.extrabold,
-                transition: 'all ' + DURATION.fast, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 3,
+                transition: 'all ' + DURATION.fast,
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                WebkitTapHighlightColor: 'transparent',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = btn.color + '25'; e.currentTarget.style.borderColor = btn.color; e.currentTarget.style.transform = 'scale(1.04)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = btn.bg; e.currentTarget.style.borderColor = btn.color + '60'; e.currentTarget.style.transform = 'scale(1)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = btn.color + '22'; e.currentTarget.style.borderColor = btn.color; e.currentTarget.style.transform = 'translateY(-2px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = btn.bg; e.currentTarget.style.borderColor = btn.color + '60'; e.currentTarget.style.transform = 'translateY(0)'; }}
               >
-                {btn.label}
+                <span aria-hidden="true" style={{ fontSize: '1.1rem', lineHeight: 1 }}>{btn.emoji}</span>
+                <span>{btn.label}</span>
               </button>
             ))}
           </div>
         )}
 
-        {/* Navigation */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginTop: SPACING.md, flexShrink: 0, width: '100%', maxWidth: 520 }}>
+        {/* Navigation — circular buttons + slim progress bar between */}
+        <div style={{
+          display: 'flex', alignItems: 'center', gap: 14,
+          flexShrink: 0, width: '100%', maxWidth: 520,
+        }}>
           <button onClick={handlePrev} disabled={currentIndex === 0} aria-label="Berê" style={{
-            width: TOUCH_MIN - 2, height: TOUCH_MIN - 2, borderRadius: RADIUS.lg,
+            width: 42, height: 42, borderRadius: '50%',
             border: '1px solid ' + t.border,
             background: t.surface, cursor: currentIndex === 0 ? 'not-allowed' : 'pointer',
             opacity: currentIndex === 0 ? 0.35 : 1,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'all ' + DURATION.fast,
-          }}>
+            flexShrink: 0,
+            boxShadow: isDark ? 'none' : '0 2px 6px rgba(15,76,92,0.06)',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+          onMouseEnter={e => { if (currentIndex !== 0) { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.borderColor = '#0D9488'; } }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = t.border; }}
+          >
             <IconArrowLeft size={18} color={t.text} />
           </button>
 
-          <span style={{ flex: 1, textAlign: 'center', fontSize: '0.85rem', fontWeight: FONT_WEIGHT.bold, color: t.textSecondary }}>
-            {currentIndex + 1} / {deckConcepts.length}
-          </span>
+          {/* Slim deck-progress bar */}
+          <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 5 }}>
+            <div style={{
+              height: 4, borderRadius: 99,
+              background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(0,0,0,0.06)',
+              overflow: 'hidden',
+            }}>
+              <div style={{
+                height: '100%',
+                width: ((currentIndex + 1) / deckConcepts.length * 100) + '%',
+                background: 'linear-gradient(90deg, #0D9488, #EA580C)',
+                borderRadius: 99,
+                transition: 'width 0.3s ease-out',
+              }} />
+            </div>
+            <span style={{
+              textAlign: 'center', fontSize: '0.72rem',
+              fontWeight: FONT_WEIGHT.semibold, color: t.textMuted,
+              letterSpacing: '0.02em',
+            }}>
+              {currentIndex + 1} / {deckConcepts.length}
+            </span>
+          </div>
 
           <button onClick={handleNext} disabled={currentIndex >= deckConcepts.length - 1} aria-label="Pêş" style={{
-            width: TOUCH_MIN - 2, height: TOUCH_MIN - 2, borderRadius: RADIUS.lg,
+            width: 42, height: 42, borderRadius: '50%',
             border: '1px solid ' + t.border,
             background: t.surface, cursor: currentIndex >= deckConcepts.length - 1 ? 'not-allowed' : 'pointer',
             opacity: currentIndex >= deckConcepts.length - 1 ? 0.35 : 1,
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             transition: 'all ' + DURATION.fast,
-          }}>
+            flexShrink: 0,
+            boxShadow: isDark ? 'none' : '0 2px 6px rgba(15,76,92,0.06)',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+          onMouseEnter={e => { if (currentIndex < deckConcepts.length - 1) { e.currentTarget.style.transform = 'translateY(-1px)'; e.currentTarget.style.borderColor = '#0D9488'; } }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = t.border; }}
+          >
             <IconArrowRight size={18} color={t.text} />
           </button>
         </div>
