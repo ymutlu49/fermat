@@ -150,24 +150,36 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
           )}
         </div>
 
-        {/* Section filter pills */}
+        {/* Section filter pills — each section in its own colour */}
         <div style={{
-          display: 'flex', gap: 5,
-          overflowX: 'auto', paddingBottom: 2,
+          display: 'flex', gap: 8,
+          overflowX: 'auto', paddingBottom: 4, paddingTop: 2,
           scrollbarWidth: 'none', WebkitOverflowScrolling: 'touch',
         }}>
-          <Pill label="Hemû" isActive={activeSectionId === null} color={t.primary} isDark={isDark} onClick={() => setActiveSectionId(null)} />
-          {Object.entries(SECTIONS).map(([id, sec]) => (
-            <Pill
-              key={id}
-              isActive={activeSectionId === parseInt(id)}
-              color={t.primary}
-              isDark={isDark}
-              onClick={() => setActiveSectionId(parseInt(id))}
-            >
-              {sec.short}
-            </Pill>
-          ))}
+          <Pill
+            label="Hemû"
+            icon="✨"
+            isActive={activeSectionId === null}
+            color="#0F4C5C"
+            isDark={isDark}
+            onClick={() => setActiveSectionId(null)}
+          />
+          {Object.entries(SECTIONS).map(([id, sec]) => {
+            const sid = parseInt(id);
+            const colors = getSectionColor(sid, isDark);
+            return (
+              <Pill
+                key={id}
+                icon={sec.icon}
+                isActive={activeSectionId === sid}
+                color={colors.accent}
+                isDark={isDark}
+                onClick={() => setActiveSectionId(sid)}
+              >
+                {sec.short}
+              </Pill>
+            );
+          })}
         </div>
       </div>{/* /max-width */}
       </div>{/* /header */}

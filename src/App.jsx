@@ -303,25 +303,52 @@ export default function App() {
             </Suspense>
           </main>
 
-          {/* Bottom navigation — semantic <nav>, not a tablist (no tabpanel pairing) */}
+          {/* Bottom navigation — semantic <nav>, modernised pill row with sliding
+              indicator above the active tab. Logo palette: teal #0D9488 + coral
+              #EA580C. Inactive tabs stay quiet so the active one pops. */}
           <nav
             aria-label="Rêgeza jêrîn"
             style={{
+              position: 'relative',
               display: 'flex',
-              background: t.surface,
+              background: isDark
+                ? 'linear-gradient(to top, rgba(15,76,92,0.04), transparent), ' + t.surface
+                : 'linear-gradient(to top, rgba(13,148,136,0.025), transparent), ' + t.surface,
               borderTop: '1px solid ' + t.border,
               flexShrink: 0,
               zIndex: 10,
-              padding: `4px 8px`,
-              paddingBottom: `calc(4px + env(safe-area-inset-bottom, 0px))`,
+              padding: '6px 6px',
+              paddingBottom: 'calc(6px + env(safe-area-inset-bottom, 0px))',
+              boxShadow: isDark
+                ? '0 -1px 0 rgba(255,255,255,0.02)'
+                : '0 -1px 0 rgba(0,0,0,0.02)',
             }}
           >
+            {/* Sliding indicator bar above active tab */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: `calc(${NAV_ITEMS.findIndex(it => (
+                  view === it.id
+                  || (it.id === 'games' && GAMES_VIEWS.includes(view))
+                  || (it.id === 'more' && MORE_VIEWS.includes(view))
+                )) * (100 / NAV_ITEMS.length)}% + ${100 / NAV_ITEMS.length / 2}%)`,
+                transform: 'translateX(-50%)',
+                width: `calc(${100 / NAV_ITEMS.length}% - 24px)`,
+                height: 3,
+                borderRadius: '0 0 3px 3px',
+                background: 'linear-gradient(90deg, #0D9488, #EA580C)',
+                transition: 'left 0.3s cubic-bezier(0.22, 0.61, 0.36, 1)',
+                opacity: 0.92,
+              }}
+            />
             {NAV_ITEMS.map(item => {
               const isActive = view === item.id
                 || (item.id === 'games' && GAMES_VIEWS.includes(view))
                 || (item.id === 'more' && MORE_VIEWS.includes(view));
               const Icon = item.icon;
-              const activeColor = '#0D9488'; // Logo teal
               return (
                 <button
                   key={item.id}
@@ -335,28 +362,46 @@ export default function App() {
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: `6px 0`,
+                    padding: '6px 0 4px',
                     minHeight: navHeight,
-                    background: isActive
-                      ? (isDark ? 'rgba(13,148,136,0.15)' : 'rgba(13,148,136,0.08)')
-                      : 'none',
+                    background: 'transparent',
                     borderRadius: 12,
                     border: 'none',
                     cursor: 'pointer',
                     fontFamily: 'inherit',
                     WebkitTapHighlightColor: 'transparent',
                     userSelect: 'none',
-                    transition: `background ${DURATION.fast}`,
+                    transition: 'transform 0.18s ease',
+                    transform: isActive ? 'translateY(-1px)' : 'translateY(0)',
                   }}
                 >
-                  <span style={{ display: 'flex', marginBottom: 3 }}>
-                    <Icon size={20} color={isActive ? activeColor : t.textMuted} />
+                  {/* Icon container — active wears a soft tinted circle */}
+                  <span
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 36,
+                      height: 28,
+                      borderRadius: 10,
+                      marginBottom: 2,
+                      background: isActive
+                        ? (isDark
+                            ? 'linear-gradient(135deg, rgba(13,148,136,0.30), rgba(234,88,12,0.20))'
+                            : 'linear-gradient(135deg, rgba(13,148,136,0.16), rgba(234,88,12,0.12))')
+                        : 'transparent',
+                      transition: 'background 0.2s ease',
+                    }}
+                  >
+                    <Icon size={20} color={isActive ? '#0D9488' : t.textMuted} />
                   </span>
                   <span style={{
-                    fontSize: '0.58rem',
+                    fontSize: '0.6rem',
                     fontWeight: isActive ? FONT_WEIGHT.bold : FONT_WEIGHT.medium,
-                    color: isActive ? activeColor : t.textMuted,
+                    color: isActive ? '#0D9488' : t.textMuted,
                     lineHeight: 1,
+                    letterSpacing: isActive ? '0.01em' : '0.005em',
+                    transition: 'color 0.2s ease, font-weight 0.2s ease',
                   }}>
                     {item.label}
                   </span>

@@ -5,37 +5,71 @@ import { getSectionColor } from '@utils/helpers.js';
 import { IconCheck, IconX, IconSearch, IconVolume, IconChevronRight } from '@components/icons';
 
 // ── Pill (toggleable filter button) ──────────────────────────────────────────
-// Behaves like a toggle button (aria-pressed) rather than a tab — without a real
-// tablist+tabpanel parent, `role="tab"` is invalid ARIA. Toggle buttons are the
-// correct semantic for "active/inactive filter" pills.
-export function Pill({ label, isActive = false, color, onClick, children, isDark = false }) {
-  const displayColor = color || '#0D9488';
+// Modern colour-aware pill. Inactive pills wear a soft tint of their own colour
+// so a horizontal row reads as a coloured map (each section keeps its identity).
+// Active pill bumps to a gradient fill + glow shadow for a clear focal point.
+//
+// Props:
+//   - label / children: the visible text
+//   - isActive: highlighted state
+//   - color: the pill's identity colour (defaults to logo teal)
+//   - icon: optional emoji/string shown before the label
+//   - isDark: dark-mode toggle (callers already pass this)
+export function Pill({ label, isActive = false, color, icon, onClick, children, isDark = false }) {
+  const tint = color || '#0D9488';
+  const text = children || label;
   return (
     <button
       type="button"
       onClick={onClick}
       aria-pressed={isActive}
       style={{
-        padding: `6px 14px`,
-        minHeight: 36,
+        padding: icon ? '7px 14px 7px 10px' : '7px 14px',
+        minHeight: 38,
         borderRadius: RADIUS.full,
         cursor: 'pointer',
         fontFamily: 'inherit',
         fontSize: FONT_SIZE.sm,
-        fontWeight: FONT_WEIGHT.semibold,
+        fontWeight: isActive ? FONT_WEIGHT.bold : FONT_WEIGHT.semibold,
         transition: `all ${DURATION.normal}`,
-        border: isActive ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}`,
-        background: isActive ? displayColor : 'transparent',
-        color: isActive ? '#fff' : (isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)'),
+        border: isActive ? 'none' : `1px solid ${tint}${isDark ? '33' : '22'}`,
+        background: isActive
+          ? `linear-gradient(135deg, ${tint} 0%, ${shade(tint, -12)} 100%)`
+          : (isDark ? `${tint}1A` : `${tint}10`),
+        color: isActive ? '#fff' : tint,
+        boxShadow: isActive
+          ? `0 4px 12px ${tint}55, 0 1px 2px ${tint}33`
+          : 'none',
         whiteSpace: 'nowrap',
-        letterSpacing: '0.01em',
+        letterSpacing: '0.015em',
         WebkitTapHighlightColor: 'transparent',
         userSelect: 'none',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 6,
       }}
     >
-      {children || label}
+      {icon && (
+        <span aria-hidden="true" style={{
+          fontSize: '0.95em',
+          lineHeight: 1,
+          opacity: isActive ? 1 : 0.85,
+        }}>
+          {icon}
+        </span>
+      )}
+      {text}
     </button>
   );
+}
+
+// Darken a hex colour for the gradient endpoint. Cheap & deterministic.
+function shade(hex, amount = -10) {
+  const c = hex.replace('#', '');
+  const r = Math.max(0, Math.min(255, parseInt(c.substring(0, 2), 16) + amount));
+  const g = Math.max(0, Math.min(255, parseInt(c.substring(2, 4), 16) + amount));
+  const b = Math.max(0, Math.min(255, parseInt(c.substring(4, 6), 16) + amount));
+  return '#' + [r, g, b].map(x => x.toString(16).padStart(2, '0')).join('');
 }
 
 // ── Badge ─────────────────────────────────────────────────────────────────────
