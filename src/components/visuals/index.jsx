@@ -1,53 +1,96 @@
-// ─── FerMat — SVG Concept Visual Library v2 ─────────────────────
-// Complete overhaul: unique IDs, theme-safe colors, consistent size×size viewBox,
-// fixed defs ordering, improved aesthetics, new visual types.
-// Shared helpers (vColors, ShadowDef) live in ./core.jsx — re-exported here for
-// any visual library consumers that need them directly.
+// ─── FerMat — SVG Concept Visual Library v3 ─────────────────────
+// Visual concepts are rendered with depth: gradients for surfaces, layered
+// drop-shadows for grounding, and subtle highlights to mimic real-world
+// materials. Shared primitives (gradients, shadows) live in ./core.jsx.
 import { useId } from 'react';
-import { vColors, ShadowDef } from './core.jsx';
+import {
+  vColors, ShadowDef, LinearLight, SphereGradient, RichShadow, darken, lighten,
+} from './core.jsx';
 export { vColors, ShadowDef };
 
 // ─── 1. NumberLineVisual ───────────────────────────────────────────────────────
+// Polished: axis with subtle gradient + grounding shadow, tick hierarchy
+// (major every integer, minor at half-steps for short ranges), highlighted
+// numbers shown as glossy spheres with their own labelled badge underneath.
 export function NumberLineVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { start = 0, end = 5, highlight = [], natural = false } = params;
-  const pad = 22, lineY = size * 0.52;
+  const pad = 22, lineY = size * 0.55;
   const range = end - start || 1;
   const toX = n => pad + ((n - start) / range) * (size - pad * 2);
   const ticks = [];
   for (let i = start; i <= end; i++) ticks.push(i);
+  // Half-step minor ticks when range is small enough to feel readable
+  const showMinor = range <= 10;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="jimarxêz">
       <defs>
-        <marker id={`${uid}_arr`} markerWidth="8" markerHeight="8" refX="4" refY="4" orient="auto">
+        <LinearLight id={`${uid}_axis`} from={c.muted} to={c.line} x1="0%" y1="0%" x2="100%" y2="0%" />
+        <SphereGradient id={`${uid}_sphere`} base={c.fill1} />
+        <RichShadow id={`${uid}_rich`} near={1.2} far={3} />
+        <ShadowDef id={`${uid}_sh`} blur={1.5} opacity={0.20} />
+        <marker id={`${uid}_arr`} markerWidth="9" markerHeight="9" refX="4" refY="4" orient="auto">
           <path d="M0,1 L7,4 L0,7 Z" fill={c.muted} />
         </marker>
-        <ShadowDef id={`${uid}_sh`} />
       </defs>
-      {/* Axis line */}
+
+      {/* Axis baseline shadow (grounds the line) */}
+      <line x1={pad - 6} y1={lineY + 2.5} x2={size - pad + 6} y2={lineY + 2.5}
+        stroke="#000" strokeWidth="0.8" opacity="0.08" />
+      {/* Axis line — subtle gradient stroke */}
       <line x1={pad - 6} y1={lineY} x2={size - pad + 6} y2={lineY}
-        stroke={c.line} strokeWidth="2" markerEnd={`url(#${uid}_arr)`} />
+        stroke={`url(#${uid}_axis)`} strokeWidth="2.2" strokeLinecap="round"
+        markerEnd={`url(#${uid}_arr)`} />
+
       {natural && (
         <text x={size - pad + 10} y={lineY + 4} fontSize={11} fill={c.muted} fontStyle="italic">…</text>
       )}
+
+      {/* Minor (half) ticks underneath, only when readable */}
+      {showMinor && ticks.slice(0, -1).map(n => {
+        const x = (toX(n) + toX(n + 1)) / 2;
+        return (
+          <line key={`m${n}`} x1={x} y1={lineY - 3} x2={x} y2={lineY + 3}
+            stroke={c.muted} strokeWidth="0.8" opacity="0.55" />
+        );
+      })}
+
+      {/* Major ticks + labels / spheres */}
       {ticks.map(n => {
         const x = toX(n);
         const isHi = highlight.includes(n);
         return (
           <g key={n}>
-            <line x1={x} y1={lineY - 6} x2={x} y2={lineY + 6}
+            {/* Tick mark — taller for highlighted */}
+            <line
+              x1={x} y1={lineY - (isHi ? 8 : 5)}
+              x2={x} y2={lineY + (isHi ? 8 : 5)}
               stroke={isHi ? c.fill1 : c.muted}
-              strokeWidth={isHi ? 2 : 1.2} />
+              strokeWidth={isHi ? 2.2 : 1.3}
+              strokeLinecap="round"
+            />
             {isHi ? (
-              <>
-                <circle cx={x} cy={lineY - 18} r={13} fill={c.fill1} filter={`url(#${uid}_sh)`} />
-                <text x={x} y={lineY - 14} textAnchor="middle" fontSize={10}
-                  fontWeight="800" fill={c.white} dominantBaseline="middle">{n}</text>
-              </>
+              <g filter={`url(#${uid}_rich)`}>
+                {/* Sphere body */}
+                <circle cx={x} cy={lineY - 20} r={13} fill={c.fill1} />
+                {/* Glossy gradient overlay */}
+                <circle cx={x} cy={lineY - 20} r={13} fill={`url(#${uid}_sphere)`} />
+                {/* Soft top-left specular highlight */}
+                <ellipse cx={x - 3.5} cy={lineY - 24} rx="4" ry="2.2"
+                  fill="#fff" opacity="0.45" />
+                {/* Number label centred */}
+                <text x={x} y={lineY - 16} textAnchor="middle" fontSize={11}
+                  fontWeight="800" fill={c.white} dominantBaseline="middle"
+                  style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.25))' }}>
+                  {n}
+                </text>
+              </g>
             ) : (
-              <text x={x} y={lineY + 20} textAnchor="middle" fontSize={9}
-                fontWeight="500" fill={c.dim}>{n}</text>
+              <text x={x} y={lineY + 20} textAnchor="middle" fontSize={9.5}
+                fontWeight="600" fill={c.dim}>
+                {n}
+              </text>
             )}
           </g>
         );
@@ -57,6 +100,9 @@ export function NumberLineVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 2. CountingVisual ────────────────────────────────────────────────────────
+// Polished: every counter is a glossy 3D object with a radial-gradient body
+// and a specular highlight at the top-left, grounded by a soft shadow. Groups
+// alternate between primary and a secondary brand tint without losing depth.
 export function CountingVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
@@ -69,183 +115,347 @@ export function CountingVisual({ params = {}, theme, size = 160 }) {
   const gapY = Math.min((size * 0.72 - r * 2) / Math.max(rows - 1, 1), r * 2.6);
   const startX = (size - (cols - 1) * gapX) / 2;
   const startY = size * 0.12 + (size * 0.68 - (rows - 1) * gapY) / 2;
-  const fillColor = color === 'accent' ? c.fill2 : color === 'success' ? c.fill3 : c.fill1;
+  const primaryFill   = color === 'accent' ? c.fill2 : color === 'success' ? c.fill3 : c.fill1;
+  const secondaryFill = primaryFill === c.fill1 ? c.fill2 : c.fill1;
+
   const items = [];
   for (let i = 0; i < n; i++) {
     const row = Math.floor(i / cols), col = i % cols;
     const cx = startX + col * gapX, cy = startY + row * gapY;
     const grpColor = groups > 1
-      ? (Math.floor(i / Math.ceil(n / groups)) % 2 === 0 ? fillColor : c.fill3)
-      : fillColor;
+      ? (Math.floor(i / Math.ceil(n / groups)) % 2 === 0 ? primaryFill : secondaryFill)
+      : primaryFill;
+    const gradId = `${uid}_g${i}`;
     const key = `item${i}`;
+
+    // Common props: depth shadow + body fill + glossy overlay
     if (shape === 'star') {
       const pts = Array.from({length:10}, (_,j) => {
         const a = (j * Math.PI) / 5 - Math.PI / 2;
         const rad = j % 2 === 0 ? r : r * 0.45;
         return `${cx + rad * Math.cos(a)},${cy + rad * Math.sin(a)}`;
       }).join(' ');
-      items.push(<polygon key={key} points={pts} fill={grpColor} opacity={0.88} filter={`url(#${uid}_sh)`} />);
+      items.push(
+        <g key={key} filter={`url(#${uid}_rich)`}>
+          <polygon points={pts} fill={grpColor} />
+          <polygon points={pts} fill={`url(#${gradId})`} />
+        </g>
+      );
     } else if (shape === 'triangle') {
-      items.push(<polygon key={key} points={`${cx},${cy-r} ${cx-r},${cy+r} ${cx+r},${cy+r}`}
-        fill={grpColor} opacity={0.88} filter={`url(#${uid}_sh)`} />);
+      items.push(
+        <g key={key} filter={`url(#${uid}_rich)`}>
+          <polygon points={`${cx},${cy-r} ${cx-r},${cy+r} ${cx+r},${cy+r}`} fill={grpColor} />
+          <polygon points={`${cx},${cy-r} ${cx-r},${cy+r} ${cx+r},${cy+r}`} fill={`url(#${gradId})`} />
+        </g>
+      );
     } else if (shape === 'square') {
-      items.push(<rect key={key} x={cx-r} y={cy-r} width={r*2} height={r*2} rx={3}
-        fill={grpColor} opacity={0.88} filter={`url(#${uid}_sh)`} />);
+      items.push(
+        <g key={key} filter={`url(#${uid}_rich)`}>
+          <rect x={cx-r} y={cy-r} width={r*2} height={r*2} rx={r * 0.18} fill={grpColor} />
+          <rect x={cx-r} y={cy-r} width={r*2} height={r*2} rx={r * 0.18} fill={`url(#${gradId})`} />
+          {/* Top-left glossy stripe */}
+          <rect x={cx-r+2} y={cy-r+2} width={r*2-4} height={r*0.5} rx={r*0.14}
+            fill="#fff" opacity="0.22" />
+        </g>
+      );
     } else {
-      items.push(<circle key={key} cx={cx} cy={cy} r={r}
-        fill={grpColor} opacity={0.88} filter={`url(#${uid}_sh)`} />);
+      // Circle — the canonical "counter token"
+      items.push(
+        <g key={key} filter={`url(#${uid}_rich)`}>
+          <circle cx={cx} cy={cy} r={r} fill={grpColor} />
+          <circle cx={cx} cy={cy} r={r} fill={`url(#${gradId})`} />
+          {/* Specular highlight */}
+          <ellipse cx={cx - r * 0.32} cy={cy - r * 0.40} rx={r * 0.36} ry={r * 0.22}
+            fill="#fff" opacity="0.50" />
+        </g>
+      );
     }
   }
+
+  // Collect unique gradient defs (one per item so each has a centred highlight)
+  const gradientDefs = [];
+  for (let i = 0; i < n; i++) {
+    const row = Math.floor(i / cols), col = i % cols;
+    const grpColor = groups > 1
+      ? (Math.floor(i / Math.ceil(n / groups)) % 2 === 0 ? primaryFill : secondaryFill)
+      : primaryFill;
+    gradientDefs.push(
+      <SphereGradient key={`g${i}`} id={`${uid}_g${i}`} base={grpColor} cx="32%" cy="28%" />
+    );
+  }
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${n} tişt`}>
-      <defs><ShadowDef id={`${uid}_sh`} blur={2} opacity={0.22} /></defs>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={2.2} opacityNear={0.20} opacityFar={0.10} />
+        {gradientDefs}
+      </defs>
       {items}
-      <text x={size/2} y={size * 0.92} textAnchor="middle" fontSize={13}
-        fontWeight="800" fill={fillColor}>{n}</text>
+      {/* Total count badge */}
+      <g transform={`translate(${size/2}, ${size * 0.92})`}>
+        <rect x={-16} y={-10} width={32} height={20} rx={10}
+          fill={primaryFill} opacity="0.10" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={13} fontWeight="800" fill={primaryFill}>
+          {n}
+        </text>
+      </g>
     </svg>
   );
 }
 
 // ─── 3. BlocksVisual ─────────────────────────────────────────────────────────
+// Polished: base-10 blocks rendered with isometric 3D depth. Each cell is a
+// little cube — top face is lightest, left face medium, right face darker —
+// so the place-value relationship reads as physical building blocks.
+//   hundred = a 5×5 layered plate (one stack of cubes, viewed isometrically)
+//   ten     = a 1×5 vertical stick
+//   one     = a single cube
 export function BlocksVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { ones = 3, tens = 2, hundreds = 1 } = params;
   const hC = Math.min(hundreds, 2), tC = Math.min(tens, 5), oC = Math.min(ones, 9);
 
-  // Simple approach: draw everything into a virtual canvas, then scale to fit
-  // Virtual units: hundred=50x50, ten=8x50, one=8x8
-  const VH = 50, VT = 8, VG = 4; // virtual heights/widths/gap
-  // Calculate total virtual width
-  let vw = 0;
-  if (hC > 0) vw += hC * (VH + VG);
-  if (tC > 0) vw += tC * (VT + VG);
-  if (oC > 0) vw += Math.min(oC, 3) * (VT + VG);
-  if (vw === 0) vw = VH;
-  const vh = VH; // max virtual height is always 50 (hundreds grid height)
-
-  // Scale to fit inside size with padding
-  const pad = size * 0.08;
-  const labelH = size * 0.12;
-  const availW = size - pad * 2;
-  const availH = size - pad - labelH;
-  const sc = Math.min(availW / vw, availH / vh);
+  // ── Helper: render an isometric cube at (x, y) with edge length `s` ──
+  // Light from top-left: top face lightest, left medium, right darkest.
+  const cube = (key, x, y, s, color) => {
+    const dx = s * 0.55;   // isometric horizontal offset
+    const dy = s * 0.30;   // isometric vertical offset
+    const top    = lighten(color, 0.28);
+    const left   = color;
+    const right  = darken(color, 0.20);
+    // Top: rhombus
+    const topPts = [
+      [x, y],
+      [x + dx, y - dy],
+      [x + s + dx, y - dy],
+      [x + s, y],
+    ].map(p => p.join(',')).join(' ');
+    // Left face
+    const leftPts = [
+      [x, y],
+      [x, y + s],
+      [x + s, y + s],
+      [x + s, y],
+    ].map(p => p.join(',')).join(' ');
+    // Right face
+    const rightPts = [
+      [x + s, y],
+      [x + s + dx, y - dy],
+      [x + s + dx, y + s - dy],
+      [x + s, y + s],
+    ].map(p => p.join(',')).join(' ');
+    return (
+      <g key={key}>
+        <polygon points={leftPts}  fill={left}  stroke={darken(color, 0.32)} strokeWidth={0.4} strokeLinejoin="round" />
+        <polygon points={rightPts} fill={right} stroke={darken(color, 0.32)} strokeWidth={0.4} strokeLinejoin="round" />
+        <polygon points={topPts}   fill={top}   stroke={darken(color, 0.18)} strokeWidth={0.4} strokeLinejoin="round" />
+      </g>
+    );
+  };
 
   const elems = [];
-  const ofsY = pad + (availH - vh * sc) / 2;
-  let ofsX = pad + (availW - vw * sc) / 2;
+  const pad = size * 0.10;
+  const labelH = size * 0.14;
+  // Estimate widths so we can centre horizontally
+  const cellSize = (hC > 0 ? (size * 0.06) : (size * 0.07));
+  const cellGap  = cellSize * 0.05;
+  const hundredW = (cellSize + cellGap) * 5 + cellSize * 0.55;
+  const tenW     = cellSize + cellSize * 0.55;
+  const oneW     = cellSize + cellSize * 0.55;
+  const oneGap   = cellSize * 0.25;
+  const groupGap = cellSize * 0.6;
 
-  // Hundreds: 5x5 grid
+  let cursorX = pad;
+  // Compute total width for centering
+  let totalW = 0;
+  if (hC > 0) totalW += hC * hundredW + (hC - 1) * groupGap;
+  if (tC > 0) totalW += (totalW ? groupGap : 0) + tC * tenW + (tC - 1) * cellGap * 2;
+  if (oC > 0) totalW += (totalW ? groupGap : 0) + Math.min(oC, 3) * (oneW + oneGap);
+
+  cursorX = (size - totalW) / 2;
+  // Bottom-aligned y baseline for "ground" feel
+  const baseY = (size - labelH - pad) - cellSize * 0.25;
+
+  // ── Hundreds plates: 5×5 cube grid ──
   for (let h = 0; h < hC; h++) {
-    const cellSz = (VH * sc) / 5.4;
-    const cellGap = cellSz * 0.08;
-    for (let r = 0; r < 5; r++) {
+    for (let row = 0; row < 5; row++) {
       for (let col = 0; col < 5; col++) {
-        elems.push(
-          <rect key={`h${h}r${r}c${col}`}
-            x={ofsX + col * (cellSz + cellGap)} y={ofsY + r * (cellSz + cellGap)}
-            width={cellSz} height={cellSz}
-            fill={c.fill1} opacity={0.78} rx={Math.max(1, sc)} />
-        );
+        // back rows render first so iso depth stacks correctly
+        const x = cursorX + col * (cellSize + cellGap);
+        const y = baseY - row * (cellSize - cellGap * 0.5);
+        elems.push(cube(`h${h}r${row}c${col}`, x, y, cellSize, c.fill1));
       }
     }
-    const gridSz = 5 * (cellSz + cellGap) - cellGap;
-    elems.push(<rect key={`hb${h}`}
-      x={ofsX - 1.5} y={ofsY - 1.5} width={gridSz + 3} height={gridSz + 3}
-      fill="none" stroke={c.fill1} strokeWidth={1.2} rx={2} />);
-    ofsX += (VH + VG) * sc;
+    cursorX += hundredW + groupGap;
   }
 
-  // Tens: 1x5 vertical bars
+  // ── Tens sticks: 5-stack ──
   for (let t = 0; t < tC; t++) {
-    const barW = VT * sc * 0.9;
-    const cellH = (VH * sc) / 5.4;
-    const cellGap = cellH * 0.08;
     for (let seg = 0; seg < 5; seg++) {
-      elems.push(
-        <rect key={`t${t}s${seg}`}
-          x={ofsX} y={ofsY + seg * (cellH + cellGap)}
-          width={barW} height={cellH}
-          fill={c.fill2} opacity={0.82} rx={Math.max(1, sc * 0.6)} />
-      );
+      const x = cursorX;
+      const y = baseY - seg * (cellSize - cellGap * 0.5);
+      elems.push(cube(`t${t}s${seg}`, x, y, cellSize, c.fill2));
     }
-    ofsX += (VT + VG) * sc;
+    cursorX += tenW + cellGap;
   }
+  if (tC > 0) cursorX += groupGap - cellGap;
 
-  // Ones: single cubes
-  const oneSz = VT * sc * 0.9;
-  const oneGap = oneSz * 0.15;
+  // ── Ones: single cubes (wrap after 3) ──
   for (let o = 0; o < oC; o++) {
     const col = o % 3, row = Math.floor(o / 3);
-    elems.push(
-      <rect key={`o${o}`}
-        x={ofsX + col * (oneSz + oneGap)} y={ofsY + row * (oneSz + oneGap)}
-        width={oneSz} height={oneSz}
-        fill={c.fill3} opacity={0.85} rx={Math.max(1, sc * 0.6)} />
-    );
+    const x = cursorX + col * (oneW + oneGap);
+    const y = baseY - row * (cellSize + oneGap);
+    elems.push(cube(`o${o}`, x, y, cellSize, c.fill3));
   }
 
+  // ── Ground shadow plate ──
+  const groundY = baseY + cellSize + 4;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="bloklar">
-      <defs><ShadowDef id={`${uid}_sh`} /></defs>
+      <ellipse cx={size / 2} cy={groundY} rx={totalW * 0.5} ry={cellSize * 0.18}
+        fill="#000" opacity="0.10" />
       {elems}
-      <text x={size / 2} y={size - pad * 0.5} textAnchor="middle" fontSize={Math.min(9, size * 0.08)} fontWeight={700} fill={c.dim}>
-        {hundreds > 0 && `${hundreds}×100 `}{tens > 0 && `${tens}×10 `}{ones > 0 && `${ones}×1`}
-      </text>
+      {/* Place-value label */}
+      <g transform={`translate(${size/2}, ${size - pad * 0.55})`}>
+        <rect x={-totalW * 0.5} y={-9} width={Math.max(totalW, 80)} height={18} rx={9}
+          fill={c.fill1} opacity="0.08" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={Math.min(10, size * 0.08)} fontWeight={700} fill={c.fill1}>
+          {hundreds > 0 && `${hundreds}×100`}{hundreds > 0 && (tens > 0 || ones > 0) ? ' · ' : ''}
+          {tens > 0 && `${tens}×10`}{tens > 0 && ones > 0 ? ' · ' : ''}
+          {ones > 0 && `${ones}×1`}
+        </text>
+      </g>
     </svg>
   );
 }
 
 // ─── 4. FractionVisual ───────────────────────────────────────────────────────
+// Polished: pie slices wear a radial gradient (centre lighter, edge darker)
+// so the disc reads as a real surface; empty slices are softly tinted with a
+// dashed inner ring so they're clearly "missing". Bar mode gets a hatched
+// fill for the empty cells. The fraction label sits in a pill badge below.
 export function FractionVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { num = 1, den = 4, visual: vtype = 'pie' } = params;
-  const cx = size / 2, cy = size * 0.44, r = size * 0.33;
+  const cx = size / 2, cy = size * 0.46, r = size * 0.34;
 
+  // ─── BAR ────────────────────────────────────────────────────────────────
   if (vtype === 'bar') {
-    const barH = size * 0.26, barY = size * 0.32;
+    const barH = size * 0.28, barY = size * 0.31;
     const segW = (size - 36) / den;
     return (
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${num}/${den}`}>
-        <defs><ShadowDef id={`${uid}_sh`} blur={2} /></defs>
-        {Array.from({length: den}, (_, i) => (
-          <rect key={i} x={18 + i * segW} y={barY} width={segW - 3} height={barH}
-            fill={i < num ? c.fill2 : 'transparent'} rx={4}
-            filter={i < num ? `url(#${uid}_sh)` : undefined}
-            stroke={i < num ? c.fill2 : c.muted} strokeWidth={1.5}
-            strokeDasharray={i < num ? undefined : '4,3'} />
-        ))}
-        <text x={size/2} y={barY + barH + 22} textAnchor="middle"
-          fontSize={14} fontWeight={800} fill={c.fill2}>{num}/{den}</text>
+        <defs>
+          <LinearLight id={`${uid}_segG`} from={lighten(c.fill2, 0.18)} to={c.fill2} x1="0%" y1="0%" x2="0%" y2="100%" />
+          <RichShadow id={`${uid}_rich`} near={1} far={2.5} />
+          <pattern id={`${uid}_hatch`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+            <rect width="6" height="6" fill={c.soft2} />
+            <line x1="0" y1="0" x2="0" y2="6" stroke={c.fill2} strokeWidth="0.8" opacity="0.30" />
+          </pattern>
+        </defs>
+        {Array.from({length: den}, (_, i) => {
+          const filled = i < num;
+          return (
+            <g key={i} filter={filled ? `url(#${uid}_rich)` : undefined}>
+              <rect
+                x={18 + i * segW} y={barY} width={segW - 3} height={barH}
+                fill={filled ? c.fill2 : `url(#${uid}_hatch)`}
+                rx={4}
+                stroke={filled ? darken(c.fill2, 0.10) : c.fill2}
+                strokeOpacity={filled ? 1 : 0.35}
+                strokeWidth={1.5}
+              />
+              {filled && (
+                <rect
+                  x={18 + i * segW} y={barY} width={segW - 3} height={barH}
+                  fill={`url(#${uid}_segG)`} rx={4} opacity="0.55"
+                />
+              )}
+            </g>
+          );
+        })}
+        {/* Label pill */}
+        <g transform={`translate(${size/2}, ${barY + barH + 22})`}>
+          <rect x={-22} y={-12} width={44} height={24} rx={12} fill={c.fill2} opacity="0.12" />
+          <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+            fontSize={14} fontWeight={800} fill={c.fill2}>{num}/{den}</text>
+        </g>
       </svg>
     );
   }
-  // Pie
+
+  // ─── PIE ────────────────────────────────────────────────────────────────
   const sliceAngle = (2 * Math.PI) / den;
-  const slices = Array.from({length: den}, (_, i) => {
-    const a1 = -Math.PI / 2 + i * sliceAngle;
-    const a2 = a1 + sliceAngle;
-    const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
-    const x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
-    const large = sliceAngle > Math.PI ? 1 : 0;
-    return (
-      <path key={i}
-        d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z`}
-        fill={i < num ? c.fill2 : c.soft1}
-        stroke={c.white} strokeWidth={2} opacity={i < num ? 0.92 : 0.85} />
-    );
-  });
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${num}/${den}`}>
       <defs>
-        <ShadowDef id={`${uid}_sh`} blur={3} opacity={0.2} />
+        <radialGradient id={`${uid}_filled`} cx="40%" cy="36%" r="65%">
+          <stop offset="0%"   stopColor={lighten(c.fill2, 0.30)} />
+          <stop offset="55%"  stopColor={c.fill2} />
+          <stop offset="100%" stopColor={darken(c.fill2, 0.12)} />
+        </radialGradient>
+        <radialGradient id={`${uid}_empty`} cx="40%" cy="36%" r="65%">
+          <stop offset="0%"   stopColor={lighten(c.soft1, 0.10)} />
+          <stop offset="100%" stopColor={c.soft1} />
+        </radialGradient>
+        <RichShadow id={`${uid}_rich`} near={1.5} far={4} />
       </defs>
-      <g filter={`url(#${uid}_sh)`}>{slices}</g>
-      {/* Center dot */}
-      <circle cx={cx} cy={cy} r={4} fill={c.white} />
-      <text x={cx} y={cy + r + 22} textAnchor="middle"
-        fontSize={15} fontWeight={800} fill={c.fill2}>{num}/{den}</text>
+
+      {/* Ground shadow under the pie */}
+      <ellipse cx={cx} cy={cy + r + 4} rx={r * 0.85} ry={r * 0.10}
+        fill="#000" opacity="0.10" />
+
+      <g filter={`url(#${uid}_rich)`}>
+        {Array.from({length: den}, (_, i) => {
+          const a1 = -Math.PI / 2 + i * sliceAngle;
+          const a2 = a1 + sliceAngle;
+          const x1 = cx + r * Math.cos(a1), y1 = cy + r * Math.sin(a1);
+          const x2 = cx + r * Math.cos(a2), y2 = cy + r * Math.sin(a2);
+          const large = sliceAngle > Math.PI ? 1 : 0;
+          const filled = i < num;
+          return (
+            <path key={i}
+              d={`M${cx},${cy} L${x1},${y1} A${r},${r} 0 ${large},1 ${x2},${y2} Z`}
+              fill={filled ? `url(#${uid}_filled)` : `url(#${uid}_empty)`}
+              stroke={filled ? darken(c.fill2, 0.18) : c.muted}
+              strokeOpacity={filled ? 0.30 : 0.40}
+              strokeWidth={filled ? 0.8 : 1}
+              strokeDasharray={filled ? undefined : '3,2'}
+            />
+          );
+        })}
+      </g>
+
+      {/* Glossy specular arc on top-left of the disc */}
+      <path
+        d={`M ${cx - r * 0.55},${cy - r * 0.65} A ${r * 0.85},${r * 0.85} 0 0,1 ${cx + r * 0.20},${cy - r * 0.85}`}
+        stroke="#fff" strokeWidth={r * 0.18} strokeLinecap="round"
+        fill="none" opacity="0.35"
+      />
+
+      {/* White separators between slices — only over the filled→empty boundary */}
+      {Array.from({length: den}, (_, i) => {
+        const a = -Math.PI / 2 + i * sliceAngle;
+        const x = cx + r * Math.cos(a), y = cy + r * Math.sin(a);
+        return (
+          <line key={`sep${i}`} x1={cx} y1={cy} x2={x} y2={y}
+            stroke="#fff" strokeWidth={1.6} opacity="0.85" />
+        );
+      })}
+
+      {/* Centre pin */}
+      <circle cx={cx} cy={cy} r={3.5} fill={c.white} stroke={c.muted} strokeOpacity="0.3" strokeWidth={0.5} />
+
+      {/* Label pill */}
+      <g transform={`translate(${cx}, ${cy + r + 22})`}>
+        <rect x={-24} y={-12} width={48} height={24} rx={12} fill={c.fill2} opacity="0.12" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={15} fontWeight={800} fill={c.fill2}>{num}/{den}</text>
+      </g>
     </svg>
   );
 }
