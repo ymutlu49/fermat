@@ -1765,12 +1765,21 @@ export function TableVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 17. DiceVisual ──────────────────────────────────────────────────────────
+// Polished: 3D isometric die with three visible faces (top, left, right). The
+// front face carries the active pip count rendered as recessed (inset) dots
+// using a glossy gradient pip + a subtle ring shadow so they look pressed
+// into the surface. Side faces wear darker shading for a "lit-from-above"
+// look that matches the rest of the visual library.
 export function DiceVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { face = 3 } = params;
-  const s = size * 0.56, bx = (size - s) / 2, by = (size - s) / 2;
-  const dotR = s * 0.11;
+  // Front face is square; size is the side length
+  const s = size * 0.50;
+  const bx = (size - s) / 2;
+  const by = (size - s) / 2 + size * 0.04;
+  const dotR = s * 0.10;
+  const depth = s * 0.18; // isometric depth offset
   const dotPositions = {
     1: [[0.5, 0.5]],
     2: [[0.28, 0.28], [0.72, 0.72]],
@@ -1779,242 +1788,484 @@ export function DiceVisual({ params = {}, theme, size = 160 }) {
     5: [[0.28, 0.28], [0.72, 0.28], [0.5, 0.5], [0.28, 0.72], [0.72, 0.72]],
     6: [[0.28, 0.22], [0.72, 0.22], [0.28, 0.5], [0.72, 0.5], [0.28, 0.78], [0.72, 0.78]],
   };
-  const dots = (dotPositions[face] || dotPositions[1]).map(([dx, dy], i) => (
-    <circle key={i} cx={bx + s * dx} cy={by + s * dy} r={dotR} fill={c.text} />
-  ));
+
+  // Die face background — bone white with a hint of warm tint
+  const faceFill = lighten(c.bg, 0.10);
+  const sideMid  = darken(faceFill, 0.10);
+  const sideDark = darken(faceFill, 0.22);
+  const pipColor = c.text;
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`zar ${face}`}>
       <defs>
-        <ShadowDef id={`${uid}_sh`} blur={3} opacity={0.2} />
-        <linearGradient id={`${uid}_diceGrad`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor={c.bg} stopOpacity={1} />
-          <stop offset="100%" stopColor={c.soft1} stopOpacity={1} />
+        <RichShadow id={`${uid}_rich`} near={2} far={5} opacityNear={0.22} opacityFar={0.12} />
+        <linearGradient id={`${uid}_top`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(faceFill, 0.12)} />
+          <stop offset="100%" stopColor={faceFill} />
         </linearGradient>
+        <linearGradient id={`${uid}_front`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={faceFill} />
+          <stop offset="100%" stopColor={darken(faceFill, 0.06)} />
+        </linearGradient>
+        <linearGradient id={`${uid}_side`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stopColor={sideMid} />
+          <stop offset="100%" stopColor={sideDark} />
+        </linearGradient>
+        <radialGradient id={`${uid}_pip`} cx="35%" cy="30%" r="65%">
+          <stop offset="0%"   stopColor={lighten(pipColor, 0.50)} />
+          <stop offset="50%"  stopColor={pipColor} />
+          <stop offset="100%" stopColor={darken(pipColor, 0.15)} />
+        </radialGradient>
       </defs>
-      {/* Dice body */}
-      <rect x={bx} y={by} width={s} height={s} rx={s * 0.14}
-        fill={`url(#${uid}_diceGrad)`} stroke={c.fill1} strokeWidth={2}
-        filter={`url(#${uid}_sh)`} />
-      {dots}
+
+      {/* Ground shadow */}
+      <ellipse cx={size / 2} cy={by + s + depth + 8} rx={s * 0.55} ry={s * 0.10}
+        fill="#000" opacity="0.18" />
+
+      <g filter={`url(#${uid}_rich)`}>
+        {/* Right face (between front and top) */}
+        <polygon points={
+          `${bx + s},${by} ${bx + s + depth},${by - depth} ` +
+          `${bx + s + depth},${by + s - depth} ${bx + s},${by + s}`
+        } fill={`url(#${uid}_side)`} stroke={darken(faceFill, 0.30)}
+          strokeWidth={0.6} strokeLinejoin="round" />
+        {/* Top face */}
+        <polygon points={
+          `${bx},${by} ${bx + depth},${by - depth} ` +
+          `${bx + s + depth},${by - depth} ${bx + s},${by}`
+        } fill={`url(#${uid}_top)`} stroke={darken(faceFill, 0.20)}
+          strokeWidth={0.6} strokeLinejoin="round" />
+        {/* Front face — rounded for friendly look */}
+        <rect x={bx} y={by} width={s} height={s} rx={s * 0.14}
+          fill={`url(#${uid}_front)`} stroke={darken(faceFill, 0.15)} strokeWidth={0.6} />
+      </g>
+
+      {/* Top-edge specular */}
+      <rect x={bx + s * 0.10} y={by + 3} width={s * 0.55} height={s * 0.06}
+        fill="#fff" opacity="0.40" rx={2} />
+
+      {/* Pips — recessed sphere look */}
+      {(dotPositions[face] || dotPositions[1]).map(([dx, dy], i) => {
+        const cx = bx + s * dx, cy = by + s * dy;
+        return (
+          <g key={i}>
+            {/* Recessed shadow underneath the pip */}
+            <circle cx={cx + 0.5} cy={cy + 1} r={dotR + 0.5}
+              fill={darken(faceFill, 0.25)} opacity="0.30" />
+            {/* Pip body with gradient */}
+            <circle cx={cx} cy={cy} r={dotR} fill={pipColor} />
+            <circle cx={cx} cy={cy} r={dotR} fill={`url(#${uid}_pip)`} />
+            {/* Tiny specular highlight */}
+            <ellipse cx={cx - dotR * 0.30} cy={cy - dotR * 0.35}
+              rx={dotR * 0.30} ry={dotR * 0.18}
+              fill="#fff" opacity="0.55" />
+          </g>
+        );
+      })}
     </svg>
   );
 }
 
 // ─── 18. ProbabilityVisual ───────────────────────────────────────────────────
+// Polished: in "coin" mode two glossy coins (heads/tails) sit side-by-side
+// with a halved equation badge below; in slider mode a multi-stop gradient
+// fills a smoothed track with a glowing sphere thumb (data-bar feel).
 export function ProbabilityVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { value = 0.5, coin = false } = params;
 
   if (coin) {
-    const r = size * 0.26;
+    const r = size * 0.24;
+    // Coin sphere — gradient body + ring rim + specular
+    const coinG = (cx, cy, base, label) => (
+      <g>
+        <ellipse cx={cx} cy={cy + r * 0.85} rx={r * 0.75} ry={r * 0.12}
+          fill="#000" opacity="0.16" />
+        <g filter={`url(#${uid}_rich)`}>
+          <circle cx={cx} cy={cy} r={r} fill={base} />
+          <circle cx={cx} cy={cy} r={r} fill={`url(#${uid}_${label}G)`} />
+        </g>
+        {/* Outer ring rim */}
+        <circle cx={cx} cy={cy} r={r - 1.5} fill="none"
+          stroke={darken(base, 0.20)} strokeWidth={0.8} strokeOpacity="0.50" />
+        {/* Specular highlight */}
+        <ellipse cx={cx - r * 0.32} cy={cy - r * 0.38} rx={r * 0.32} ry={r * 0.20}
+          fill="#fff" opacity="0.60" />
+        {/* Letter */}
+        <text x={cx} y={cy + 5} textAnchor="middle"
+          fontSize={16} fontWeight={900} fill="#fff"
+          style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.30))' }}>
+          {label}
+        </text>
+      </g>
+    );
+
     return (
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="perçe">
         <defs>
-          <ShadowDef id={`${uid}_sh`} blur={3} opacity={0.2} />
-          <radialGradient id={`${uid}_cg1`} cx="38%" cy="35%" r="60%">
-            <stop offset="0%" stopColor={c.white} stopOpacity={0.5} />
-            <stop offset="100%" stopColor={c.fill4} stopOpacity={1} />
+          <RichShadow id={`${uid}_rich`} near={1.5} far={4} />
+          <radialGradient id={`${uid}_TG`} cx="32%" cy="28%" r="68%">
+            <stop offset="0%"   stopColor={lighten(c.fill4, 0.40)} />
+            <stop offset="55%"  stopColor={c.fill4} />
+            <stop offset="100%" stopColor={darken(c.fill4, 0.12)} />
           </radialGradient>
-          <radialGradient id={`${uid}_cg2`} cx="38%" cy="35%" r="60%">
-            <stop offset="0%" stopColor={c.white} stopOpacity={0.5} />
-            <stop offset="100%" stopColor={c.fill1} stopOpacity={1} />
+          <radialGradient id={`${uid}_YG`} cx="32%" cy="28%" r="68%">
+            <stop offset="0%"   stopColor={lighten(c.fill1, 0.40)} />
+            <stop offset="55%"  stopColor={c.fill1} />
+            <stop offset="100%" stopColor={darken(c.fill1, 0.12)} />
           </radialGradient>
         </defs>
-        <circle cx={size*0.3} cy={size*0.42} r={r}
-          fill={`url(#${uid}_cg1)`} stroke={c.fill4} strokeWidth={2.5}
-          filter={`url(#${uid}_sh)`} />
-        <text x={size*0.3} y={size*0.42+5} textAnchor="middle"
-          fontSize={15} fontWeight={800} fill={c.white}>T</text>
-        <circle cx={size*0.7} cy={size*0.42} r={r}
-          fill={`url(#${uid}_cg2)`} stroke={c.fill1} strokeWidth={2.5}
-          filter={`url(#${uid}_sh)`} />
-        <text x={size*0.7} y={size*0.42+5} textAnchor="middle"
-          fontSize={15} fontWeight={800} fill={c.white}>Y</text>
-        <text x={size/2} y={size*0.82} textAnchor="middle"
-          fontSize={11} fontWeight={600} fill={c.dim}>½ + ½ = 1</text>
+        {coinG(size * 0.30, size * 0.42, c.fill4, 'T')}
+        {coinG(size * 0.70, size * 0.42, c.fill1, 'Y')}
+        {/* Equation badge */}
+        <g transform={`translate(${size / 2}, ${size * 0.84})`}>
+          <rect x={-40} y={-12} width={80} height={24} rx={12}
+            fill={c.fill1} opacity="0.10" />
+          <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+            fontSize={12} fontWeight={800} fill={c.fill1}
+            fontFamily="'Inter',system-ui">½ + ½ = 1</text>
+        </g>
       </svg>
     );
   }
 
-  const trackX = 18, trackW = size - 36, trackH = 14, trackY = size * 0.44;
+  // ── Probability slider ──
+  const trackX = 18, trackW = size - 36, trackH = 14, trackY = size * 0.46;
   const fillW = Math.max(0, Math.min(trackW, trackW * value));
   const labels = ['0', '¼', '½', '¾', '1'];
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
       aria-label={`îhtîmal ${value}`}>
       <defs>
-        <ShadowDef id={`${uid}_sh`} blur={2} opacity={0.15} />
-        <linearGradient id={`${uid}_pg`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor={c.fill5} />
-          <stop offset="50%" stopColor={c.fill4} />
+        <RichShadow id={`${uid}_rich`} near={1} far={3} />
+        <linearGradient id={`${uid}_pg`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stopColor={c.fill5} />
+          <stop offset="50%"  stopColor={c.fill4} />
           <stop offset="100%" stopColor={c.fill3} />
         </linearGradient>
+        <linearGradient id={`${uid}_track`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={darken(c.line, 0.05)} />
+          <stop offset="100%" stopColor={lighten(c.line, 0.05)} />
+        </linearGradient>
+        <SphereGradient id={`${uid}_thumb`} base={c.fill3} cx="32%" cy="28%" />
         <clipPath id={`${uid}_clip`}>
           <rect x={trackX} y={trackY} width={fillW} height={trackH} rx={7} />
         </clipPath>
       </defs>
-      <text x={trackX} y={trackY - 8} fontSize={9} fill={c.fill5} fontWeight={700}>Negengaz</text>
-      <text x={trackX+trackW} y={trackY - 8} textAnchor="end"
-        fontSize={9} fill={c.fill3} fontWeight={700}>Teqez</text>
-      {/* Track */}
-      <rect x={trackX} y={trackY} width={trackW} height={trackH} rx={7} fill={c.line} />
-      {/* Fill — gradient */}
+
+      {/* End labels */}
+      <g transform={`translate(${trackX + 18}, ${trackY - 12})`}>
+        <rect x={-18} y={-9} width={36} height={16} rx={8} fill={c.fill5} opacity="0.14" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={9} fontWeight={800} fill={c.fill5}>Negengaz</text>
+      </g>
+      <g transform={`translate(${trackX + trackW - 18}, ${trackY - 12})`}>
+        <rect x={-15} y={-9} width={30} height={16} rx={8} fill={c.fill3} opacity="0.14" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={9} fontWeight={800} fill={c.fill3}>Teqez</text>
+      </g>
+
+      {/* Track (inset look with subtle inner shadow line) */}
+      <rect x={trackX} y={trackY} width={trackW} height={trackH} rx={7}
+        fill={`url(#${uid}_track)`} />
+      <rect x={trackX} y={trackY} width={trackW} height={2} rx={1}
+        fill="#000" opacity="0.10" />
+      {/* Fill */}
       <rect x={trackX} y={trackY} width={trackW} height={trackH} rx={7}
         fill={`url(#${uid}_pg)`} clipPath={`url(#${uid}_clip)`} />
-      {/* Thumb */}
-      <circle cx={trackX + fillW} cy={trackY + trackH/2} r={10}
-        fill={c.fill3} filter={`url(#${uid}_sh)`} />
-      <text x={trackX + fillW} y={trackY + trackH/2 + 4} textAnchor="middle"
-        fontSize={8} fontWeight={700} fill={c.white}>{value}</text>
-      {/* Labels */}
+
+      {/* Glossy thumb sphere */}
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={trackX + fillW} cy={trackY + trackH / 2} r={11} fill={c.fill3} />
+        <circle cx={trackX + fillW} cy={trackY + trackH / 2} r={11} fill={`url(#${uid}_thumb)`} />
+      </g>
+      <ellipse cx={trackX + fillW - 3.5} cy={trackY + trackH / 2 - 4} rx={3.5} ry={2}
+        fill="#fff" opacity="0.60" />
+      <text x={trackX + fillW} y={trackY + trackH / 2 + 4} textAnchor="middle"
+        fontSize={8} fontWeight={900} fill="#fff"
+        style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.30))' }}>
+        {value}
+      </text>
+
+      {/* Tick labels under the track */}
       {labels.map((l, i) => (
-        <text key={i} x={trackX + (i/4) * trackW} y={trackY + trackH + 18}
-          textAnchor="middle" fontSize={8} fill={c.muted}>{l}</text>
+        <text key={i} x={trackX + (i / 4) * trackW} y={trackY + trackH + 20}
+          textAnchor="middle" fontSize={9} fontWeight={700} fill={c.muted}>{l}</text>
       ))}
     </svg>
   );
 }
 
 // ─── 19. AlgebraVisual (pure SVG) ────────────────────────────────────────────
+// Polished: equation mode renders a compact balance beneath the equation
+// pill; balanced state uses logo green, unbalanced uses logo coral. Variable
+// mode shows a dashed-bordered "mystery box" with a glowing ? inside and a
+// soft inner gradient (the "what goes here?" feel).
 export function AlgebraVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { type: vtype = 'variable', equation = '□ + 3 = 7', balanced = true } = params;
 
   if (vtype === 'equation') {
-    // Inline mini scale + equation text, pure SVG
-    const cx = size / 2, baseY = size * 0.72, postH = size * 0.38;
-    const tilt = balanced ? 0 : 10;
-    const beamColor = balanced ? c.fill3 : c.fill5;
+    const cx = size / 2, baseY = size * 0.74, postH = size * 0.34;
+    const tilt = balanced ? 0 : 9;
+    const beamColor = balanced ? c.fill3 : c.fill2;
+    const fontSize = equation.length > 14 ? 9 : equation.length > 10 ? 11 : 13;
     return (
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
         aria-label={equation}>
-        <defs><ShadowDef id={`${uid}_sh`} blur={2} opacity={0.15} /></defs>
-        {/* Post */}
-        <line x1={cx} y1={baseY-postH} x2={cx} y2={baseY}
-          stroke={c.muted} strokeWidth={3.5} strokeLinecap="round" />
-        {/* Base */}
-        <rect x={cx-22} y={baseY} width={44} height={7} rx={4} fill={c.muted} />
+        <defs>
+          <RichShadow id={`${uid}_rich`} near={1.2} far={3} />
+          <linearGradient id={`${uid}_post`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor={lighten(c.muted, 0.18)} />
+            <stop offset="100%" stopColor={darken(c.muted, 0.18)} />
+          </linearGradient>
+          <linearGradient id={`${uid}_beam`} x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%"   stopColor={lighten(beamColor, 0.20)} />
+            <stop offset="100%" stopColor={darken(beamColor, 0.10)} />
+          </linearGradient>
+          <SphereGradient id={`${uid}_pivot`} base={beamColor} cx="32%" cy="28%" />
+        </defs>
+
+        {/* Equation pill at the top */}
+        <g transform={`translate(${size / 2}, ${size * 0.16})`}>
+          <rect x={-Math.min(size * 0.40, equation.length * fontSize * 0.32)} y={-13}
+            width={Math.min(size * 0.80, equation.length * fontSize * 0.64)} height={26} rx={13}
+            fill={c.fill1} opacity="0.12" />
+          <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+            fontSize={fontSize} fontWeight={900} fill={c.fill1}
+            fontFamily="'Inter',system-ui,monospace">{equation}</text>
+        </g>
+
+        {/* Ground shadow */}
+        <ellipse cx={cx} cy={baseY + 11} rx={size * 0.20} ry={3} fill="#000" opacity="0.14" />
+
+        {/* Base plate */}
+        <rect x={cx - 24} y={baseY + 4} width={48} height={3.5}
+          fill={darken(c.muted, 0.20)} rx={1.5} />
+        <rect x={cx - 24} y={baseY} width={48} height={6} rx={3}
+          fill={`url(#${uid}_post)`} />
+
+        {/* Vertical post */}
+        <rect x={cx - 2.5} y={baseY - postH} width={5} height={postH}
+          fill={`url(#${uid}_post)`} rx={1.5} />
+
         {/* Beam */}
-        <line x1={cx-size*0.30} y1={baseY-postH+tilt}
-          x2={cx+size*0.30} y2={baseY-postH-tilt}
-          stroke={beamColor} strokeWidth={3} strokeLinecap="round" />
-        <circle cx={cx} cy={baseY-postH} r={4} fill={beamColor} />
-        {/* Pans */}
-        <ellipse cx={cx-size*0.30} cy={baseY-postH+tilt+18}
-          rx={22} ry={6} fill="none" stroke={beamColor} strokeWidth={2} />
-        <ellipse cx={cx+size*0.30} cy={baseY-postH-tilt+18}
-          rx={22} ry={6} fill="none" stroke={beamColor} strokeWidth={2} />
-        {/* Equation text — auto-shrink for long equations */}
-        <text x={size/2} y={size*0.14} textAnchor="middle"
-          fontSize={equation.length > 12 ? 10 : 13} fontWeight={800} fill={c.fill1} fontFamily="monospace">{equation}</text>
+        <line x1={cx - size * 0.28} y1={baseY - postH + tilt}
+          x2={cx + size * 0.28} y2={baseY - postH - tilt}
+          stroke={`url(#${uid}_beam)`} strokeWidth={3.5} strokeLinecap="round" />
+
+        {/* Pivot — glossy sphere */}
+        <g filter={`url(#${uid}_rich)`}>
+          <circle cx={cx} cy={baseY - postH} r={5} fill={beamColor} />
+          <circle cx={cx} cy={baseY - postH} r={5} fill={`url(#${uid}_pivot)`} />
+        </g>
+
+        {/* Pans (open ellipses) */}
+        <ellipse cx={cx - size * 0.28} cy={baseY - postH + tilt + 16}
+          rx={20} ry={5.5} fill="none" stroke={beamColor} strokeWidth={2} />
+        <ellipse cx={cx + size * 0.28} cy={baseY - postH - tilt + 16}
+          rx={20} ry={5.5} fill="none" stroke={beamColor} strokeWidth={2} />
       </svg>
     );
   }
 
-  // Variable box
+  // Variable mystery-box
   const bx = size * 0.28, by = size * 0.18, bs = size * 0.44;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="guherbar">
-      <defs><ShadowDef id={`${uid}_sh`} blur={3} opacity={0.15} /></defs>
-      <rect x={bx} y={by} width={bs} height={bs} rx={10}
-        fill={c.soft1} stroke={c.fill1} strokeWidth={2.5}
-        strokeDasharray="7,4" filter={`url(#${uid}_sh)`} />
-      <text x={size/2} y={by + bs/2 + 2} textAnchor="middle"
-        fontSize={28} fontWeight={800} fill={c.fill1} dominantBaseline="middle">?</text>
-      <text x={size/2} y={by + bs + 22} textAnchor="middle"
-        fontSize={11} fontWeight={600} fill={c.dim}>guherbar</text>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={1.5} far={3.5} />
+        <radialGradient id={`${uid}_var`} cx="40%" cy="36%" r="80%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.65)} />
+          <stop offset="100%" stopColor={c.soft1} />
+        </radialGradient>
+      </defs>
+      <g filter={`url(#${uid}_rich)`}>
+        <rect x={bx} y={by} width={bs} height={bs} rx={12}
+          fill={`url(#${uid}_var)`} stroke={c.fill1} strokeWidth={2.5}
+          strokeDasharray="7,4" />
+      </g>
+      {/* Question mark with a soft inner glow */}
+      <circle cx={size / 2} cy={by + bs / 2} r={bs * 0.30}
+        fill={c.fill1} opacity="0.10" />
+      <text x={size / 2} y={by + bs / 2 + 2} textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize={32} fontWeight={900} fill={c.fill1}
+        style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.18))' }}>?</text>
+      <g transform={`translate(${size / 2}, ${by + bs + 20})`}>
+        <rect x={-32} y={-9} width={64} height={18} rx={9} fill={c.fill1} opacity="0.12" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={10} fontWeight={800} fill={c.fill1}>guherbar</text>
+      </g>
     </svg>
   );
 }
 
 // ─── 20. PatternVisual ───────────────────────────────────────────────────────
+// Polished: each pattern element is a glossy sphere/square/triangle. The
+// unknown ("?") slot wears a dashed pill with a pulsing tint so it reads as
+// the question. A subtle row baseline anchors them on the same "shelf".
 export function PatternVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
-  const { items = ['🔵','🟡','🔵','🟡','?'], count = 5 } = params;
+  const { items = ['🔵', '🟡', '🔵', '🟡', '?'], count = 5 } = params;
   const shapeMap = { '🔵':'circle','🟡':'square','🔺':'triangle','🟢':'circle','🔴':'circle','🟠':'circle' };
   const colorMap = { '🔵':c.fill1,'🟡':c.fill4,'🔺':c.fill5,'🟢':c.fill3,'🔴':c.fill5,'🟠':c.fill2 };
   const n = Math.min(count, 7);
   const spacing = (size - 20) / n;
   const r = Math.min(spacing * 0.36, 20);
   const midY = size * 0.42;
+
+  // Collect unique gradient defs so each element has its own highlight
+  const gradDefs = [];
   const elems = [];
   for (let i = 0; i < n; i++) {
     const cx = 12 + i * spacing + spacing / 2;
     const item = items[i] || (i % 2 === 0 ? '🔵' : '🟡');
-    const isLast = item === '?' || i === n - 1 && items[n-1] === '?';
+    const isLast = item === '?' || (i === n - 1 && items[n - 1] === '?');
     if (isLast) {
       elems.push(
-        <rect key={`box${i}`} x={cx-r} y={midY-r} width={r*2} height={r*2} rx={5}
-          fill={c.soft1} stroke={c.muted} strokeWidth={2} strokeDasharray="4,2.5" />,
-        <text key={`q${i}`} x={cx} y={midY+4} textAnchor="middle"
-          fontSize={16} fontWeight={800} fill={c.muted} dominantBaseline="middle">?</text>
+        <g key={`box${i}`}>
+          <rect x={cx - r} y={midY - r} width={r * 2} height={r * 2} rx={6}
+            fill={c.soft1} stroke={c.muted} strokeWidth={1.8} strokeDasharray="4,2.5" />
+          <text x={cx} y={midY + 4} textAnchor="middle" dominantBaseline="middle"
+            fontSize={18} fontWeight={900} fill={c.muted}>?</text>
+        </g>
       );
     } else {
       const shape = shapeMap[item] || 'circle';
       const col   = colorMap[item] || c.fill1;
+      const gid   = `${uid}_g${i}`;
+      gradDefs.push(<SphereGradient key={gid} id={gid} base={col} cx="32%" cy="28%" />);
       if (shape === 'triangle') {
-        elems.push(<polygon key={i} points={`${cx},${midY-r} ${cx-r},${midY+r} ${cx+r},${midY+r}`}
-          fill={col} opacity={0.88} />);
+        elems.push(
+          <g key={i} filter={`url(#${uid}_rich)`}>
+            <polygon points={`${cx},${midY - r} ${cx - r},${midY + r} ${cx + r},${midY + r}`}
+              fill={col} strokeLinejoin="round" />
+            <polygon points={`${cx},${midY - r} ${cx - r},${midY + r} ${cx + r},${midY + r}`}
+              fill={`url(#${gid})`} strokeLinejoin="round" />
+          </g>
+        );
       } else if (shape === 'square') {
-        elems.push(<rect key={i} x={cx-r} y={midY-r} width={r*2} height={r*2} rx={4}
-          fill={col} opacity={0.88} />);
+        elems.push(
+          <g key={i} filter={`url(#${uid}_rich)`}>
+            <rect x={cx - r} y={midY - r} width={r * 2} height={r * 2} rx={r * 0.18}
+              fill={col} />
+            <rect x={cx - r} y={midY - r} width={r * 2} height={r * 2} rx={r * 0.18}
+              fill={`url(#${gid})`} />
+            <rect x={cx - r + 2} y={midY - r + 2} width={r * 2 - 4} height={r * 0.5} rx={r * 0.13}
+              fill="#fff" opacity="0.22" />
+          </g>
+        );
       } else {
-        elems.push(<circle key={i} cx={cx} cy={midY} r={r} fill={col} opacity={0.88} />);
+        elems.push(
+          <g key={i} filter={`url(#${uid}_rich)`}>
+            <circle cx={cx} cy={midY} r={r} fill={col} />
+            <circle cx={cx} cy={midY} r={r} fill={`url(#${gid})`} />
+            <ellipse cx={cx - r * 0.32} cy={midY - r * 0.40} rx={r * 0.32} ry={r * 0.20}
+              fill="#fff" opacity="0.55" />
+          </g>
+        );
       }
     }
   }
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="şêwe">
-      <defs><ShadowDef id={`${uid}_sh`} blur={1.5} opacity={0.15} /></defs>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={2} opacityNear={0.20} opacityFar={0.10} />
+        {gradDefs}
+      </defs>
+      {/* Subtle baseline shelf */}
+      <line x1={10} y1={midY + r + 4} x2={size - 10} y2={midY + r + 4}
+        stroke={c.line} strokeWidth={0.5} opacity="0.40" />
       {elems}
       {size >= 120 && (
-        <text x={size/2} y={size*0.74} textAnchor="middle"
-          fontSize={9} fill={c.muted}>Şêweyê berdewam bike…</text>
+        <g transform={`translate(${size / 2}, ${size * 0.78})`}>
+          <rect x={-66} y={-9} width={132} height={18} rx={9} fill={c.fill2} opacity="0.10" />
+          <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+            fontSize={9} fontWeight={700} fill={c.fill2}>
+            Şêweyê berdewam bike…
+          </text>
+        </g>
       )}
     </svg>
   );
 }
 
 // ─── 21. SetVisual ───────────────────────────────────────────────────────────
+// Polished: two overlapping Venn circles wear radial gradient fills (lighter
+// centre → tinted edge) so each set feels like a glowing disc; the
+// intersection is rendered as a single warmer wedge using a clip-path so it
+// reads as the "shared" region. Set labels sit in tinted pills.
 export function SetVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
-  const { type: stype = 'two_sets', labels = ['A', 'B'] } = params;
+  const { labels = ['A', 'B'] } = params;
   const cx = size / 2, cy = size * 0.46, r = size * 0.30;
   const offset = r * 0.62;
+  const aCx = cx - offset * 0.7;
+  const bCx = cx + offset * 0.7;
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="kom">
       <defs>
+        <RichShadow id={`${uid}_rich`} near={1.5} far={3.5} />
+        <radialGradient id={`${uid}_setA`} cx="50%" cy="40%" r="70%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.30)} stopOpacity="0.45" />
+          <stop offset="100%" stopColor={c.fill1} stopOpacity="0.30" />
+        </radialGradient>
+        <radialGradient id={`${uid}_setB`} cx="50%" cy="40%" r="70%">
+          <stop offset="0%"   stopColor={lighten(c.fill2, 0.30)} stopOpacity="0.45" />
+          <stop offset="100%" stopColor={c.fill2} stopOpacity="0.30" />
+        </radialGradient>
+        <radialGradient id={`${uid}_intersect`} cx="50%" cy="40%" r="70%">
+          <stop offset="0%"   stopColor={lighten(c.fill4, 0.40)} stopOpacity="0.85" />
+          <stop offset="100%" stopColor={c.fill4} stopOpacity="0.60" />
+        </radialGradient>
         <clipPath id={`${uid}_clipA`}>
-          <circle cx={cx - offset * 0.7} cy={cy} r={r} />
+          <circle cx={aCx} cy={cy} r={r} />
         </clipPath>
-        <clipPath id={`${uid}_clipB`}>
-          <circle cx={cx + offset * 0.7} cy={cy} r={r} />
-        </clipPath>
-        <ShadowDef id={`${uid}_sh`} blur={3} opacity={0.12} />
       </defs>
-      {/* Circle A */}
-      <circle cx={cx - offset * 0.7} cy={cy} r={r}
-        fill={c.fill1} opacity={0.18} stroke={c.fill1} strokeWidth={2.5}
-        filter={`url(#${uid}_sh)`} />
-      {/* Circle B */}
-      <circle cx={cx + offset * 0.7} cy={cy} r={r}
-        fill={c.fill2} opacity={0.18} stroke={c.fill2} strokeWidth={2.5} />
-      {/* Intersection highlight */}
-      <circle cx={cx + offset * 0.7} cy={cy} r={r}
-        fill={c.fill4} opacity={0.28}
-        clipPath={`url(#${uid}_clipA)`} />
-      {/* Labels */}
-      <text x={cx - offset * 1.25} y={cy + 5} textAnchor="middle"
-        fontSize={18} fontWeight={800} fill={c.fill1}>{labels[0]}</text>
-      <text x={cx + offset * 1.25} y={cy + 5} textAnchor="middle"
-        fontSize={18} fontWeight={800} fill={c.fill2}>{labels[1] || 'B'}</text>
-      <text x={cx} y={cy + 5} textAnchor="middle"
-        fontSize={11} fontWeight={700} fill={c.text}>∩</text>
+
+      {/* Set A — gradient fill + thick stroke */}
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={aCx} cy={cy} r={r}
+          fill={`url(#${uid}_setA)`} stroke={c.fill1} strokeWidth={2.5} strokeOpacity="0.65" />
+      </g>
+      {/* Set A specular highlight */}
+      <ellipse cx={aCx - r * 0.35} cy={cy - r * 0.50} rx={r * 0.32} ry={r * 0.16}
+        fill="#fff" opacity="0.40" transform={`rotate(-25 ${aCx - r * 0.35} ${cy - r * 0.50})`} />
+
+      {/* Set B */}
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={bCx} cy={cy} r={r}
+          fill={`url(#${uid}_setB)`} stroke={c.fill2} strokeWidth={2.5} strokeOpacity="0.65" />
+      </g>
+      <ellipse cx={bCx - r * 0.35} cy={cy - r * 0.50} rx={r * 0.32} ry={r * 0.16}
+        fill="#fff" opacity="0.40" transform={`rotate(-25 ${bCx - r * 0.35} ${cy - r * 0.50})`} />
+
+      {/* Intersection — B clipped by A's circle so only overlap is filled */}
+      <circle cx={bCx} cy={cy} r={r}
+        fill={`url(#${uid}_intersect)`} clipPath={`url(#${uid}_clipA)`} />
+
+      {/* Labels — tinted pills */}
+      <g transform={`translate(${aCx - r - 6}, ${cy})`}>
+        <rect x={-14} y={-12} width={28} height={24} rx={12} fill={c.fill1} opacity="0.16" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={16} fontWeight={900} fill={c.fill1}>{labels[0]}</text>
+      </g>
+      <g transform={`translate(${bCx + r + 6}, ${cy})`}>
+        <rect x={-14} y={-12} width={28} height={24} rx={12} fill={c.fill2} opacity="0.16" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={16} fontWeight={900} fill={c.fill2}>{labels[1] || 'B'}</text>
+      </g>
+      {/* ∩ symbol in intersection centre */}
+      <text x={cx} y={cy + 5} textAnchor="middle" dominantBaseline="middle"
+        fontSize={14} fontWeight={900} fill="#fff"
+        style={{ filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.35))' }}>∩</text>
     </svg>
   );
 }
@@ -2370,18 +2621,30 @@ export function RegroupingVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 25b. CustomVisual ──────────────────────────────────────────────────────
+// Polished: large emoji centred over a subtle teal soft-tint disc; formula
+// and label appear in tinted pill badges, matching the rest of the library.
 export function CustomVisual({ params = {}, theme, size = 160 }) {
+  const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { icon = '🔢', label = '', formula = '' } = params;
   const formulaFs = formula.length > 14 ? 9 : formula.length > 10 ? 11 : 13;
-  const labelFs = label.length > 16 ? 8 : 10;
+  const hasFormulaOrLabel = formula || label;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={label || icon}>
-      <text x={size/2} y={size * (formula || label ? 0.40 : 0.50)} textAnchor="middle"
-        fontSize={size * 0.28} dominantBaseline="middle">{icon}</text>
+      <defs>
+        <radialGradient id={`${uid}_disc`} cx="50%" cy="50%" r="55%">
+          <stop offset="0%"   stopColor={c.fill1} stopOpacity="0.14" />
+          <stop offset="100%" stopColor={c.fill1} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Soft glow disc behind the emoji */}
+      <circle cx={size / 2} cy={size * (hasFormulaOrLabel ? 0.40 : 0.50)} r={size * 0.32}
+        fill={`url(#${uid}_disc)`} />
+      <text x={size / 2} y={size * (hasFormulaOrLabel ? 0.40 : 0.50)} textAnchor="middle"
+        fontSize={size * 0.32} dominantBaseline="middle">{icon}</text>
       {formula && (
-        <text x={size/2} y={size * 0.68} textAnchor="middle"
-          fontSize={formulaFs} fontWeight={800} fill={c.fill1} fontFamily="monospace">
+        <text x={size / 2} y={size * 0.68} textAnchor="middle"
+          fontSize={formulaFs} fontWeight={800} fill={c.fill1} fontFamily="'Inter',system-ui,monospace">
           {formula.length > 18 ? formula.slice(0, 17) + '…' : formula}
         </text>
       )}
