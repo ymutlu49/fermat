@@ -199,6 +199,7 @@ export default function App() {
                 theme={theme} isDark={isDark}
                 progress={progress}
                 setView={handleSetView}
+                gamification={gamification}
               />
             )}
             {view === 'dict' && (
