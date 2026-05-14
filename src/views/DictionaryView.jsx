@@ -302,17 +302,58 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
           <div style={{ width: 40, height: 4, borderRadius: 2, background: t.border }} />
         </div>
 
-        {/* Visual hero — fixed height */}
+        {/* Visual hero — subtle gradient using section palette, with corner accent */}
         <div style={{
-          background: colors.bg,
+          position: 'relative',
+          background: `linear-gradient(135deg, ${colors.bg} 0%, ${colors.accent}18 100%)`,
           display: 'flex', justifyContent: 'center', alignItems: 'center',
-          height: isMobile ? 150 : 180,
+          height: isMobile ? 160 : 190,
           overflow: 'hidden',
         }}>
-          {concept.visual
-            ? <ConceptVisual visual={concept.visual} theme={t} size={isMobile ? 120 : 150} />
-            : <span style={{ fontSize: isMobile ? '3.5rem' : '5rem' }}>{SECTIONS[concept.s]?.icon}</span>
-          }
+          <div aria-hidden="true" style={{
+            position: 'absolute', top: -30, right: -30,
+            width: 120, height: 120, borderRadius: '50%',
+            background: `${colors.accent}14`,
+            pointerEvents: 'none',
+          }} />
+          <div aria-hidden="true" style={{
+            position: 'absolute', bottom: -20, left: -20,
+            width: 80, height: 80, borderRadius: '50%',
+            background: `${colors.accent}10`,
+            pointerEvents: 'none',
+          }} />
+          <div style={{ position: 'relative' }}>
+            {concept.visual
+              ? <ConceptVisual visual={concept.visual} theme={t} size={isMobile ? 130 : 160} />
+              : <span style={{ fontSize: isMobile ? '3.8rem' : '5.2rem' }}>{SECTIONS[concept.s]?.icon}</span>
+            }
+          </div>
+          {/* Favorite — floating top-right */}
+          <button
+            onClick={() => toggleFavorite(concept.ku + '_' + concept.s)}
+            aria-label={isFav ? 'Ji bijartî derxe' : 'Wek bijartî nîşan bide'}
+            style={{
+              position: 'absolute', top: 12, right: 12,
+              width: 36, height: 36, borderRadius: '50%',
+              background: isFav
+                ? 'linear-gradient(135deg, #FCD34D, #F59E0B)'
+                : (isDark ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.65)'),
+              border: 'none',
+              cursor: 'pointer',
+              fontSize: '1.1rem', lineHeight: 1,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              boxShadow: isFav
+                ? '0 4px 12px rgba(245,158,11,0.35)'
+                : '0 2px 6px rgba(0,0,0,0.08)',
+              transition: 'transform 0.15s ease',
+            }}
+            onMouseEnter={e => { e.currentTarget.style.transform = 'scale(1.08)'; }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'scale(1)'; }}
+          >
+            <span aria-hidden="true">{isFav ? '⭐' : '☆'}</span>
+          </button>
         </div>
 
         {/* Content */}
@@ -321,23 +362,17 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
           {/* Title */}
           <div style={{ textAlign: 'center', marginBottom: SPACING.lg }}>
             <div style={{
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 4,
-              marginBottom: 5,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              marginBottom: 5, flexWrap: 'wrap',
             }}>
               <div style={{
-                fontSize: concept.ku.length > 25 ? '1rem' : concept.ku.length > 18 ? '1.2rem' : isMobile ? '1.5rem' : '1.8rem',
+                fontSize: concept.ku.length > 25 ? '1.05rem' : concept.ku.length > 18 ? '1.25rem' : isMobile ? '1.55rem' : '1.85rem',
                 fontWeight: FONT_WEIGHT.black, color: colors.text, lineHeight: 1.15,
+                letterSpacing: '-0.01em',
               }}>
                 {concept.ku}
               </div>
               <SpeakButton text={concept.ku} speak={speak} isSpeaking={isSpeaking} theme={t} size={32} />
-              <span
-                role="button" tabIndex={0}
-                onClick={() => toggleFavorite(concept.ku + '_' + concept.s)}
-                style={{ cursor: 'pointer', fontSize: '1.2rem', opacity: isFav ? 1 : 0.3 }}
-              >
-                {isFav ? '⭐' : '☆'}
-              </span>
             </div>
 
             {/* Syllable display */}
@@ -347,35 +382,42 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
               </div>
             )}
 
-            <div style={{ fontSize: '0.92rem', color: t.textSecondary, fontWeight: FONT_WEIGHT.medium, marginBottom: 10 }}>
+            <div style={{ fontSize: '0.95rem', color: t.textSecondary, fontWeight: FONT_WEIGHT.medium, marginTop: 6, marginBottom: 12 }}>
               {concept.tr}{concept.en ? ' · ' + concept.en : ''}
             </div>
-            <div style={{ display: 'flex', gap: 6, justifyContent: 'center' }}>
+            <div style={{ display: 'flex', gap: 6, justifyContent: 'center', flexWrap: 'wrap' }}>
               <SectionTag sectionId={concept.s} isDark={isDark} size="sm" />
               <span style={{
-                background: lvColor, color: '#fff',
+                background: `linear-gradient(135deg, ${lvColor}, ${lvColor}CC)`,
+                color: '#fff',
                 fontSize: '0.72rem', fontWeight: FONT_WEIGHT.extrabold,
-                padding: '3px 10px', borderRadius: 10,
+                padding: '4px 11px', borderRadius: 99,
+                letterSpacing: '0.02em',
+                boxShadow: `0 2px 6px ${lvColor}40`,
               }}>
-                {concept.lv}
+                Asta {concept.lv}
               </span>
             </div>
           </div>
 
-          {/* Penase */}
+          {/* Penase — section colour, accent left border */}
           {concept.df && (
             <div style={{
-              background: colors.bg, borderRadius: RADIUS.lg,
-              padding: `${SPACING.md}px ${SPACING.lg - 2}px`, marginBottom: 10,
+              background: colors.bg,
+              borderRadius: 14,
+              borderLeft: `4px solid ${colors.accent}`,
+              padding: '12px 14px 12px 16px',
+              marginBottom: 10,
             }}>
               <div style={{
-                fontSize: '0.68rem', fontWeight: FONT_WEIGHT.extrabold, color: colors.accent,
-                marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em',
+                fontSize: '0.62rem', fontWeight: FONT_WEIGHT.extrabold, color: colors.accent,
+                marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em',
+                display: 'flex', alignItems: 'center', gap: 5,
               }}>
-                PENASE
+                <span aria-hidden="true">📖</span> Penase
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <div style={{ fontSize: '0.9rem', color: t.text, lineHeight: 1.65, flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                <div style={{ fontSize: '0.92rem', color: t.text, lineHeight: 1.65, flex: 1 }}>
                   {concept.df}
                 </div>
                 <SpeakButton text={concept.df} speak={speak} isSpeaking={isSpeaking} theme={t} size={24} />
@@ -383,20 +425,24 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
             </div>
           )}
 
-          {/* Mînak */}
+          {/* Mînak — coral accent (logo coral) */}
           {concept.ex && (
             <div style={{
-              background: isDark ? '#2A1F14' : '#FFF7ED',
-              borderRadius: RADIUS.lg, padding: `${SPACING.md}px ${SPACING.lg - 2}px`, marginBottom: 18,
+              background: isDark ? 'rgba(234,88,12,0.08)' : 'rgba(234,88,12,0.05)',
+              borderRadius: 14,
+              borderLeft: '4px solid #EA580C',
+              padding: '12px 14px 12px 16px',
+              marginBottom: 18,
             }}>
               <div style={{
-                fontSize: '0.68rem', fontWeight: FONT_WEIGHT.extrabold, color: '#F97316',
-                marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em',
+                fontSize: '0.62rem', fontWeight: FONT_WEIGHT.extrabold, color: '#EA580C',
+                marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em',
+                display: 'flex', alignItems: 'center', gap: 5,
               }}>
-                MÎNAK
+                <span aria-hidden="true">💬</span> Mînak
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <div style={{ fontSize: '0.9rem', color: t.text, lineHeight: 1.65, fontStyle: 'italic', flex: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start', gap: 6 }}>
+                <div style={{ fontSize: '0.92rem', color: t.text, lineHeight: 1.65, fontStyle: 'italic', flex: 1 }}>
                   {concept.ex}
                 </div>
                 <SpeakButton text={concept.ex} speak={speak} isSpeaking={isSpeaking} theme={t} size={24} />
@@ -434,45 +480,94 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
             </div>
           )}
 
-          {/* Navigation */}
-          <div style={{ display: 'flex', gap: SPACING.sm, alignItems: 'center', marginBottom: SPACING.md, marginTop: SPACING.lg }}>
+          {/* Navigation — circular prev/next + progress bar centre */}
+          <div style={{
+            display: 'flex', gap: 12, alignItems: 'center',
+            marginBottom: SPACING.md, marginTop: SPACING.lg,
+          }}>
             <button
               onClick={onPrev} disabled={modalIdx === 0}
-              style={navBtnStyle(t, modalIdx === 0)}
+              aria-label="Paş"
+              style={{
+                width: 40, height: 40, borderRadius: '50%',
+                border: `1px solid ${t.border}`,
+                background: t.surface,
+                cursor: modalIdx === 0 ? 'not-allowed' : 'pointer',
+                opacity: modalIdx === 0 ? 0.35 : 1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.15s ease',
+                flexShrink: 0,
+                WebkitTapHighlightColor: 'transparent',
+              }}
+              onMouseEnter={e => { if (modalIdx !== 0) e.currentTarget.style.borderColor = colors.accent; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = t.border; }}
             >
-              <IconArrowLeft size={ICON_SIZE.sm} color={modalIdx === 0 ? t.textMuted : t.textSecondary} />
-              <span>Paş</span>
+              <IconArrowLeft size={16} color={modalIdx === 0 ? t.textMuted : t.textSecondary} />
             </button>
-            <div style={{
-              flex: 0.7, textAlign: 'center',
-              fontSize: '0.78rem', color: t.textMuted, fontWeight: FONT_WEIGHT.bold,
-            }}>
-              {modalIdx + 1} / {total}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: 4 }}>
+              <div style={{
+                height: 4, borderRadius: 99,
+                background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+                overflow: 'hidden',
+              }}>
+                <div style={{
+                  height: '100%',
+                  width: total > 0 ? ((modalIdx + 1) / total * 100) + '%' : '0%',
+                  background: `linear-gradient(90deg, ${colors.accent}, #EA580C)`,
+                  transition: 'width 0.25s ease-out',
+                }} />
+              </div>
+              <span style={{
+                textAlign: 'center', fontSize: '0.7rem',
+                color: t.textMuted, fontWeight: FONT_WEIGHT.semibold,
+              }}>
+                {modalIdx + 1} / {total}
+              </span>
             </div>
             <button
               onClick={onNext} disabled={modalIdx >= total - 1}
-              style={navBtnStyle(t, modalIdx >= total - 1)}
+              aria-label="Pêş"
+              style={{
+                width: 40, height: 40, borderRadius: '50%',
+                border: `1px solid ${t.border}`,
+                background: t.surface,
+                cursor: modalIdx >= total - 1 ? 'not-allowed' : 'pointer',
+                opacity: modalIdx >= total - 1 ? 0.35 : 1,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                transition: 'all 0.15s ease',
+                flexShrink: 0,
+                WebkitTapHighlightColor: 'transparent',
+              }}
+              onMouseEnter={e => { if (modalIdx < total - 1) e.currentTarget.style.borderColor = colors.accent; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor = t.border; }}
             >
-              <span>Pêş</span>
-              <IconArrowRight size={ICON_SIZE.sm} color={modalIdx >= total - 1 ? t.textMuted : t.textSecondary} />
+              <IconArrowRight size={16} color={modalIdx >= total - 1 ? t.textMuted : t.textSecondary} />
             </button>
           </div>
 
-          {/* Close */}
+          {/* Close — subtle outline rather than full gradient (less visual weight) */}
           <button
             onClick={onClose}
             style={{
-              width: '100%', padding: `${SPACING.lg - 2}px`, minHeight: 52,
-              borderRadius: RADIUS.lg, border: 'none',
-              background: `linear-gradient(135deg, ${colors.accent}, ${colors.icon || colors.accent})`,
-              color: '#fff',
-              fontFamily: 'inherit', fontSize: '0.95rem',
+              width: '100%', padding: '12px 16px', minHeight: 48,
+              borderRadius: 14,
+              border: `1.5px solid ${colors.accent}40`,
+              background: 'transparent',
+              color: colors.text,
+              fontFamily: 'inherit', fontSize: '0.9rem',
               fontWeight: FONT_WEIGHT.bold, cursor: 'pointer',
-              transition: `opacity ${DURATION.fast}`,
+              transition: 'all 0.15s ease',
               WebkitTapHighlightColor: 'transparent',
+              letterSpacing: '0.02em',
             }}
-            onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
-            onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = colors.bg;
+              e.currentTarget.style.borderColor = colors.accent;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = 'transparent';
+              e.currentTarget.style.borderColor = `${colors.accent}40`;
+            }}
           >
             Bigire
           </button>

@@ -220,34 +220,72 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
         </div>
       </div>
 
-      {/* Question */}
+      {/* Question + Options */}
       <div style={{ flex: 1, overflowY: 'auto', padding: '20px 0' }}>
         <div style={{ maxWidth: 520, margin: '0 auto' }}>
+        {/* Question card — subtle gradient + corner blob using section colour */}
         <div style={{
-          background: sectionColors.bg, borderRadius: RADIUS.xl + 'px', padding: `${SPACING.xl}px`,
-          textAlign: 'center', marginBottom: 20,
-          border: '1px solid ' + sectionColors.accent + '30',
+          position: 'relative',
+          background: `linear-gradient(135deg, ${sectionColors.bg} 0%, ${sectionColors.accent}18 100%)`,
+          borderRadius: 18,
+          padding: '22px 20px',
+          textAlign: 'center',
+          marginBottom: 22,
+          border: `1px solid ${sectionColors.accent}25`,
+          overflow: 'hidden',
         }}>
-          <div style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.bold, color: sectionColors.text, marginBottom: SPACING.md, textTransform: 'uppercase', letterSpacing: '0.04em', opacity: 0.7 }}>
-            Bersiva vê têgehê çi ye?
+          <div aria-hidden="true" style={{
+            position: 'absolute', top: -30, right: -30,
+            width: 110, height: 110, borderRadius: '50%',
+            background: `${sectionColors.accent}10`,
+            pointerEvents: 'none',
+          }} />
+          <div style={{
+            position: 'relative',
+            fontSize: '0.62rem', fontWeight: FONT_WEIGHT.extrabold, color: sectionColors.accent,
+            marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.10em',
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
+          }}>
+            <span aria-hidden="true">❓</span> Bersiva rast hilbijêre
           </div>
-          <div style={{ fontSize: '1.75rem', fontWeight: FONT_WEIGHT.extrabold, color: sectionColors.text, lineHeight: 1.3, marginBottom: SPACING.md, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: SPACING.sm }}>
+          <div style={{
+            position: 'relative',
+            fontSize: currentQuestion.question.length > 30 ? '1.3rem' : '1.7rem',
+            fontWeight: FONT_WEIGHT.black, color: sectionColors.text, lineHeight: 1.25,
+            letterSpacing: '-0.01em',
+            marginBottom: 12,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, flexWrap: 'wrap',
+          }}>
             {currentQuestion.question}
             <SpeakButton text={currentQuestion.question} speak={speak} isSpeaking={isSpeaking} theme={t} size={28} />
           </div>
-          <SectionTag sectionId={currentQuestion.concept.s} isDark={isDark} size="sm" />
+          <div style={{ position: 'relative' }}>
+            <SectionTag sectionId={currentQuestion.concept.s} isDark={isDark} size="sm" />
+          </div>
         </div>
 
-        {/* Options */}
+        {/* Options — letter pill + result feedback animation */}
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
           {currentQuestion.options.map((option, idx) => {
-            let optBg = t.surface, optBorder = t.border, optColor = t.text;
-            if (selectedAnswer !== null) {
-              if (option === currentQuestion.correct) {
-                optBg = t.successLight; optBorder = t.success; optColor = t.success;
-              } else if (option === selectedAnswer && !isCorrect) {
-                optBg = t.errorLight; optBorder = t.error; optColor = t.error;
-              }
+            const isCorrectOpt = selectedAnswer !== null && option === currentQuestion.correct;
+            const isWrongPick  = selectedAnswer !== null && option === selectedAnswer && !isCorrect;
+            const isDimmed     = selectedAnswer !== null && !isCorrectOpt && !isWrongPick;
+            let bg = t.surface, border = t.border, color = t.text, letterBg, letterColor;
+            if (isCorrectOpt) {
+              bg = isDark ? 'rgba(21,128,61,0.12)' : 'rgba(21,128,61,0.08)';
+              border = '#15803D';
+              color = isDark ? '#86EFAC' : '#15803D';
+              letterBg = '#15803D';
+              letterColor = '#fff';
+            } else if (isWrongPick) {
+              bg = isDark ? 'rgba(230,57,70,0.12)' : 'rgba(230,57,70,0.08)';
+              border = t.error;
+              color = isDark ? '#FCA5A5' : t.error;
+              letterBg = t.error;
+              letterColor = '#fff';
+            } else {
+              letterBg = isDark ? 'rgba(13,148,136,0.18)' : 'rgba(13,148,136,0.10)';
+              letterColor = '#0D9488';
             }
             return (
               <button
@@ -256,42 +294,78 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
                 disabled={selectedAnswer !== null}
                 aria-label={'Bersiv ' + (idx + 1) + ': ' + option}
                 style={{
-                  padding: `14px ${SPACING.lg}px`, borderRadius: RADIUS.xl + 'px', border: `1px solid ${selectedAnswer !== null && (option === currentQuestion.correct || (option === selectedAnswer && !isCorrect)) ? optBorder : (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)')}`,
-                  background: optBg, color: optColor,
-                  fontFamily: 'inherit', fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.semibold, cursor: selectedAnswer !== null ? 'default' : 'pointer',
+                  padding: '14px 16px',
+                  borderRadius: 14,
+                  border: `1.5px solid ${border}`,
+                  background: bg,
+                  color: color,
+                  fontFamily: 'inherit', fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.semibold,
+                  cursor: selectedAnswer !== null ? 'default' : 'pointer',
                   textAlign: 'left', transition: `all ${DURATION.normal}`,
-                  display: 'flex', alignItems: 'center', gap: SPACING.md,
-                  minHeight: TOUCH_MIN,
-                  animation: isCorrect !== null && option === currentQuestion.correct ? `pulse ${DURATION.slow} ease-out` : 'none',
+                  display: 'flex', alignItems: 'center', gap: 12,
+                  minHeight: TOUCH_MIN + 4,
+                  opacity: isDimmed ? 0.5 : 1,
+                  transform: isCorrectOpt ? 'scale(1.015)' : 'scale(1)',
+                  boxShadow: isCorrectOpt
+                    ? '0 4px 16px rgba(21,128,61,0.25)'
+                    : isWrongPick
+                      ? '0 4px 16px rgba(230,57,70,0.20)'
+                      : 'none',
+                  WebkitTapHighlightColor: 'transparent',
                 }}
-                onMouseEnter={e => { if (selectedAnswer === null) e.currentTarget.style.background = t.surfaceHover; }}
-                onMouseLeave={e => { if (selectedAnswer === null) e.currentTarget.style.background = t.surface; }}
+                onMouseEnter={e => {
+                  if (selectedAnswer === null) {
+                    e.currentTarget.style.background = isDark ? 'rgba(13,148,136,0.08)' : 'rgba(13,148,136,0.04)';
+                    e.currentTarget.style.borderColor = '#0D9488';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (selectedAnswer === null) {
+                    e.currentTarget.style.background = bg;
+                    e.currentTarget.style.borderColor = border;
+                    e.currentTarget.style.transform = 'translateY(0)';
+                  }
+                }}
               >
                 <span style={{
-                  width: 28, height: 28, borderRadius: `${RADIUS.full}px`, background: optBorder + '22',
+                  width: 32, height: 32, borderRadius: '50%',
+                  background: letterBg,
+                  color: letterColor,
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '0.85rem', fontWeight: FONT_WEIGHT.extrabold, flexShrink: 0, color: optColor,
+                  fontSize: '0.9rem', fontWeight: FONT_WEIGHT.extrabold,
+                  flexShrink: 0,
+                  transition: 'all 0.2s ease',
                 }}>
-                  {['A', 'B', 'C', 'D'][idx]}
+                  {isCorrectOpt ? '✓' : isWrongPick ? '✗' : ['A', 'B', 'C', 'D'][idx]}
                 </span>
-                {option}
+                <span style={{ flex: 1 }}>{option}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Feedback */}
+        {/* Feedback toast */}
         {selectedAnswer !== null && (
           <div style={{
-            marginTop: SPACING.lg, padding: `${SPACING.md}px ${SPACING.lg}px`, borderRadius: '12px',
-            background: isCorrect ? t.successLight : t.errorLight,
-            color: isCorrect ? t.success : t.error,
+            marginTop: SPACING.lg,
+            padding: '14px 18px',
+            borderRadius: 14,
+            background: isCorrect
+              ? (isDark ? 'rgba(21,128,61,0.15)' : 'rgba(21,128,61,0.08)')
+              : (isDark ? 'rgba(230,57,70,0.15)' : 'rgba(230,57,70,0.08)'),
+            border: `1.5px solid ${isCorrect ? '#15803D' : t.error}40`,
+            color: isCorrect ? (isDark ? '#86EFAC' : '#15803D') : (isDark ? '#FCA5A5' : t.error),
             fontWeight: FONT_WEIGHT.semibold, fontSize: '0.9rem',
             animation: 'fadeInUp 0.3s ease-out',
-            display: 'flex', alignItems: 'center', gap: SPACING.sm,
+            display: 'flex', alignItems: 'center', gap: 10,
           }}>
-            {isCorrect ? <IconCheck size={18} color={t.success} /> : <IconX size={18} color={t.error} />}
-            {isCorrect ? 'Rast! Aferîn!' : 'Xelet. Bersiva rast: ' + currentQuestion.correct}
+            <span aria-hidden="true" style={{ fontSize: '1.2rem', lineHeight: 1 }}>
+              {isCorrect ? '🎉' : '💭'}
+            </span>
+            <span style={{ flex: 1 }}>
+              {isCorrect ? 'Aferîn! Bersiv rast e.' : `Bersiva rast: ${currentQuestion.correct}`}
+            </span>
           </div>
         )}
         </div>
