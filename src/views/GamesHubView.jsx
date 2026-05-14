@@ -34,6 +34,11 @@ export default function GamesHubView({ theme, isDark, setView, progress, gamific
     };
   }, [progress, gamification]);
 
+  // Each card uses two logo-palette colours that fade into the dark-teal
+  // anchor (#0F4C5C) — the same anchor as the HomeView hero. This keeps
+  // every gradient in the same family while letting each game keep its
+  // own identity colour at the focal (top-left) corner.
+  //   Logo palette: teal #0D9488 · coral #EA580C · green #15803D · dark #0F4C5C
   const games = [
     {
       id: 'quiz',
@@ -41,9 +46,10 @@ export default function GamesHubView({ theme, isDark, setView, progress, gamific
       title: 'Azmûn',
       subtitle: 'Zanîna xwe biceribîne',
       hint: `${QUIZ_TOTAL_QUESTIONS} pirs · pirsên ji rastê hilbijartî`,
-      from: '#15803D',
-      via:  '#16A34A',
-      to:   '#22C55E',
+      from:   '#15803D', // logo green
+      mid:    '#166D40',
+      to:     '#0F4C5C', // logo dark teal — shared anchor
+      shadow: '#15803D',
       stats: stats.quiz.played > 0
         ? [
             { label: 'Lîstik', value: stats.quiz.played },
@@ -58,9 +64,10 @@ export default function GamesHubView({ theme, isDark, setView, progress, gamific
       title: 'Cot Bîne',
       subtitle: 'Peyv û wateyan bîne hev',
       hint: 'Kart bi kart cot bibîne · bê dem',
-      from: '#0D9488',
-      via:  '#14B8A6',
-      to:   '#5EEAD4',
+      from:   '#0D9488', // logo teal
+      mid:    '#0E6F70',
+      to:     '#0F4C5C', // logo dark teal — shared anchor
+      shadow: '#0D9488',
       stats: stats.match.played > 0
         ? [
             { label: 'Lîstik', value: stats.match.played },
@@ -73,9 +80,10 @@ export default function GamesHubView({ theme, isDark, setView, progress, gamific
       title: 'Binivîse',
       subtitle: 'Têgehan bi rêk binivîse',
       hint: 'Tîpan li ser klavyeya xwe binivîse',
-      from: '#C2410C',
-      via:  '#EA580C',
-      to:   '#FB923C',
+      from:   '#EA580C', // logo coral
+      mid:    '#9A4014',
+      to:     '#0F4C5C', // logo dark teal — shared anchor
+      shadow: '#EA580C',
       stats: stats.write.correct > 0
         ? [
             { label: 'Peyvên rast', value: stats.write.correct },
@@ -160,13 +168,21 @@ export default function GamesHubView({ theme, isDark, setView, progress, gamific
 
 function GameCard({ game, onClick, t, isDark, isRecommended }) {
   const Icon = game.icon;
+  // Logo-palette gradient: identity colour fades into shared dark-teal anchor.
+  const gradient = `linear-gradient(135deg, ${game.from} 0%, ${game.mid} 55%, ${game.to} 100%)`;
+  const restingShadow = isDark
+    ? `0 6px 18px ${game.shadow}44, 0 1px 3px rgba(0,0,0,0.30)`
+    : `0 8px 20px ${game.shadow}28, 0 1px 2px rgba(15,76,92,0.10)`;
+  const hoverShadow = isDark
+    ? `0 10px 26px ${game.shadow}55, 0 2px 6px rgba(0,0,0,0.35)`
+    : `0 12px 28px ${game.shadow}38, 0 2px 4px rgba(15,76,92,0.12)`;
   return (
     <button
       onClick={onClick}
       aria-label={game.title}
       style={{
         position: 'relative',
-        background: `linear-gradient(135deg, ${game.from} 0%, ${game.via} 60%, ${game.to} 130%)`,
+        background: gradient,
         border: 'none',
         borderRadius: 20,
         padding: 0,
@@ -174,37 +190,30 @@ function GameCard({ game, onClick, t, isDark, isRecommended }) {
         fontFamily: 'inherit',
         textAlign: 'left',
         WebkitTapHighlightColor: 'transparent',
-        boxShadow: isDark
-          ? `0 6px 18px ${game.from}55, 0 1px 3px rgba(0,0,0,0.3)`
-          : `0 8px 22px ${game.from}33`,
+        boxShadow: restingShadow,
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         overflow: 'hidden',
       }}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-3px)';
-        e.currentTarget.style.boxShadow = isDark
-          ? `0 10px 26px ${game.from}66, 0 2px 6px rgba(0,0,0,0.35)`
-          : `0 12px 30px ${game.from}44`;
+        e.currentTarget.style.boxShadow = hoverShadow;
       }}
       onMouseLeave={e => {
         e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.boxShadow = isDark
-          ? `0 6px 18px ${game.from}55, 0 1px 3px rgba(0,0,0,0.3)`
-          : `0 8px 22px ${game.from}33`;
+        e.currentTarget.style.boxShadow = restingShadow;
       }}
     >
-      {/* Decorative blob */}
+      {/* Decorative blob — much softer so the dark anchor reads through */}
       <div aria-hidden="true" style={{
         position: 'absolute', top: -30, right: -30,
         width: 130, height: 130, borderRadius: '50%',
-        background: 'rgba(255,255,255,0.10)',
+        background: 'rgba(255,255,255,0.06)',
         pointerEvents: 'none',
       }} />
-      {/* Smaller decorative blob */}
       <div aria-hidden="true" style={{
         position: 'absolute', bottom: -20, left: 30,
         width: 70, height: 70, borderRadius: '50%',
-        background: 'rgba(255,255,255,0.06)',
+        background: 'rgba(255,255,255,0.04)',
         pointerEvents: 'none',
       }} />
 
@@ -214,13 +223,14 @@ function GameCard({ game, onClick, t, isDark, isRecommended }) {
           position: 'absolute', top: 12, right: 12,
           padding: '3px 9px',
           borderRadius: 99,
-          background: 'rgba(255,255,255,0.20)',
+          background: 'rgba(255,255,255,0.16)',
           backdropFilter: 'blur(8px)',
           WebkitBackdropFilter: 'blur(8px)',
           color: '#fff', fontSize: '0.6rem',
           fontWeight: FONT_WEIGHT.bold,
           textTransform: 'uppercase', letterSpacing: '0.06em',
           display: 'flex', alignItems: 'center', gap: 4,
+          border: '1px solid rgba(255,255,255,0.18)',
         }}>
           <span aria-hidden="true">✨</span> Pêşniyar
         </div>
