@@ -1,5 +1,5 @@
 // ─── FerMat — Root Application Component ───────────────────────
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, lazy, Suspense } from 'react';
 import '@/styles/animations.css';
 
 import { ALL_CONCEPTS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
@@ -12,11 +12,25 @@ import {
   IconPencil, IconBarChart, IconLightbulb, IconMessage, IconInfo,
   IconMoreHorizontal, IconGamepad, IconMap, IconClipboard, IconChevronRight,
 } from '@components/icons';
-import {
-  SplashView, HomeView, DictionaryView, FlashcardView,
-  QuizGame, MatchingGame, WriteGame, StatsView, NexşeView, ExerciseView,
-  ConceptMapView, WorksheetView, FeedbackView, AboutView,
-} from '@views';
+
+// Eager: shown on first paint (Splash) and primary landing (Home).
+import SplashView from '@views/SplashView.jsx';
+import HomeView from '@views/HomeView.jsx';
+
+// Lazy: loaded on first navigation. Each is its own chunk.
+const DictionaryView = lazy(() => import('@views/DictionaryView.jsx'));
+const FlashcardView  = lazy(() => import('@views/FlashcardView.jsx'));
+const QuizGame       = lazy(() => import('@views/QuizGame.jsx'));
+const MatchingGame   = lazy(() => import('@views/MatchingGame.jsx'));
+const WriteGame      = lazy(() => import('@views/WriteGame.jsx'));
+const StatsView      = lazy(() => import('@views/StatsView.jsx'));
+const NexşeView      = lazy(() => import('@views/NexseView.jsx'));
+const ExerciseView   = lazy(() => import('@views/ExerciseView.jsx'));
+const ConceptMapView = lazy(() => import('@views/ConceptMapView.jsx'));
+const WorksheetView  = lazy(() => import('@views/WorksheetView.jsx'));
+const FeedbackView   = lazy(() => import('@views/FeedbackView.jsx'));
+const AboutView      = lazy(() => import('@views/AboutView.jsx'));
+
 import { trackEvent, trackSession } from '@utils/analytics.js';
 
 // ─── Nav items ────────────────────────────────────────────────────────────────
@@ -179,6 +193,7 @@ export default function App() {
               ? 'radial-gradient(ellipse at 20% 0%, rgba(13,148,136,0.06) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(234,88,12,0.04) 0%, transparent 50%)'
               : 'radial-gradient(ellipse at 20% 0%, rgba(13,148,136,0.04) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(234,88,12,0.03) 0%, transparent 50%)',
           }}>
+            <Suspense fallback={<ViewLoadingFallback theme={t} />}>
             {view === 'home' && (
               <HomeView
                 theme={theme} isDark={isDark}
@@ -278,11 +293,11 @@ export default function App() {
                 theme={theme} isDark={isDark}
               />
             )}
+            </Suspense>
           </main>
 
-          {/* Bottom navigation */}
+          {/* Bottom navigation — semantic <nav>, not a tablist (no tabpanel pairing) */}
           <nav
-            role="navigation"
             aria-label="Rêgeza jêrîn"
             style={{
               display: 'flex',
@@ -303,9 +318,9 @@ export default function App() {
               return (
                 <button
                   key={item.id}
+                  type="button"
                   onClick={() => handleSetView(item.id)}
-                  role="tab"
-                  aria-selected={isActive}
+                  aria-current={isActive ? 'page' : undefined}
                   aria-label={item.label}
                   style={{
                     flex: 1,
@@ -385,6 +400,40 @@ function MoreHubView({ theme: t, isDark, setView }) {
         ))}
       </SectionCard>
     </PageContainer>
+  );
+}
+
+// ── Suspense loading fallback (theme-aware spinner) ──────────────────────────
+function ViewLoadingFallback({ theme: t }) {
+  return (
+    <div
+      role="status"
+      aria-live="polite"
+      aria-label="Tê barkirin"
+      style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 12,
+        padding: 24,
+      }}
+    >
+      <span
+        style={{
+          width: 28,
+          height: 28,
+          border: `3px solid ${t.border}`,
+          borderTopColor: t.primary,
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite',
+          display: 'inline-block',
+        }}
+      />
+      <span style={{ fontSize: '0.85rem', color: t.textMuted, fontWeight: 500 }}>
+        Tê barkirin…
+      </span>
+    </div>
   );
 }
 

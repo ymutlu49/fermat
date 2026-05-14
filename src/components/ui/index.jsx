@@ -1,17 +1,20 @@
 // ─── FerMat — Shared UI Components ──────────────────────────────
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { SECTIONS, THEME, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { getSectionColor } from '@utils/helpers.js';
 import { IconCheck, IconX, IconSearch, IconVolume, IconChevronRight } from '@components/icons';
 
-// ── Pill (section filter button) ──────────────────────────────────────────────
+// ── Pill (toggleable filter button) ──────────────────────────────────────────
+// Behaves like a toggle button (aria-pressed) rather than a tab — without a real
+// tablist+tabpanel parent, `role="tab"` is invalid ARIA. Toggle buttons are the
+// correct semantic for "active/inactive filter" pills.
 export function Pill({ label, isActive = false, color, onClick, children, isDark = false }) {
   const displayColor = color || '#0D9488';
   return (
     <button
+      type="button"
       onClick={onClick}
-      role="tab"
-      aria-selected={isActive}
+      aria-pressed={isActive}
       style={{
         padding: `6px 14px`,
         minHeight: 36,
@@ -24,7 +27,6 @@ export function Pill({ label, isActive = false, color, onClick, children, isDark
         border: isActive ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.1)'}`,
         background: isActive ? displayColor : 'transparent',
         color: isActive ? '#fff' : (isDark ? 'rgba(255,255,255,0.7)' : 'rgba(0,0,0,0.55)'),
-        outline: 'none',
         whiteSpace: 'nowrap',
         letterSpacing: '0.01em',
         WebkitTapHighlightColor: 'transparent',
@@ -55,6 +57,8 @@ export function Badge({ label, color, bgColor }) {
 }
 
 // ── ConceptRow (list row with visual thumbnail) ──────────────────────────────
+// Uses CSS content-visibility for free off-screen virtualization on modern browsers
+// (Chrome 85+, Safari 18+, Firefox 125+, Edge 85+). Older browsers render normally.
 export function ConceptRow({ concept, theme, isDark, onClick, isLast = false, VisualComponent }) {
   const t = theme || THEME.light;
   const colors = getSectionColor(concept.s, isDark);
@@ -70,6 +74,9 @@ export function ConceptRow({ concept, theme, isDark, onClick, isLast = false, Vi
         border: 'none', borderBottom: isLast ? 'none' : `1px solid ${isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'}`,
         cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left',
         WebkitTapHighlightColor: 'transparent',
+        // Browser-level virtualization: skip layout/paint of off-screen rows.
+        contentVisibility: 'auto',
+        containIntrinsicSize: '64px',
       }}
     >
       {/* Thumbnail — concept visual or section emoji */}
@@ -261,9 +268,18 @@ export function ProgressBar({ value, max, color, bgColor, height = SPACING.sm })
 }
 
 // ── Modal ─────────────────────────────────────────────────────────────────────
-export function Modal({ isOpen, onClose, theme, children, maxWidth = 420 }) {
+// Accessibility:
+//   - role="dialog" + aria-modal so screen readers announce as modal
+//   - aria-label can be passed by caller; defaults to a generic value
+//   - Auto-focuses the first focusable element when opened
+//   - Restores focus to previously focused element on close
+//   - Escape key closes
+export function Modal({ isOpen, onClose, theme, children, maxWidth = 420, ariaLabel = 'Pencereya pê re têkilî' }) {
   const t = theme || THEME.light;
+  const dialogRef = useRef(null);
+  const previousFocusRef = useRef(null);
 
+  // Keyboard: Escape closes
   useEffect(() => {
     if (!isOpen) return;
     const handleKey = (e) => { if (e.key === 'Escape') onClose?.(); };
@@ -271,10 +287,30 @@ export function Modal({ isOpen, onClose, theme, children, maxWidth = 420 }) {
     return () => document.removeEventListener('keydown', handleKey);
   }, [isOpen, onClose]);
 
+  // Lock body scroll while open
   useEffect(() => {
     if (!isOpen) return;
     document.body.style.overflow = 'hidden';
     return () => { document.body.style.overflow = ''; };
+  }, [isOpen]);
+
+  // Focus management: capture current focus, move into dialog, restore on close
+  useEffect(() => {
+    if (!isOpen) return;
+    previousFocusRef.current = document.activeElement;
+    const dialog = dialogRef.current;
+    if (dialog) {
+      const firstFocusable = dialog.querySelector(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+      );
+      (firstFocusable || dialog).focus();
+    }
+    return () => {
+      const prev = previousFocusRef.current;
+      if (prev && typeof prev.focus === 'function') {
+        prev.focus();
+      }
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -294,6 +330,11 @@ export function Modal({ isOpen, onClose, theme, children, maxWidth = 420 }) {
       }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label={ariaLabel}
+        tabIndex={-1}
         onClick={e => e.stopPropagation()}
         style={{
           background: t.surface,
@@ -305,6 +346,7 @@ export function Modal({ isOpen, onClose, theme, children, maxWidth = 420 }) {
           animation: `slideUp ${DURATION.normal} cubic-bezier(0.22,0.61,0.36,1)`,
           maxHeight: '90dvh',
           overflowY: 'auto',
+          outline: 'none',
         }}
       >
         {children}
