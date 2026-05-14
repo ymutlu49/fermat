@@ -2628,6 +2628,7 @@ export function CustomVisual({ params = {}, theme, size = 160 }) {
   const c = vColors(theme);
   const { icon = '🔢', label = '', formula = '' } = params;
   const formulaFs = formula.length > 14 ? 9 : formula.length > 10 ? 11 : 13;
+  const labelFs   = label.length > 16 ? 8 : 10;
   const hasFormulaOrLabel = formula || label;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={label || icon}>
