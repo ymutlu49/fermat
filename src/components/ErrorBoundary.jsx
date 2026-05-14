@@ -4,7 +4,7 @@ import { Component } from 'react';
 export class ErrorBoundary extends Component {
   constructor(props) {
     super(props);
-    this.state = { hasError: false, error: null };
+    this.state = { hasError: false, error: null, errorInfo: null };
   }
 
   static getDerivedStateFromError(error) {
@@ -12,11 +12,12 @@ export class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, errorInfo) {
+    this.setState({ errorInfo });
     console.error('[FerMat] Xeletî:', error, errorInfo);
   }
 
   handleReset = () => {
-    this.setState({ hasError: false, error: null });
+    this.setState({ hasError: false, error: null, errorInfo: null });
   };
 
   render() {
@@ -53,14 +54,19 @@ export class ErrorBoundary extends Component {
           >
             Ji nû ve biceribîne
           </button>
-          {this.props.showDetails && this.state.error && (
+          {this.state.error && (
             <pre style={{
               marginTop: 24, padding: 16, borderRadius: 8,
               background: '#FEF2F2', color: '#991B1B', fontSize: 11,
-              maxWidth: '90vw', overflow: 'auto', textAlign: 'left',
+              maxWidth: '90vw', maxHeight: 280, overflow: 'auto', textAlign: 'left',
               border: '1px solid #FECACA',
+              fontFamily: 'ui-monospace, Menlo, monospace',
+              whiteSpace: 'pre-wrap',
             }}>
-              {this.state.error.toString()}
+              <strong>{this.state.error.toString()}</strong>
+              {this.state.errorInfo?.componentStack && (
+                <>{'\n\nComponent stack:'}{this.state.errorInfo.componentStack}</>
+              )}
             </pre>
           )}
         </div>
