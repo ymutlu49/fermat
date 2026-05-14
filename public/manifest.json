@@ -1,16 +1,17 @@
 {
-  "name": "FerMat",
+  "name": "FerMat — Ferhenga Matematîkê ya Kurdî",
   "short_name": "FerMat",
   "description": "FerMat — Pêşdibistanî û Dibistana Seretayî ji bo zarokan",
   "start_url": "/fermat/",
   "scope": "/fermat/",
   "display": "standalone",
+  "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
   "background_color": "#0F4C5C",
   "theme_color": "#0F4C5C",
-  "lang": "ku",
+  "lang": "ku-Latn",
   "dir": "ltr",
-  "categories": ["education", "kids"],
+  "categories": ["education", "kids", "books"],
   "icons": [
     {
       "src": "icon-192.png",
@@ -35,6 +36,26 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Ferheng",
+      "short_name": "Ferheng",
+      "description": "Hemû têgehan bibîne",
+      "url": "/fermat/#/dict"
+    },
+    {
+      "name": "Fêrbûn",
+      "short_name": "Fêrbûn",
+      "description": "Bi kartan fêr bibe",
+      "url": "/fermat/#/flash"
+    },
+    {
+      "name": "Azmûn",
+      "short_name": "Azmûn",
+      "description": "Zanîna xwe biceribîne",
+      "url": "/fermat/#/quiz"
     }
   ]
 }

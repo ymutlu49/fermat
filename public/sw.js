@@ -1,9 +1,12 @@
-// ─── FerMat — Service Worker v4 ───────────────────────────────────────────────
-const CACHE_NAME = 'ferhenga-v4';
+// ─── FerMat — Service Worker v5 ───────────────────────────────────────────────
+const CACHE_NAME = 'ferhenga-v5';
 const PRECACHE_URLS = [
   './',
   './index.html',
   './manifest.json',
+  './favicon.svg',
+  './icon-192.png',
+  './icon-512.png',
 ];
 
 // Install: precache shell
@@ -45,8 +48,8 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Hashed assets (contain content hash in filename): cache-first (immutable)
-  if (request.url.match(/\/assets\/.*-[a-f0-9]{8}\./)) {
+  // Hashed assets (Vite default produces 8+ hex chars in filename): cache-first (immutable)
+  if (request.url.match(/\/assets\/.*-[A-Za-z0-9_-]{6,}\./)) {
     event.respondWith(
       caches.match(request).then(cached => {
         if (cached) return cached;
