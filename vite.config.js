@@ -1,34 +1,24 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { resolve } from 'path';
-import { writeFileSync, mkdirSync, rmSync, existsSync } from 'fs';
+import { writeFileSync } from 'fs';
 
-// Cloudflare Pages plugin:
-//   1. Wipes the entire `dist/` parent on build start (Vite's `emptyOutDir`
-//      only clears `dist/fermat`, not legacy files at dist root).
-//   2. Emits `dist/_redirects` so deep links under /fermat/ fall back to
-//      /fermat/index.html — must live at the Pages "Build output directory"
-//      root, which is dist/, NOT dist/fermat/.
+// Cloudflare Pages SPA fallback: any unmatched path serves /index.html so
+// hash-based routing (useHashRouter) can take over on the client.
 function cloudflarePagesPlugin() {
   return {
     name: 'cloudflare-pages',
-    buildStart() {
-      const distDir = resolve(__dirname, 'dist');
-      if (existsSync(distDir)) rmSync(distDir, { recursive: true, force: true });
-    },
     closeBundle() {
-      const outDir = resolve(__dirname, 'dist');
-      mkdirSync(outDir, { recursive: true });
       writeFileSync(
-        resolve(outDir, '_redirects'),
-        '/fermat/*    /fermat/index.html    200\n'
+        resolve(__dirname, 'dist', '_redirects'),
+        '/*    /index.html    200\n'
       );
     },
   };
 }
 
 export default defineConfig({
-  base: '/fermat/',
+  base: '/',
   plugins: [react(), cloudflarePagesPlugin()],
   resolve: {
     alias: {
@@ -41,11 +31,7 @@ export default defineConfig({
     },
   },
   build: {
-    // outDir mirrors the base URL so Cloudflare Pages can serve files at the
-    // same path the bundled HTML/JS references them at (e.g. /fermat/assets/...).
-    // Pages "Build output directory" should be set to `dist` so it serves
-    // dist/fermat/* under https://<project>.pages.dev/fermat/*.
-    outDir: 'dist/fermat',
+    outDir: 'dist',
     emptyOutDir: true,
     sourcemap: true,
     rollupOptions: {

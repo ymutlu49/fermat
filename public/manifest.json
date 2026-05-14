@@ -2,8 +2,8 @@
   "name": "FerMat — Ferhenga Matematîkê ya Kurdî",
   "short_name": "FerMat",
   "description": "FerMat — Pêşdibistanî û Dibistana Seretayî ji bo zarokan",
-  "start_url": "/fermat/",
-  "scope": "/fermat/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "portrait",
@@ -43,19 +43,19 @@
       "name": "Ferheng",
       "short_name": "Ferheng",
       "description": "Hemû têgehan bibîne",
-      "url": "/fermat/#/dict"
+      "url": "/#/dict"
     },
     {
       "name": "Fêrbûn",
       "short_name": "Fêrbûn",
       "description": "Bi kartan fêr bibe",
-      "url": "/fermat/#/flash"
+      "url": "/#/flash"
     },
     {
       "name": "Azmûn",
       "short_name": "Azmûn",
       "description": "Zanîna xwe biceribîne",
-      "url": "/fermat/#/quiz"
+      "url": "/#/quiz"
     }
   ]
 }
