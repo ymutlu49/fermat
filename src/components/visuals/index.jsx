@@ -1085,146 +1085,345 @@ export function SymmetryVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 11. RulerVisual ─────────────────────────────────────────────────────────
+// Polished: a real plastic-with-coloured-edge ruler. The body has a vertical
+// gradient (paler top, slightly darker bottom — the "lit-from-above" cue);
+// the brand stripe runs along the top edge; tick hierarchy is three-deep
+// (major every cm, half-cm medium, mm short); the bottom 1px shadow grounds
+// it on the page.
 export function RulerVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { length = 5, unit = 'cm' } = params;
-  const startX = 14, endX = size - 14;
+  const startX = 12, endX = size - 12;
   const rulerW = endX - startX;
-  const rulerH = size * 0.28, rulerY = size * 0.36;
+  const rulerH = size * 0.32, rulerY = size * 0.36;
   const tickCount = Math.min(length, 10);
   const tickGap = rulerW / tickCount;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={`${length}${unit} pîvan`}>
-      <defs><ShadowDef id={`${uid}_sh`} blur={2} opacity={0.15} /></defs>
-      {/* Ruler body */}
-      <rect x={startX} y={rulerY} width={rulerW} height={rulerH}
-        fill={c.bg} stroke={c.fill1} strokeWidth={1.8} rx={3}
-        filter={`url(#${uid}_sh)`} />
-      {/* Color stripe */}
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={1.5} far={3.5} />
+        <linearGradient id={`${uid}_body`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.bg, 0.15)} />
+          <stop offset="50%"  stopColor={c.bg} />
+          <stop offset="100%" stopColor={darken(c.bg, 0.08)} />
+        </linearGradient>
+        <linearGradient id={`${uid}_stripe`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.18)} />
+          <stop offset="100%" stopColor={c.fill1} />
+        </linearGradient>
+      </defs>
+
+      {/* Body — outer drop shadow grounds the ruler */}
+      <g filter={`url(#${uid}_rich)`}>
+        <rect x={startX} y={rulerY} width={rulerW} height={rulerH}
+          fill={`url(#${uid}_body)`} stroke={darken(c.fill1, 0.1)} strokeWidth={0.8}
+          strokeOpacity={0.35} rx={4} />
+      </g>
+
+      {/* Top coloured stripe (brand band) */}
       <rect x={startX} y={rulerY} width={rulerW} height={rulerH * 0.22}
-        fill={c.fill1} rx={3} opacity={0.8} />
-      {/* Ticks */}
-      {Array.from({length: tickCount + 1}, (_, i) => {
-        const x = startX + i * tickGap;
-        const isMajor = i % (tickCount <= 5 ? 1 : 2) === 0;
-        const tickH = isMajor ? rulerH * 0.55 : rulerH * 0.32;
-        return (
-          <g key={i}>
-            <line x1={x} y1={rulerY + rulerH - tickH} x2={x} y2={rulerY + rulerH}
-              stroke={c.fill1} strokeWidth={isMajor ? 1.8 : 0.8} />
-            {isMajor && (
-              <text x={x} y={rulerY + rulerH + 14} textAnchor="middle"
-                fontSize={9} fill={c.dim} fontWeight={600}>{i}</text>
-            )}
-          </g>
-        );
-      })}
-      <text x={endX - 8} y={rulerY + rulerH * 0.62}
-        fontSize={9} fontWeight={700} fill={c.muted} textAnchor="end">{unit}</text>
+        fill={`url(#${uid}_stripe)`} rx={4} />
+      {/* Stripe inner highlight */}
+      <rect x={startX + 2} y={rulerY + 1.5} width={rulerW - 4} height={rulerH * 0.06}
+        fill="#fff" opacity="0.30" rx={2} />
+
+      {/* Subtle separator under the stripe */}
+      <line x1={startX} y1={rulerY + rulerH * 0.22} x2={endX} y2={rulerY + rulerH * 0.22}
+        stroke={darken(c.fill1, 0.15)} strokeWidth={0.4} opacity="0.40" />
+
+      {/* Ticks: major (cm) every gap, medium at half-cm, short at every mm */}
+      {(() => {
+        const out = [];
+        const stripeBottom = rulerY + rulerH * 0.22;
+        const tickBaseY = rulerY + rulerH - 2;
+        const subTicksPerCm = 10;
+        const subGap = tickGap / subTicksPerCm;
+
+        for (let i = 0; i <= tickCount; i++) {
+          const x = startX + i * tickGap;
+          const isMajor = true;
+          const tickH = rulerH * 0.55;
+          out.push(
+            <line key={`maj${i}`}
+              x1={x} y1={tickBaseY - tickH} x2={x} y2={tickBaseY}
+              stroke={darken(c.fill1, 0.05)} strokeWidth={1.4} strokeLinecap="round" />
+          );
+          out.push(
+            <text key={`num${i}`} x={x} y={rulerY + rulerH + 12}
+              textAnchor="middle" fontSize={9} fontWeight={700} fill={c.dim}>
+              {i}
+            </text>
+          );
+          // Medium + sub ticks between this cm and next (skip on last)
+          if (i < tickCount) {
+            for (let j = 1; j < subTicksPerCm; j++) {
+              const sx = x + j * subGap;
+              if (sx > endX - 1) break;
+              const isMedium = j === 5;
+              const subH = isMedium ? rulerH * 0.30 : rulerH * 0.16;
+              out.push(
+                <line key={`s${i}_${j}`}
+                  x1={sx} y1={tickBaseY - subH} x2={sx} y2={tickBaseY}
+                  stroke={c.muted} strokeWidth={isMedium ? 0.8 : 0.5}
+                  opacity={isMedium ? 0.85 : 0.55}
+                  strokeLinecap="round" />
+              );
+            }
+          }
+        }
+        return out;
+      })()}
+
+      {/* Unit label inside the brand stripe */}
+      <text x={endX - 6} y={rulerY + rulerH * 0.15}
+        fontSize={8.5} fontWeight={800} fill="#fff" textAnchor="end"
+        letterSpacing="0.04em">
+        {unit.toUpperCase()}
+      </text>
+
+      {/* Subtle reflection highlight on body (top edge) */}
+      <rect x={startX + 3} y={rulerY + rulerH * 0.28} width={rulerW - 6} height={2}
+        fill="#fff" opacity="0.18" rx={1} />
     </svg>
   );
 }
 
 // ─── 12. ScaleVisual ─────────────────────────────────────────────────────────
+// Polished: classic balance scale. Brass-tinted gradient post, 3D base plate,
+// rounded beam with shadow, dish-shaped pans (ellipse with thickness), glossy
+// pivot sphere. Balanced state uses green beam; tilted state uses logo coral.
 export function ScaleVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { balanced = true, leftLabel = '', rightLabel = '' } = params;
-  const cx = size / 2, baseY = size * 0.88, postH = size * 0.52;
-  const tilt = balanced ? 0 : 14;
-  const beamColor = balanced ? c.fill3 : c.fill5;
+  const cx = size / 2, baseY = size * 0.86, postH = size * 0.50;
+  const tilt = balanced ? 0 : 12;
+  const beamColor = balanced ? c.fill3 : c.fill2;
+  // Pan positions (rotate around pivot)
+  const beamLen = size * 0.34;
+  const leftEndX = cx - beamLen, leftEndY = baseY - postH + tilt;
+  const rightEndX = cx + beamLen, rightEndY = baseY - postH - tilt;
+  const panY = (y) => Math.min(y + 22, size - 18);
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
       aria-label={balanced ? 'hevseng' : 'nehevseng'}>
-      <defs><ShadowDef id={`${uid}_sh`} blur={2} opacity={0.15} /></defs>
-      {/* Post */}
-      <line x1={cx} y1={baseY-postH} x2={cx} y2={baseY}
-        stroke={c.muted} strokeWidth={4} strokeLinecap="round" />
-      {/* Base */}
-      <rect x={cx-28} y={baseY} width={56} height={9} rx={5}
-        fill={c.muted} filter={`url(#${uid}_sh)`} />
-      {/* Beam */}
-      <line x1={cx-size*0.34} y1={baseY-postH+tilt}
-        x2={cx+size*0.34} y2={baseY-postH-tilt}
-        stroke={beamColor} strokeWidth={3.5} strokeLinecap="round" />
-      {/* Pivot */}
-      <circle cx={cx} cy={baseY-postH} r={5} fill={beamColor} />
-      {/* Left pan + string */}
-      <line x1={cx-size*0.34} y1={baseY-postH+tilt}
-        x2={cx-size*0.34} y2={baseY-postH+tilt+20}
-        stroke={c.muted} strokeWidth={1.5} />
-      <ellipse cx={cx-size*0.34} cy={baseY-postH+tilt+25}
-        rx={26} ry={8} fill="none"
-        stroke={balanced ? c.fill3 : c.fill2} strokeWidth={2.5} />
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={1.2} far={3.5} />
+        <linearGradient id={`${uid}_post`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stopColor={lighten(c.muted, 0.20)} />
+          <stop offset="50%"  stopColor={c.muted} />
+          <stop offset="100%" stopColor={darken(c.muted, 0.20)} />
+        </linearGradient>
+        <linearGradient id={`${uid}_base`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.muted, 0.15)} />
+          <stop offset="100%" stopColor={darken(c.muted, 0.15)} />
+        </linearGradient>
+        <linearGradient id={`${uid}_beam`} x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(beamColor, 0.20)} />
+          <stop offset="100%" stopColor={darken(beamColor, 0.10)} />
+        </linearGradient>
+        <SphereGradient id={`${uid}_pivot`} base={beamColor} cx="32%" cy="28%" />
+        <radialGradient id={`${uid}_panL`} cx="50%" cy="35%" r="65%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.30)} />
+          <stop offset="100%" stopColor={darken(c.fill1, 0.15)} />
+        </radialGradient>
+        <radialGradient id={`${uid}_panR`} cx="50%" cy="35%" r="65%">
+          <stop offset="0%"   stopColor={lighten(c.fill2, 0.30)} />
+          <stop offset="100%" stopColor={darken(c.fill2, 0.15)} />
+        </radialGradient>
+      </defs>
+
+      {/* Ground shadow */}
+      <ellipse cx={cx} cy={baseY + 11} rx={42} ry={3.5} fill="#000" opacity="0.16" />
+
+      {/* Base plate — 3D look with top face + dark side */}
+      <rect x={cx - 30} y={baseY + 4} width={60} height={4}
+        fill={darken(c.muted, 0.18)} rx={2} />
+      <rect x={cx - 30} y={baseY} width={60} height={6}
+        fill={`url(#${uid}_base)`} rx={2.5} />
+      <rect x={cx - 28} y={baseY + 1} width={56} height={1.4}
+        fill="#fff" opacity="0.20" rx={0.7} />
+
+      {/* Vertical post */}
+      <rect x={cx - 3} y={baseY - postH} width={6} height={postH}
+        fill={`url(#${uid}_post)`} rx={1.5} />
+      <rect x={cx - 2.5} y={baseY - postH + 4} width={1.4} height={postH - 8}
+        fill="#fff" opacity="0.30" rx={0.7} />
+
+      {/* Beam (rotates) — wider rounded bar */}
+      <g transform={`rotate(${balanced ? 0 : -8} ${cx} ${baseY - postH})`}>
+        <line x1={cx - beamLen} y1={baseY - postH} x2={cx + beamLen} y2={baseY - postH}
+          stroke="#000" strokeWidth={5} strokeLinecap="round" opacity="0.18" transform="translate(0,1.5)" />
+        <line x1={cx - beamLen} y1={baseY - postH} x2={cx + beamLen} y2={baseY - postH}
+          stroke={`url(#${uid}_beam)`} strokeWidth={4} strokeLinecap="round" />
+        <line x1={cx - beamLen + 4} y1={baseY - postH - 1} x2={cx + beamLen - 4} y2={baseY - postH - 1}
+          stroke="#fff" strokeWidth={1} strokeLinecap="round" opacity="0.40" />
+      </g>
+
+      {/* Pivot — glossy sphere */}
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={cx} cy={baseY - postH} r={6} fill={beamColor} />
+        <circle cx={cx} cy={baseY - postH} r={6} fill={`url(#${uid}_pivot)`} />
+      </g>
+      <ellipse cx={cx - 2} cy={baseY - postH - 2} rx="1.8" ry="1"
+        fill="#fff" opacity="0.65" />
+
+      {/* Left chain + pan */}
+      <line x1={leftEndX} y1={leftEndY} x2={leftEndX} y2={leftEndY + 22}
+        stroke={darken(c.muted, 0.10)} strokeWidth={1.5} strokeLinecap="round" />
+      <g filter={`url(#${uid}_rich)`}>
+        {/* Pan: ellipse with subtle 3D rim */}
+        <ellipse cx={leftEndX} cy={leftEndY + 25} rx={26} ry={4}
+          fill={darken(c.fill1, 0.20)} />
+        <ellipse cx={leftEndX} cy={leftEndY + 23} rx={26} ry={8}
+          fill={`url(#${uid}_panL)`} stroke={darken(c.fill1, 0.15)} strokeWidth={0.8} />
+        <ellipse cx={leftEndX} cy={leftEndY + 22} rx={22} ry={5.5}
+          fill="none" stroke="#fff" strokeWidth={0.7} opacity="0.40" />
+      </g>
       {leftLabel && (
-        <text x={cx-size*0.34} y={Math.min(baseY-postH+tilt+42, size - 16)}
-          textAnchor="middle" fontSize={9} fontWeight={700} fill={c.text}>{leftLabel}</text>
+        <g transform={`translate(${leftEndX}, ${panY(leftEndY + 18)})`}>
+          <rect x="-18" y="-9" width="36" height="16" rx="8" fill={c.fill1} opacity="0.12" />
+          <text x="0" y="1" textAnchor="middle" dominantBaseline="middle"
+            fontSize={9} fontWeight={800} fill={c.fill1}>{leftLabel}</text>
+        </g>
       )}
-      {/* Right pan + string */}
-      <line x1={cx+size*0.34} y1={baseY-postH-tilt}
-        x2={cx+size*0.34} y2={baseY-postH-tilt+20}
-        stroke={c.muted} strokeWidth={1.5} />
-      <ellipse cx={cx+size*0.34} cy={baseY-postH-tilt+25}
-        rx={26} ry={8} fill="none"
-        stroke={balanced ? c.fill3 : c.fill1} strokeWidth={2.5} />
+
+      {/* Right chain + pan */}
+      <line x1={rightEndX} y1={rightEndY} x2={rightEndX} y2={rightEndY + 22}
+        stroke={darken(c.muted, 0.10)} strokeWidth={1.5} strokeLinecap="round" />
+      <g filter={`url(#${uid}_rich)`}>
+        <ellipse cx={rightEndX} cy={rightEndY + 25} rx={26} ry={4}
+          fill={darken(c.fill2, 0.20)} />
+        <ellipse cx={rightEndX} cy={rightEndY + 23} rx={26} ry={8}
+          fill={`url(#${uid}_panR)`} stroke={darken(c.fill2, 0.15)} strokeWidth={0.8} />
+        <ellipse cx={rightEndX} cy={rightEndY + 22} rx={22} ry={5.5}
+          fill="none" stroke="#fff" strokeWidth={0.7} opacity="0.40" />
+      </g>
       {rightLabel && (
-        <text x={cx+size*0.34} y={Math.min(baseY-postH-tilt+42, size - 16)}
-          textAnchor="middle" fontSize={9} fontWeight={700} fill={c.text}>{rightLabel}</text>
+        <g transform={`translate(${rightEndX}, ${panY(rightEndY + 18)})`}>
+          <rect x="-18" y="-9" width="36" height="16" rx="8" fill={c.fill2} opacity="0.12" />
+          <text x="0" y="1" textAnchor="middle" dominantBaseline="middle"
+            fontSize={9} fontWeight={800} fill={c.fill2}>{rightLabel}</text>
+        </g>
       )}
     </svg>
   );
 }
 
 // ─── 13. ClockVisual ─────────────────────────────────────────────────────────
+// Polished: real analog clock — metallic bezel ring around white dial, three-
+// tier tick hierarchy (hour/quarter/minute), tapered hour & minute hands with
+// drop shadow, glossy centre cap, coral second hand for accent.
 export function ClockVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { hour = 3, minute = 0 } = params;
   const cx = size / 2, cy = size * 0.50, r = size * 0.42;
-  const hourAngle  = ((hour % 12) / 12) * 2 * Math.PI - Math.PI / 2 + (minute / 60) * (Math.PI / 6);
-  const minAngle   = (minute / 60) * 2 * Math.PI - Math.PI / 2;
-  const secAngle   = -Math.PI / 2; // 12 o'clock reference
-  const hx = cx + r * 0.55 * Math.cos(hourAngle), hy = cy + r * 0.55 * Math.sin(hourAngle);
+  const hourAngle = ((hour % 12) / 12) * 2 * Math.PI - Math.PI / 2 + (minute / 60) * (Math.PI / 6);
+  const minAngle  = (minute / 60) * 2 * Math.PI - Math.PI / 2;
+  const hx = cx + r * 0.52 * Math.cos(hourAngle), hy = cy + r * 0.52 * Math.sin(hourAngle);
   const mx = cx + r * 0.78 * Math.cos(minAngle),  my = cy + r * 0.78 * Math.sin(minAngle);
-  const nums = [12,1,2,3,4,5,6,7,8,9,10,11];
+  // tail end (small back-stub for hands)
+  const hxBack = cx - r * 0.10 * Math.cos(hourAngle), hyBack = cy - r * 0.10 * Math.sin(hourAngle);
+  const mxBack = cx - r * 0.10 * Math.cos(minAngle),  myBack = cy - r * 0.10 * Math.sin(minAngle);
+  const nums = [12, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
-      aria-label={`${hour}:${String(minute).padStart(2,'0')}`}>
-      <defs><ShadowDef id={`${uid}_sh`} blur={4} opacity={0.18} /></defs>
-      {/* Clock face */}
-      <circle cx={cx} cy={cy} r={r} fill={c.bg} stroke={c.line} strokeWidth={3}
-        filter={`url(#${uid}_sh)`} />
-      {/* Minute and hour tick marks */}
-      {Array.from({length: 60}, (_, i) => {
+      aria-label={`${hour}:${String(minute).padStart(2, '0')}`}>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={2} far={5} opacityNear={0.20} opacityFar={0.10} />
+        {/* Metallic bezel — top brighter than bottom */}
+        <linearGradient id={`${uid}_bezel`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.20)} />
+          <stop offset="50%"  stopColor={c.fill1} />
+          <stop offset="100%" stopColor={darken(c.fill1, 0.20)} />
+        </linearGradient>
+        {/* Dial face — subtle inner shading from edges to centre */}
+        <radialGradient id={`${uid}_dial`} cx="50%" cy="42%" r="58%">
+          <stop offset="0%"   stopColor={lighten(c.bg, 0.05)} />
+          <stop offset="80%"  stopColor={c.bg} />
+          <stop offset="100%" stopColor={darken(c.bg, 0.04)} />
+        </radialGradient>
+        {/* Centre cap sphere */}
+        <SphereGradient id={`${uid}_cap`} base={c.fill1} cx="32%" cy="28%" />
+      </defs>
+
+      {/* Outer ground shadow */}
+      <ellipse cx={cx} cy={cy + r + 4} rx={r * 0.88} ry={r * 0.10} fill="#000" opacity="0.14" />
+
+      {/* Outer bezel ring */}
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={cx} cy={cy} r={r} fill={`url(#${uid}_bezel)`} />
+      </g>
+      {/* Bezel highlight (top arc) */}
+      <path
+        d={`M ${cx - r * 0.75},${cy - r * 0.55} A ${r * 0.92},${r * 0.92} 0 0,1 ${cx + r * 0.50},${cy - r * 0.78}`}
+        stroke="#fff" strokeWidth={r * 0.10} strokeLinecap="round"
+        fill="none" opacity="0.40"
+      />
+
+      {/* Dial face — slightly inset */}
+      <circle cx={cx} cy={cy} r={r - r * 0.13} fill={`url(#${uid}_dial)`} />
+      {/* Dial inner rim shadow */}
+      <circle cx={cx} cy={cy} r={r - r * 0.13} fill="none"
+        stroke={darken(c.bg, 0.20)} strokeWidth={0.8} opacity="0.45" />
+
+      {/* Tick marks: minutes (light), hours (bold) — drawn over the dial */}
+      {Array.from({ length: 60 }, (_, i) => {
         const a = (i / 60) * 2 * Math.PI - Math.PI / 2;
-        const isMaj = i % 5 === 0;
-        const r1 = r - (isMaj ? 10 : 5), r2 = r - 1;
+        const isHour = i % 5 === 0;
+        const r1 = r - (isHour ? r * 0.18 : r * 0.12);
+        const r2 = r - r * 0.075;
         return (
           <line key={i}
             x1={cx + r1 * Math.cos(a)} y1={cy + r1 * Math.sin(a)}
             x2={cx + r2 * Math.cos(a)} y2={cy + r2 * Math.sin(a)}
-            stroke={isMaj ? c.fill1 : c.line}
-            strokeWidth={isMaj ? 2.2 : 0.8} />
+            stroke={isHour ? c.text : c.muted}
+            strokeWidth={isHour ? 2.2 : 0.7}
+            strokeOpacity={isHour ? 0.92 : 0.55}
+            strokeLinecap="round" />
         );
       })}
+
       {/* Hour numbers */}
       {nums.map((n, i) => {
         const a = (i / 12) * 2 * Math.PI - Math.PI / 2;
         return (
-          <text key={n} x={cx + (r-20) * Math.cos(a)} y={cy + (r-20) * Math.sin(a) + 4}
-            textAnchor="middle" fontSize={11} fontWeight={700} fill={c.text}>{n}</text>
+          <text key={n}
+            x={cx + (r - r * 0.32) * Math.cos(a)}
+            y={cy + (r - r * 0.32) * Math.sin(a) + 3.5}
+            textAnchor="middle" fontSize={Math.max(9, r * 0.20)}
+            fontWeight={n === 12 ? 800 : 700}
+            fill={c.text}>
+            {n}
+          </text>
         );
       })}
-      {/* Hour hand */}
-      <line x1={cx} y1={cy} x2={hx} y2={hy}
-        stroke={c.fill1} strokeWidth={5} strokeLinecap="round" />
+
+      {/* Hour hand — tapered + shadow */}
+      <g filter={`url(#${uid}_rich)`}>
+        <line x1={hxBack} y1={hyBack} x2={hx} y2={hy}
+          stroke={c.text} strokeWidth={5.5} strokeLinecap="round" />
+      </g>
       {/* Minute hand */}
-      <line x1={cx} y1={cy} x2={mx} y2={my}
-        stroke={c.fill1} strokeWidth={3} strokeLinecap="round" />
-      {/* Center dot */}
-      <circle cx={cx} cy={cy} r={5} fill={c.fill1} />
-      <circle cx={cx} cy={cy} r={2.5} fill={c.white} />
+      <g filter={`url(#${uid}_rich)`}>
+        <line x1={mxBack} y1={myBack} x2={mx} y2={my}
+          stroke={c.text} strokeWidth={3.2} strokeLinecap="round" />
+      </g>
+      {/* Coral accent on minute hand tip */}
+      <circle cx={mx} cy={my} r={2.5} fill={c.fill2} />
+
+      {/* Centre cap — glossy sphere */}
+      <g filter={`url(#${uid}_rich)`}>
+        <circle cx={cx} cy={cy} r={6} fill={c.fill1} />
+        <circle cx={cx} cy={cy} r={6} fill={`url(#${uid}_cap)`} />
+      </g>
+      <ellipse cx={cx - 2} cy={cy - 2} rx="1.8" ry="1" fill="#fff" opacity="0.70" />
+      {/* Centre pin */}
+      <circle cx={cx} cy={cy} r={1.4} fill={c.fill1} />
     </svg>
   );
 }
