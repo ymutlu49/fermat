@@ -461,108 +461,169 @@ export function FractionVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 5. OperationVisual ──────────────────────────────────────────────────────
+// Polished: counters are glossy spheres (radial gradient + specular). The
+// operation symbol sits inside a tinted badge so it reads as a "function"
+// applied between operands; result lives in a logo-coral pill at the right.
+// Subtraction marks removed tokens with a red cross overlay + lower opacity.
 export function OperationVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { op = 'add', a = 3, b = 2 } = params;
   const aCount = Math.min(a, 7), bCount = Math.min(b, 7);
-  const total = aCount + bCount + 3;
-  const r = Math.min((size * 0.75) / (total * 2.4), 14);
-  const gapX = r * 2.4;
-  const midY = size * 0.40;
-  const items = [];
+  const slots = op === 'sub' ? aCount + 2 : aCount + bCount + 4;
+  const r = Math.min((size * 0.80) / (slots * 2.2), 13);
+  const gapX = r * 2.3;
+  const midY = size * 0.42;
+  const opSyms = { add: '+', sub: '−', mul: '×', div: '÷' };
+  const symText = opSyms[op];
+  const symColor = op === 'add' ? c.fill3 : op === 'sub' ? c.fill5 : op === 'mul' ? c.fill2 : c.fill4;
+  const result = op === 'add' ? a + b : op === 'sub' ? a - b : op === 'mul' ? a * b : b !== 0 ? Math.floor(a / b) : 0;
 
+  // Sphere counter
+  const sphere = (key, x, y, base, gid) => (
+    <g key={key} filter={`url(#${uid}_rich)`}>
+      <circle cx={x} cy={y} r={r} fill={base} />
+      <circle cx={x} cy={y} r={r} fill={`url(#${gid})`} />
+      <ellipse cx={x - r * 0.32} cy={y - r * 0.40} rx={r * 0.30} ry={r * 0.18}
+        fill="#fff" opacity="0.55" />
+    </g>
+  );
+
+  const items = [];
   if (op === 'sub') {
     for (let i = 0; i < aCount; i++) {
       const x = r + 4 + i * gapX;
       const isRemoved = i >= aCount - bCount;
-      items.push(
-        <circle key={`s${i}`} cx={x} cy={midY} r={r}
-          fill={isRemoved ? c.fill5 : c.fill1} opacity={isRemoved ? 0.35 : 0.88} />
-      );
       if (isRemoved) {
+        // Dim sphere + red cross
         items.push(
-          <line key={`x1${i}`} x1={x-r} y1={midY-r} x2={x+r} y2={midY+r}
-            stroke={c.fill5} strokeWidth={2} />,
-          <line key={`x2${i}`} x1={x+r} y1={midY-r} x2={x-r} y2={midY+r}
-            stroke={c.fill5} strokeWidth={2} />
+          <g key={`s${i}`} opacity="0.40">
+            {sphere(`g${i}`, x, midY, c.fill1, `${uid}_g1`)}
+          </g>
         );
+        items.push(
+          <g key={`x${i}`}>
+            <line x1={x - r * 0.85} y1={midY - r * 0.85} x2={x + r * 0.85} y2={midY + r * 0.85}
+              stroke={c.fill5} strokeWidth={2.5} strokeLinecap="round" />
+            <line x1={x + r * 0.85} y1={midY - r * 0.85} x2={x - r * 0.85} y2={midY + r * 0.85}
+              stroke={c.fill5} strokeWidth={2.5} strokeLinecap="round" />
+          </g>
+        );
+      } else {
+        items.push(sphere(`s${i}`, x, midY, c.fill1, `${uid}_g1`));
       }
     }
   } else {
     for (let i = 0; i < aCount; i++) {
-      items.push(<circle key={`a${i}`} cx={r + 4 + i * gapX} cy={midY} r={r}
-        fill={c.fill1} opacity={0.88} />);
+      items.push(sphere(`a${i}`, r + 4 + i * gapX, midY, c.fill1, `${uid}_g1`));
     }
-    const symX = r + 4 + aCount * gapX + gapX * 0.6;
-    const symText = op === 'add' ? '+' : op === 'mul' ? '×' : '÷';
-    const symColor = op === 'add' ? c.fill3 : op === 'mul' ? c.fill2 : c.fill4;
+    const symX = r + 4 + aCount * gapX + gapX * 0.5;
     items.push(
-      <text key="sym" x={symX} y={midY + 5} textAnchor="middle"
-        fontSize={18} fontWeight={800} fill={symColor}>{symText}</text>
+      <g key="sym">
+        <rect x={symX - 12} y={midY - 12} width={24} height={24} rx={6}
+          fill={symColor} opacity="0.14" />
+        <text x={symX} y={midY + 5} textAnchor="middle"
+          fontSize={18} fontWeight={900} fill={symColor}>{symText}</text>
+      </g>
     );
-    const bStartX = symX + gapX * 0.7;
+    const bStartX = symX + gapX * 0.6;
     for (let i = 0; i < bCount; i++) {
-      items.push(<circle key={`b${i}`} cx={bStartX + i * gapX} cy={midY} r={r}
-        fill={c.fill2} opacity={0.88} />);
+      items.push(sphere(`b${i}`, bStartX + i * gapX, midY, c.fill2, `${uid}_g2`));
     }
-    const result = op === 'add' ? a + b : op === 'mul' ? a * b : b !== 0 ? Math.floor(a / b) : 0;
-    const eqX = bStartX + bCount * gapX + gapX * 0.6;
+    const eqX = bStartX + bCount * gapX + gapX * 0.5;
     items.push(
       <text key="eq" x={eqX} y={midY + 5} textAnchor="middle"
-        fontSize={16} fontWeight={700} fill={c.muted}>=</text>,
-      <circle key="resBg" cx={eqX + gapX * 1.0} cy={midY} r={r + 3}
-        fill={c.fill1} opacity={0.15} />,
-      <text key="res" x={eqX + gapX * 1.0} y={midY + 5} textAnchor="middle"
-        fontSize={15} fontWeight={800} fill={c.fill1}>{result}</text>
+        fontSize={16} fontWeight={700} fill={c.muted}>=</text>
+    );
+    items.push(
+      <g key="res">
+        <rect x={eqX + gapX * 0.55 - 12} y={midY - 13} width={26} height={26} rx={13}
+          fill={c.fill1} opacity="0.16" />
+        <text x={eqX + gapX * 0.55} y={midY + 5} textAnchor="middle"
+          fontSize={15} fontWeight={900} fill={c.fill1}>{result}</text>
+      </g>
     );
   }
 
-  const opSyms = { add: '+', sub: '−', mul: '×', div: '÷' };
-  const result2 = op === 'add' ? a+b : op === 'sub' ? a-b : op === 'mul' ? a*b : b !== 0 ? Math.floor(a/b) : 0;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
-      aria-label={`${a} ${opSyms[op]} ${b} = ${result2}`}>
-      <defs><ShadowDef id={`${uid}_sh`} blur={1} opacity={0.15} /></defs>
+      aria-label={`${a} ${symText} ${b} = ${result}`}>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={2.2} opacityNear={0.20} opacityFar={0.10} />
+        <SphereGradient id={`${uid}_g1`} base={c.fill1} cx="32%" cy="28%" />
+        <SphereGradient id={`${uid}_g2`} base={c.fill2} cx="32%" cy="28%" />
+      </defs>
       {items}
-      <text x={size/2} y={size * 0.72} textAnchor="middle"
-        fontSize={12} fontWeight={700} fill={c.dim}>
-        {a} {opSyms[op]} {b} = {result2}
-      </text>
+      {/* Equation label as a pill below the visual */}
+      <g transform={`translate(${size / 2}, ${size * 0.78})`}>
+        <rect x={-44} y={-12} width={88} height={24} rx={12}
+          fill={symColor} opacity="0.10" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={13} fontWeight={800} fill={symColor}>
+          {a} {symText} {b} = {result}
+        </text>
+      </g>
     </svg>
   );
 }
 
 // ─── 6. CompareVisual ────────────────────────────────────────────────────────
+// Polished: two rows of glossy sphere counters (top teal, bottom coral) make
+// the inequality readable at a glance; the comparison symbol lives in its own
+// tinted badge to the right, scaled large enough to feel like the focal point.
 export function CompareVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { a = 5, b = 3, type = 'greater' } = params;
   const maxN = 8, r = size * 0.058, gapX = r * 2.3;
   const aCount = Math.min(a, maxN), bCount = Math.min(b, maxN);
-  const rowY1 = size * 0.30, rowY2 = size * 0.58;
+  const rowY1 = size * 0.30, rowY2 = size * 0.62;
 
-  const makeRow = (n, fill, y) => Array.from({length: n}, (_, i) => (
-    <circle key={`${y}_${i}`} cx={r + 4 + i * gapX} cy={y} r={r}
-      fill={fill} opacity={0.88} />
-  ));
+  const sphere = (key, x, y, gid, base) => (
+    <g key={key} filter={`url(#${uid}_rich)`}>
+      <circle cx={x} cy={y} r={r} fill={base} />
+      <circle cx={x} cy={y} r={r} fill={`url(#${gid})`} />
+      <ellipse cx={x - r * 0.32} cy={y - r * 0.40} rx={r * 0.30} ry={r * 0.18}
+        fill="#fff" opacity="0.55" />
+    </g>
+  );
+
+  const makeRow = (n, gid, base, y) =>
+    Array.from({ length: n }, (_, i) => sphere(`${y}_${i}`, r + 4 + i * gapX, y, gid, base));
 
   const sym = type === 'greater' ? '>' : type === 'less' ? '<' : '=';
   const symColor = type === 'equal' ? c.fill3 : c.fill2;
-  const labelX = r + 4 + maxN * gapX + 10;
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
       aria-label={`${a} ${sym} ${b}`}>
-      <defs><ShadowDef id={`${uid}_sh`} blur={1} opacity={0.15} /></defs>
-      {makeRow(aCount, c.fill1, rowY1)}
-      {makeRow(bCount, c.fill2, rowY2)}
-      <text x={size * 0.72} y={size * 0.48} textAnchor="middle"
-        fontSize={28} fontWeight={800} fill={symColor}>{sym}</text>
-      <text x={r + 4 + aCount * gapX + r + 2} y={rowY1 + 4}
-        fontSize={11} fontWeight={700} fill={c.fill1}>{a}</text>
-      <text x={r + 4 + bCount * gapX + r + 2} y={rowY2 + 4}
-        fontSize={11} fontWeight={700} fill={c.fill2}>{b}</text>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={2.2} opacityNear={0.20} opacityFar={0.10} />
+        <SphereGradient id={`${uid}_top`}    base={c.fill1} cx="32%" cy="28%" />
+        <SphereGradient id={`${uid}_bottom`} base={c.fill2} cx="32%" cy="28%" />
+      </defs>
+      {makeRow(aCount, `${uid}_top`, c.fill1, rowY1)}
+      {makeRow(bCount, `${uid}_bottom`, c.fill2, rowY2)}
+
+      {/* Comparison symbol in a tinted badge — focal point */}
+      <g transform={`translate(${size * 0.74}, ${size * 0.46})`}>
+        <rect x={-22} y={-22} width={44} height={44} rx={12}
+          fill={symColor} opacity="0.14" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={30} fontWeight={900} fill={symColor}>{sym}</text>
+      </g>
+
+      {/* Count labels next to each row */}
+      <g transform={`translate(${r + 4 + aCount * gapX + r * 2.2}, ${rowY1})`}>
+        <rect x={-12} y={-9} width={24} height={18} rx={9} fill={c.fill1} opacity="0.12" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={11} fontWeight={800} fill={c.fill1}>{a}</text>
+      </g>
+      <g transform={`translate(${r + 4 + bCount * gapX + r * 2.2}, ${rowY2})`}>
+        <rect x={-12} y={-9} width={24} height={18} rx={9} fill={c.fill2} opacity="0.12" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={11} fontWeight={800} fill={c.fill2}>{b}</text>
+      </g>
     </svg>
   );
 }
@@ -1959,11 +2020,14 @@ export function SetVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 22. NumberGridVisual (NEW) ──────────────────────────────────────────────
+// Polished: each cell is a subtle paper tile; highlighted numbers wear a
+// gradient body with a glossy specular highlight (selected button feel),
+// crossed-out numbers get an X-stroke through them with dimmed text.
 export function NumberGridVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { cols: rawCols = 5, rows: rawRows = 4, highlight = [], crossed = [], startAt = 1 } = params;
-  const cols = Math.min(rawCols, 10), rows = Math.min(rawRows, 8); // cap grid size
+  const cols = Math.min(rawCols, 10), rows = Math.min(rawRows, 8);
   const pad = 12;
   const cellW = (size - pad * 2) / cols;
   const cellH = (size * 0.88 - pad * 2) / rows;
@@ -1974,74 +2038,148 @@ export function NumberGridVisual({ params = {}, theme, size = 160 }) {
       const x = pad + col * cellW, y = pad + r * cellH;
       const isHi = highlight.includes(n);
       const isCross = crossed.includes(n);
+      // Cell body
+      if (isHi) {
+        cells.push(
+          <g key={`bg${r}${col}`} filter={`url(#${uid}_rich)`}>
+            <rect x={x + 1} y={y + 1} width={cellW - 2} height={cellH - 2}
+              fill={c.fill1} rx={4} />
+            <rect x={x + 1} y={y + 1} width={cellW - 2} height={cellH - 2}
+              fill={`url(#${uid}_hi)`} rx={4} />
+            {/* Top specular stripe */}
+            <rect x={x + 3} y={y + 2} width={cellW - 6} height={cellH * 0.25}
+              fill="#fff" opacity="0.30" rx={2} />
+          </g>
+        );
+      } else {
+        cells.push(
+          <rect key={`bg${r}${col}`} x={x + 0.5} y={y + 0.5}
+            width={cellW - 1} height={cellH - 1}
+            fill={`url(#${uid}_cell)`} stroke={c.line} strokeWidth={0.6}
+            strokeOpacity="0.55" rx={3} />
+        );
+      }
       cells.push(
-        <rect key={`bg${r}${col}`} x={x+1} y={y+1} width={cellW-2} height={cellH-2}
-          fill={isHi ? c.fill1 : c.bg} stroke={c.line} strokeWidth={0.7} rx={3} />,
-        <text key={`t${r}${col}`} x={x + cellW/2} y={y + cellH/2 + 4}
+        <text key={`t${r}${col}`} x={x + cellW / 2} y={y + cellH / 2 + 4}
           textAnchor="middle" fontSize={Math.min(cellW * 0.45, 12)}
-          fontWeight={isHi ? 800 : 400}
-          fill={isHi ? c.white : isCross ? c.muted : c.text}>{n}</text>
+          fontWeight={isHi ? 800 : 600}
+          fill={isHi ? '#fff' : isCross ? c.muted : c.text}
+          opacity={isCross ? 0.55 : 1}
+          style={isHi ? { filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.25))' } : undefined}>
+          {n}
+        </text>
       );
       if (isCross) {
         cells.push(
-          <line key={`x1${r}${col}`} x1={x+4} y1={y+4} x2={x+cellW-4} y2={y+cellH-4}
-            stroke={c.fill5} strokeWidth={1.5} />,
-          <line key={`x2${r}${col}`} x1={x+cellW-4} y1={y+4} x2={x+4} y2={y+cellH-4}
-            stroke={c.fill5} strokeWidth={1.5} />
+          <line key={`x1${r}${col}`} x1={x + 5} y1={y + 5} x2={x + cellW - 5} y2={y + cellH - 5}
+            stroke={c.fill5} strokeWidth={1.7} strokeLinecap="round" opacity="0.80" />,
+          <line key={`x2${r}${col}`} x1={x + cellW - 5} y1={y + 5} x2={x + 5} y2={y + cellH - 5}
+            stroke={c.fill5} strokeWidth={1.7} strokeLinecap="round" opacity="0.80" />
         );
       }
     }
   }
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="jimarên risteyê">
-      <defs><ShadowDef id={`${uid}_sh`} blur={2} opacity={0.1} /></defs>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={1.8} opacityNear={0.20} opacityFar={0.08} />
+        <linearGradient id={`${uid}_cell`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.bg, 0.05)} />
+          <stop offset="100%" stopColor={c.bg} />
+        </linearGradient>
+        <linearGradient id={`${uid}_hi`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.20)} />
+          <stop offset="100%" stopColor={c.fill1} />
+        </linearGradient>
+      </defs>
       {cells}
     </svg>
   );
 }
 
 // ─── 23. ArrowSequenceVisual (NEW) ───────────────────────────────────────────
+// Polished: input/output mapping table with glossy spherical bubbles. Logo
+// teal for input, coral for output. The operation label sits in a central
+// pill that visually "transforms" each input into its paired output.
 export function ArrowSequenceVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { from = [1, 2, 3], to = [2, 4, 6], label = '×2' } = params;
   const n = Math.min(from.length, to.length, 4);
-  const rowH = (size * 0.75) / (n + 1);
-  const lx = size * 0.16, rx = size * 0.78;
+  const rowH = (size * 0.78) / (n + 0.5);
+  const lx = size * 0.18, rx = size * 0.82;
   const midX = size * 0.5;
-  const topY = size * 0.14;
+  const topY = size * 0.15;
+  const bubbleR = 17;
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="rêzik">
       <defs>
-        <marker id={`${uid}_aseq`} markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-          <path d="M0,0.5 L5.5,3 L0,5.5 Z" fill={c.fill2} />
+        <RichShadow id={`${uid}_rich`} near={1} far={2.5} />
+        <SphereGradient id={`${uid}_inG`}  base={c.fill1} cx="32%" cy="28%" />
+        <SphereGradient id={`${uid}_outG`} base={c.fill2} cx="32%" cy="28%" />
+        <linearGradient id={`${uid}_arrow`} x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%"   stopColor={c.fill1} />
+          <stop offset="100%" stopColor={c.fill2} />
+        </linearGradient>
+        <marker id={`${uid}_aseq`} markerWidth="6.5" markerHeight="6.5" refX="3.5" refY="3.25" orient="auto">
+          <path d="M0,0.5 L6,3.25 L0,6 Z" fill={c.fill2} />
         </marker>
-        <ShadowDef id={`${uid}_sh`} blur={2} opacity={0.15} />
       </defs>
-      {/* Column headers */}
-      <text x={lx} y={topY - 4} textAnchor="middle" fontSize={9} fontWeight={700} fill={c.dim}>Têkeve</text>
-      <text x={rx} y={topY - 4} textAnchor="middle" fontSize={9} fontWeight={700} fill={c.dim}>Derxe</text>
-      {/* Operation label */}
-      <rect x={midX-22} y={topY + n*rowH/2 - 12} width={44} height={22} rx={8}
-        fill={c.fill2} opacity={0.15} />
-      <text x={midX} y={topY + n*rowH/2 + 3} textAnchor="middle"
-        fontSize={12} fontWeight={800} fill={c.fill2}>{label}</text>
-      {Array.from({length: n}, (_, i) => {
-        const y = topY + (i + 0.5) * rowH;
+
+      {/* Column headers (chips) */}
+      <g transform={`translate(${lx}, ${topY - 4})`}>
+        <rect x={-22} y={-9} width={44} height={16} rx={8} fill={c.fill1} opacity="0.12" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={9} fontWeight={800} fill={c.fill1}>Têkeve</text>
+      </g>
+      <g transform={`translate(${rx}, ${topY - 4})`}>
+        <rect x={-20} y={-9} width={40} height={16} rx={8} fill={c.fill2} opacity="0.12" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={9} fontWeight={800} fill={c.fill2}>Derxe</text>
+      </g>
+
+      {/* Operation label — central pill with gradient */}
+      <g transform={`translate(${midX}, ${topY + (n / 2) * rowH})`}>
+        <rect x={-22} y={-13} width={44} height={26} rx={13}
+          fill={`url(#${uid}_arrow)`} opacity="0.22" />
+        <rect x={-22} y={-13} width={44} height={26} rx={13}
+          fill="none" stroke={c.fill2} strokeWidth={1.2} strokeOpacity="0.55" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={13} fontWeight={900} fill={c.fill2}>{label}</text>
+      </g>
+
+      {Array.from({ length: n }, (_, i) => {
+        const y = topY + (i + 0.7) * rowH;
         return (
           <g key={i}>
-            {/* From bubble */}
-            <circle cx={lx} cy={y} r={16} fill={c.soft1} stroke={c.fill1} strokeWidth={1.8}
-              filter={`url(#${uid}_sh)`} />
-            <text x={lx} y={y+4} textAnchor="middle" fontSize={11} fontWeight={700} fill={c.fill1}>
+            {/* From bubble — glossy sphere */}
+            <g filter={`url(#${uid}_rich)`}>
+              <circle cx={lx} cy={y} r={bubbleR} fill={c.fill1} />
+              <circle cx={lx} cy={y} r={bubbleR} fill={`url(#${uid}_inG)`} />
+            </g>
+            <ellipse cx={lx - bubbleR * 0.32} cy={y - bubbleR * 0.40}
+              rx={bubbleR * 0.30} ry={bubbleR * 0.18}
+              fill="#fff" opacity="0.55" />
+            <text x={lx} y={y + 4} textAnchor="middle" fontSize={12} fontWeight={800} fill="#fff"
+              style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.25))' }}>
               {from[i]}
             </text>
-            {/* Arrow */}
-            <line x1={lx+17} y1={y} x2={rx-17} y2={y}
-              stroke={c.fill2} strokeWidth={1.8} markerEnd={`url(#${uid}_aseq)`} />
+
+            {/* Arrow — gradient stroke */}
+            <line x1={lx + bubbleR + 1} y1={y} x2={rx - bubbleR - 1} y2={y}
+              stroke={`url(#${uid}_arrow)`} strokeWidth={2.2}
+              strokeLinecap="round" markerEnd={`url(#${uid}_aseq)`} />
+
             {/* To bubble */}
-            <circle cx={rx} cy={y} r={16} fill={c.soft2} stroke={c.fill2} strokeWidth={1.8} />
-            <text x={rx} y={y+4} textAnchor="middle" fontSize={11} fontWeight={700} fill={c.fill2}>
+            <g filter={`url(#${uid}_rich)`}>
+              <circle cx={rx} cy={y} r={bubbleR} fill={c.fill2} />
+              <circle cx={rx} cy={y} r={bubbleR} fill={`url(#${uid}_outG)`} />
+            </g>
+            <ellipse cx={rx - bubbleR * 0.32} cy={y - bubbleR * 0.40}
+              rx={bubbleR * 0.30} ry={bubbleR * 0.18}
+              fill="#fff" opacity="0.55" />
+            <text x={rx} y={y + 4} textAnchor="middle" fontSize={12} fontWeight={800} fill="#fff"
+              style={{ filter: 'drop-shadow(0 1px 1px rgba(0,0,0,0.25))' }}>
               {to[i]}
             </text>
           </g>
@@ -2052,40 +2190,67 @@ export function ArrowSequenceVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 24. AreaModelVisual (NEW) ───────────────────────────────────────────────
+// Polished: a × b rectangle modelled as a checkerboard of softly tinted unit
+// cells (each cell carries a subtle vertical gradient so the grid feels like
+// a tiled mosaic rather than a flat outline). Dimension labels live in pill
+// badges along the outside edges.
 export function AreaModelVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { a = 4, b = 3 } = params;
-  const pad = 28;
-  const aW = size - pad * 2, aH = size * 0.62 - pad;
+  const pad = 30;
+  const aW = size - pad * 2, aH = size * 0.60 - pad * 0.4;
   const cellW = aW / a, cellH = aH / b;
   const cells = [];
   for (let row = 0; row < b; row++) {
     for (let col = 0; col < a; col++) {
+      const isAlt = (row + col) % 2 === 1;
       cells.push(
         <rect key={`${row}${col}`}
-          x={pad + col * cellW + 1} y={pad + row * cellH + 1}
-          width={cellW - 2} height={cellH - 2}
-          fill={c.soft1} stroke={c.fill1} strokeWidth={0.7} rx={2} />
+          x={pad + col * cellW + 1.5} y={pad + row * cellH + 1.5}
+          width={cellW - 3} height={cellH - 3}
+          fill={isAlt ? `url(#${uid}_cellB)` : `url(#${uid}_cellA)`}
+          stroke={`${c.fill1}40`} strokeWidth={0.6} rx={3} />
       );
     }
   }
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
-      aria-label={`${a} × ${b} = ${a*b}`}>
-      <defs><ShadowDef id={`${uid}_sh`} blur={3} opacity={0.12} /></defs>
-      {/* Outer rect */}
-      <rect x={pad} y={pad} width={aW} height={aH}
-        fill="none" stroke={c.fill1} strokeWidth={2.5} rx={4}
-        filter={`url(#${uid}_sh)`} />
+      aria-label={`${a} × ${b} = ${a * b}`}>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={1.2} far={3} />
+        <linearGradient id={`${uid}_cellA`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.fill1, 0.85)} />
+          <stop offset="100%" stopColor={c.soft1} />
+        </linearGradient>
+        <linearGradient id={`${uid}_cellB`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={c.soft1} />
+          <stop offset="100%" stopColor={lighten(c.fill1, 0.45)} />
+        </linearGradient>
+      </defs>
+
+      {/* Outer rectangle with shadow */}
+      <g filter={`url(#${uid}_rich)`}>
+        <rect x={pad} y={pad} width={aW} height={aH}
+          fill="none" stroke={c.fill1} strokeWidth={2.5}
+          rx={5} />
+      </g>
       {cells}
-      {/* Width label */}
-      <text x={pad + aW/2} y={pad - 8} textAnchor="middle"
-        fontSize={11} fontWeight={800} fill={c.fill1}>{a}</text>
-      {/* Height label */}
-      <text x={pad - 8} y={pad + aH/2 + 4} textAnchor="middle"
-        fontSize={11} fontWeight={800} fill={c.fill1}
-        transform={`rotate(-90,${pad-8},${pad + aH/2 + 4})`}>{b}</text>
+
+      {/* Width label pill */}
+      <g transform={`translate(${pad + aW / 2}, ${pad - 12})`}>
+        <rect x={-14} y={-9} width={28} height={18} rx={9}
+          fill={c.fill1} opacity="0.16" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={11} fontWeight={800} fill={c.fill1}>{a}</text>
+      </g>
+      {/* Height label pill (rotated) */}
+      <g transform={`translate(${pad - 12}, ${pad + aH / 2}) rotate(-90)`}>
+        <rect x={-14} y={-9} width={28} height={18} rx={9}
+          fill={c.fill1} opacity="0.16" />
+        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={11} fontWeight={800} fill={c.fill1}>{b}</text>
+      </g>
       {/* Result — clamped to stay inside viewBox */}
       <text x={size/2} y={Math.min(pad + aH + 24, size - 6)} textAnchor="middle"
         fontSize={12} fontWeight={800} fill={c.fill2}>{a} × {b} = {a * b}</text>
@@ -2121,7 +2286,11 @@ export function RegroupingVisual({ params = {}, theme, size = 160 }) {
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
       aria-label={`${a} ${opSym} ${b} = ${result}`}>
       <defs>
-        <ShadowDef id={`${uid}_sh`} blur={1.5} opacity={0.12} />
+        <RichShadow id={`${uid}_rich`} near={1.5} far={3.5} />
+        <linearGradient id={`${uid}_paper`} x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%"   stopColor={lighten(c.bg, 0.05)} />
+          <stop offset="100%" stopColor={c.bg} />
+        </linearGradient>
         {carry && (
           <marker id={`${uid}_arr`} markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
             <path d="M0,1 L5,3 L0,5 Z" fill={carryColor} />
@@ -2129,29 +2298,37 @@ export function RegroupingVisual({ params = {}, theme, size = 160 }) {
         )}
       </defs>
 
-      {/* Card bg */}
-      <rect x={size*0.1} y={size*0.06} width={size*0.8} height={size*0.74}
-        rx={size*0.06} fill={c.white} stroke={c.line} strokeWidth={1}
-        filter={`url(#${uid}_sh)`} />
+      {/* Notebook card background — gradient + soft shadow */}
+      <g filter={`url(#${uid}_rich)`}>
+        <rect x={size*0.10} y={size*0.06} width={size*0.80} height={size*0.74}
+          rx={size*0.06} fill={`url(#${uid}_paper)`} stroke={c.line} strokeWidth={0.6}
+          strokeOpacity={0.5} />
+      </g>
+      {/* Subtle inner top highlight for the paper feel */}
+      <rect x={size*0.11} y={size*0.07} width={size*0.78} height={size*0.04}
+        rx={size*0.04} fill="#fff" opacity="0.40" />
 
       {/* Carry indicator */}
       {carry && op === 'add' && (
         <>
           <path d={`M${rightX} ${startY + rowH*0.3} Q${rightX - digitW*0.5} ${startY - rowH*0.1} ${rightX - digitW} ${startY + rowH*0.3}`}
-            fill="none" stroke={carryColor} strokeWidth={1.3} strokeDasharray="3 2"
+            fill="none" stroke={carryColor} strokeWidth={1.5} strokeDasharray="3 2"
             markerEnd={`url(#${uid}_arr)`} />
+          <circle cx={rightX - digitW} cy={startY + rowH*0.22} r={fsSmall * 0.85}
+            fill={carryColor} opacity="0.15" />
           <text x={rightX - digitW} y={startY + rowH*0.22}
-            textAnchor="middle" fontSize={fsSmall} fontWeight={800} fill={carryColor}>1</text>
+            textAnchor="middle" dominantBaseline="middle"
+            fontSize={fsSmall} fontWeight={800} fill={carryColor}>1</text>
         </>
       )}
       {carry && op === 'sub' && (
         <>
           <path d={`M${rightX - digitW} ${startY + rowH*0.3} Q${rightX - digitW*0.5} ${startY - rowH*0.1} ${rightX} ${startY + rowH*0.3}`}
-            fill="none" stroke={carryColor} strokeWidth={1.3} strokeDasharray="3 2"
+            fill="none" stroke={carryColor} strokeWidth={1.5} strokeDasharray="3 2"
             markerEnd={`url(#${uid}_arr)`} />
           <line x1={rightX - digitW - digitW*0.15} y1={startY + rowH*0.5}
             x2={rightX - digitW + digitW*0.15} y2={startY + rowH*0.8}
-            stroke={carryColor} strokeWidth={1.2} />
+            stroke={carryColor} strokeWidth={1.4} strokeLinecap="round" />
         </>
       )}
 
