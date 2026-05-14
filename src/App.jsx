@@ -4,13 +4,12 @@ import '@/styles/animations.css';
 
 import { ALL_CONCEPTS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
 import { useTheme, useSoundManager, useToast, useMediaQuery, usePersistedState, useGamification, useHashRouter, useBackgroundMusic } from '@hooks';
-import { ToastContainer, PageContainer, SectionCard, ActionRow } from '@components/ui';
+import { ToastContainer } from '@components/ui';
 import { Confetti, AchievementPopup, XPToast } from '@components/Confetti.jsx';
 import {
-  IconVolume, IconVolumeMute, IconSun, IconMoon, IconMusic, IconMusicOff,
-  IconHome, IconBook, IconCards, IconQuizIcon, IconPuzzle,
-  IconPencil, IconBarChart, IconLightbulb, IconMessage, IconInfo,
-  IconMoreHorizontal, IconGamepad, IconMap, IconClipboard, IconChevronRight,
+  IconVolume, IconVolumeMute, IconSun, IconMoon,
+  IconHome, IconBook, IconCards, IconBarChart,
+  IconMoreHorizontal, IconGamepad,
 } from '@components/icons';
 
 // Eager: shown on first paint (Splash) and primary landing (Home).
@@ -30,6 +29,8 @@ const ConceptMapView = lazy(() => import('@views/ConceptMapView.jsx'));
 const WorksheetView  = lazy(() => import('@views/WorksheetView.jsx'));
 const FeedbackView   = lazy(() => import('@views/FeedbackView.jsx'));
 const AboutView      = lazy(() => import('@views/AboutView.jsx'));
+const GamesHubView   = lazy(() => import('@views/GamesHubView.jsx'));
+const MoreHubView    = lazy(() => import('@views/MoreHubView.jsx'));
 
 import { trackEvent, trackSession } from '@utils/analytics.js';
 
@@ -220,7 +221,12 @@ export default function App() {
               />
             )}
             {view === 'games' && (
-              <GamesHubView theme={theme} isDark={isDark} setView={handleSetView} />
+              <GamesHubView
+                theme={theme} isDark={isDark}
+                setView={handleSetView}
+                progress={progress}
+                gamification={gamification}
+              />
             )}
             {view === 'quiz' && (
               <QuizGame
@@ -361,46 +367,6 @@ export default function App() {
         </>
       )}
     </div>
-  );
-}
-
-// ── Games Hub View ───────────────────────────────────────────────────────────
-function GamesHubView({ theme: t, isDark, setView }) {
-  const games = [
-    { id: 'quiz',  icon: IconQuizIcon, label: 'Azmûn',    desc: 'Zanîna xwe biceribîne',  color: '#15803D' },
-    { id: 'match', icon: IconPuzzle,   label: 'Cot Bîne',  desc: 'Peyv û wateyan bîne hev', color: '#0D9488' },
-    { id: 'write', icon: IconPencil,   label: 'Binivîse',  desc: 'Têgehan bi rêk binivîse', color: '#EA580C' },
-  ];
-  return (
-    <PageContainer>
-      <SectionCard theme={t}>
-        {games.map((g, i) => (
-          <ActionRow key={g.id} icon={g.icon} iconColor={g.color} label={g.label} desc={g.desc}
-            onClick={() => setView(g.id)} theme={t} isDark={isDark} isLast={i === games.length - 1} />
-        ))}
-      </SectionCard>
-    </PageContainer>
-  );
-}
-
-// ── More Hub View ────────────────────────────────────────────────────────────
-function MoreHubView({ theme: t, isDark, setView }) {
-  const items = [
-    { id: 'exercise',   icon: IconLightbulb, label: 'Hîndarî',              desc: 'Temrîn û pratîk',    color: '#0E7490' },
-    { id: 'conceptmap', icon: IconMap,        label: 'Nexşeya Têgehan',      desc: 'Têgehan bi nexşeyê bibîne', color: '#7E22CE' },
-    { id: 'worksheet',  icon: IconClipboard,  label: 'Rûpelên Xebatê',       desc: 'Rûpelên çapkirî',    color: '#B45309' },
-    { id: 'about',      icon: IconInfo,       label: 'Derbarê Ferhengê',      desc: 'Agahdarî û pêşgotin', color: '#0F4C5C' },
-    { id: 'feedback',   icon: IconMessage,    label: 'Pêşniyar û Serrastkirin', desc: 'Pêşniyarên xwe bişîne', color: '#059669' },
-  ];
-  return (
-    <PageContainer>
-      <SectionCard theme={t}>
-        {items.map((item, i) => (
-          <ActionRow key={item.id} icon={item.icon} iconColor={item.color} label={item.label} desc={item.desc}
-            onClick={() => setView(item.id)} theme={t} isDark={isDark} isLast={i === items.length - 1} />
-        ))}
-      </SectionCard>
-    </PageContainer>
   );
 }
 
