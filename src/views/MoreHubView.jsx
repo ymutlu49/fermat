@@ -1,10 +1,11 @@
-// ─── FerMat — More Hub (rich) ──────────────────────────────────────────────
-// Replaces the flat 5-row list with a colourful tinted grid. Each tile carries
-// its own accent colour so the hub itself feels like a map rather than a menu.
+// ─── FerMat — More Hub ─────────────────────────────────────────────────────
+// Same visual grammar as HomeView's action cards: soft tinted gradient +
+// tinted icon container + dark text + chevron. Each item carries its own
+// accent colour from the logo palette family.
 import { ALL_CONCEPTS, SECTIONS, FONT_SIZE, FONT_WEIGHT, SPACING } from '@data';
 import { PageContainer } from '@components/ui';
 import {
-  IconLightbulb, IconMap, IconClipboard, IconInfo, IconMessage,
+  IconLightbulb, IconMap, IconClipboard, IconInfo, IconMessage, IconChevronRight,
 } from '@components/icons';
 
 const APP_VERSION = '3.0.0';
@@ -14,97 +15,91 @@ export default function MoreHubView({ theme, isDark, setView }) {
   const conceptCount = ALL_CONCEPTS.length;
   const sectionCount = Object.keys(SECTIONS).length;
 
-  // Two halves: practice/explore (rich tiles) and meta (about/feedback)
-  const practice = [
+  const items = [
     {
       id: 'exercise',
       icon: IconLightbulb,
       title: 'Hîndarî',
       desc: 'Temrîn û pratîk',
-      tint: '#0E7490',
-      accent: 'rgba(14,116,144,0.12)',
-      accentDark: 'rgba(14,116,144,0.22)',
-      emoji: '💡',
+      tint: '#0D9488',         // logo teal
+      rgb:  '13,148,136',
     },
     {
       id: 'conceptmap',
       icon: IconMap,
       title: 'Nexşeya Têgehan',
-      desc: 'Bi nexşeyê bibîne',
-      tint: '#7E22CE',
-      accent: 'rgba(126,34,206,0.10)',
-      accentDark: 'rgba(126,34,206,0.22)',
-      emoji: '🗺️',
+      desc: 'Têgehan bi nexşeyê bibîne',
+      tint: '#15803D',         // logo green
+      rgb:  '21,128,61',
     },
     {
       id: 'worksheet',
       icon: IconClipboard,
       title: 'Rûpelên Xebatê',
       desc: 'Rûpelên çapkirî',
-      tint: '#B45309',
-      accent: 'rgba(180,83,9,0.10)',
-      accentDark: 'rgba(180,83,9,0.22)',
-      emoji: '📋',
+      tint: '#EA580C',         // logo coral
+      rgb:  '234,88,12',
     },
-  ];
-
-  const meta = [
     {
       id: 'about',
       icon: IconInfo,
       title: 'Derbarê Ferhengê',
       desc: 'Agahdarî û pêşgotin',
-      tint: '#0F4C5C',
-      accent: 'rgba(15,76,92,0.10)',
-      accentDark: 'rgba(15,76,92,0.25)',
-      emoji: 'ℹ️',
+      tint: '#0F4C5C',         // logo dark teal
+      rgb:  '15,76,92',
     },
     {
       id: 'feedback',
       icon: IconMessage,
       title: 'Pêşniyar û Serrastkirin',
       desc: 'Pêşniyarên xwe bişîne',
-      tint: '#059669',
-      accent: 'rgba(5,150,105,0.10)',
-      accentDark: 'rgba(5,150,105,0.22)',
-      emoji: '💬',
+      tint: '#15803D',         // logo green (success/positive)
+      rgb:  '21,128,61',
     },
   ];
 
   return (
     <PageContainer>
-      {/* ── Mini stat banner ── */}
+      {/* Section label */}
       <div style={{
-        background: isDark
-          ? 'linear-gradient(135deg, rgba(13,148,136,0.10), rgba(234,88,12,0.06))'
-          : 'linear-gradient(135deg, rgba(13,148,136,0.06), rgba(234,88,12,0.03))',
-        border: `1px solid ${isDark ? 'rgba(13,148,136,0.20)' : 'rgba(13,148,136,0.12)'}`,
-        borderRadius: 16,
-        padding: '12px 16px',
-        marginBottom: SPACING.lg,
-        display: 'flex', alignItems: 'center', gap: 14,
+        fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
+        color: t.textMuted, textTransform: 'uppercase',
+        letterSpacing: '0.06em', marginBottom: 10,
       }}>
-        <div aria-hidden="true" style={{ fontSize: 30, lineHeight: 1 }}>📚</div>
+        Zêdetir
+      </div>
+
+      {/* Mini stat banner — matches HomeView compact-ring style */}
+      <div style={{
+        background: t.surface,
+        border: `1px solid ${t.border}`,
+        borderRadius: 14,
+        padding: '12px 14px',
+        display: 'flex', alignItems: 'center', gap: 12,
+        marginBottom: SPACING.lg,
+      }}>
+        <div aria-hidden="true" style={{
+          width: 36, height: 36, borderRadius: 10,
+          background: isDark ? 'rgba(13,148,136,0.18)' : 'rgba(13,148,136,0.10)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          fontSize: '1.05rem', flexShrink: 0,
+        }}>
+          📚
+        </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.extrabold, color: t.text, lineHeight: 1.2 }}>
-            FerMat <span style={{ color: t.textMuted, fontWeight: FONT_WEIGHT.medium }}>v{APP_VERSION}</span>
+          <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, fontWeight: FONT_WEIGHT.medium }}>
+            FerMat <span style={{ opacity: 0.7 }}>v{APP_VERSION}</span>
           </div>
-          <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 2, fontWeight: FONT_WEIGHT.medium }}>
+          <div style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.semibold, color: t.text, marginTop: 1 }}>
             {conceptCount} têgeh · {sectionCount} beş · 3 ziman
           </div>
         </div>
       </div>
 
-      {/* ── Section: Practice & Explore ── */}
-      <SectionLabel theme={t}>Hîndarî û keşf</SectionLabel>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: 10,
-        marginBottom: SPACING.lg,
-      }}>
-        {practice.map(item => (
-          <TintedTile
+      {/* Action cards */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+        {items.map(item => (
+          <ActionRow
             key={item.id}
             item={item}
             onClick={() => setView(item.id)}
@@ -113,167 +108,80 @@ export default function MoreHubView({ theme, isDark, setView }) {
         ))}
       </div>
 
-      {/* ── Section: Info & Feedback ── */}
-      <SectionLabel theme={t}>Derbarê û têkilî</SectionLabel>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr',
-        gap: 10,
-      }}>
-        {meta.map(item => (
-          <MetaRow
-            key={item.id}
-            item={item}
-            onClick={() => setView(item.id)}
-            t={t} isDark={isDark}
-          />
-        ))}
-      </div>
-
-      {/* ── Author credit ── */}
+      {/* Author credit — sade footer */}
       <div style={{
         textAlign: 'center', marginTop: SPACING.xl,
-        fontSize: FONT_SIZE.xs, color: t.textMuted, lineHeight: 1.5,
+        fontSize: FONT_SIZE.xs, color: t.textMuted, lineHeight: 1.6,
       }}>
-        <div style={{ fontWeight: FONT_WEIGHT.medium }}>Prof. Dr. Yılmaz MUTLU</div>
-        <div style={{ color: t.textMuted, opacity: 0.7, marginTop: 2 }}>
-          Zanîngeha Mûş Alparslan
-        </div>
+        <div style={{ fontWeight: FONT_WEIGHT.semibold }}>Prof. Dr. Yılmaz MUTLU</div>
+        <div style={{ opacity: 0.7, marginTop: 1 }}>Zanîngeha Mûş Alparslan</div>
       </div>
     </PageContainer>
   );
 }
 
-// ─── Sub-components ────────────────────────────────────────────────────────
-
-function SectionLabel({ children, theme: t }) {
-  return (
-    <div style={{
-      fontSize: '0.65rem', fontWeight: FONT_WEIGHT.bold,
-      color: t.textMuted, textTransform: 'uppercase',
-      letterSpacing: '0.08em', marginBottom: 8, paddingLeft: 2,
-    }}>
-      {children}
-    </div>
-  );
-}
-
-function TintedTile({ item, onClick, t, isDark }) {
+// ─── ActionRow — HomeView Lîstik kart pattern'i ────────────────────────────
+function ActionRow({ item, onClick, t, isDark }) {
   const Icon = item.icon;
-  const bg = isDark ? item.accentDark : item.accent;
   return (
     <button
       onClick={onClick}
       aria-label={item.title}
       style={{
-        position: 'relative',
-        background: t.surface,
-        border: `1px solid ${t.border}`,
+        width: '100%',
+        background: isDark
+          ? `linear-gradient(135deg, rgba(${item.rgb},0.22) 0%, rgba(${item.rgb},0.08) 100%)`
+          : `linear-gradient(135deg, rgba(${item.rgb},0.10) 0%, rgba(${item.rgb},0.04) 100%)`,
+        border: `1px solid ${isDark ? `rgba(${item.rgb},0.30)` : `rgba(${item.rgb},0.18)`}`,
         borderRadius: 16,
-        padding: '14px 14px 12px',
+        padding: '14px 16px',
+        display: 'flex', alignItems: 'center', gap: 12,
         cursor: 'pointer',
-        fontFamily: 'inherit',
-        textAlign: 'left',
+        fontFamily: 'inherit', textAlign: 'left',
         WebkitTapHighlightColor: 'transparent',
-        transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease',
-        overflow: 'hidden',
+        transition: 'transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease',
       }}
       onMouseEnter={e => {
         e.currentTarget.style.transform = 'translateY(-2px)';
         e.currentTarget.style.boxShadow = isDark
-          ? `0 6px 16px ${item.tint}33`
-          : `0 6px 16px ${item.tint}22`;
-        e.currentTarget.style.borderColor = `${item.tint}66`;
+          ? `0 6px 16px rgba(${item.rgb},0.20)`
+          : `0 6px 16px rgba(${item.rgb},0.14)`;
+        e.currentTarget.style.borderColor = `rgba(${item.rgb},0.35)`;
       }}
       onMouseLeave={e => {
         e.currentTarget.style.transform = 'translateY(0)';
         e.currentTarget.style.boxShadow = 'none';
-        e.currentTarget.style.borderColor = t.border;
+        e.currentTarget.style.borderColor = isDark
+          ? `rgba(${item.rgb},0.30)`
+          : `rgba(${item.rgb},0.18)`;
       }}
     >
-      {/* Decorative corner accent */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', top: -20, right: -20,
-        width: 80, height: 80, borderRadius: '50%',
-        background: bg,
-        pointerEvents: 'none',
-      }} />
       <div style={{
-        position: 'relative',
         width: 44, height: 44, borderRadius: 12,
-        background: bg,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        marginBottom: 10,
-      }}>
-        <Icon size={22} color={item.tint} />
-      </div>
-      <div style={{ position: 'relative' }}>
-        <div style={{
-          fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.extrabold,
-          color: t.text, lineHeight: 1.25,
-          minHeight: 36,
-          display: 'flex', alignItems: 'center',
-        }}>
-          {item.title}
-        </div>
-        <div style={{
-          fontSize: '0.7rem', color: t.textMuted,
-          marginTop: 2, lineHeight: 1.3,
-        }}>
-          {item.desc}
-        </div>
-      </div>
-    </button>
-  );
-}
-
-function MetaRow({ item, onClick, t, isDark }) {
-  const Icon = item.icon;
-  const bg = isDark ? item.accentDark : item.accent;
-  return (
-    <button
-      onClick={onClick}
-      aria-label={item.title}
-      style={{
-        background: t.surface,
-        border: `1px solid ${t.border}`,
-        borderRadius: 14,
-        padding: '14px 16px',
-        cursor: 'pointer',
-        fontFamily: 'inherit',
-        textAlign: 'left',
-        WebkitTapHighlightColor: 'transparent',
-        display: 'flex', alignItems: 'center', gap: 12,
-        transition: 'transform 0.15s ease, border-color 0.2s ease',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.borderColor = `${item.tint}55`;
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.borderColor = t.border;
-      }}
-    >
-      <div style={{
-        width: 40, height: 40, borderRadius: 11,
-        background: bg,
+        background: `rgba(${item.rgb},0.18)`,
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         flexShrink: 0,
       }}>
-        <Icon size={20} color={item.tint} />
+        <Icon size={22} color={item.tint} />
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.semibold, color: t.text }}>
+        <div style={{
+          fontSize: FONT_SIZE.md,
+          fontWeight: FONT_WEIGHT.extrabold,
+          color: t.text,
+          lineHeight: 1.2,
+        }}>
           {item.title}
         </div>
-        <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 1 }}>
+        <div style={{
+          fontSize: FONT_SIZE.xs,
+          color: t.textMuted,
+          marginTop: 2,
+        }}>
           {item.desc}
         </div>
       </div>
-      <div aria-hidden="true" style={{
-        fontSize: '1rem', color: t.textMuted, opacity: 0.6,
-      }}>
-        ›
-      </div>
+      <IconChevronRight size={18} color={t.textMuted} />
     </button>
   );
 }

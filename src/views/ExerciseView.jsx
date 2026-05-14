@@ -235,14 +235,35 @@ export default function ExerciseView({ theme, isDark, sounds }) {
       <div style={{ flex: 1, overflowY: 'auto', background: 'transparent', padding: `${SPACING.xl}px ${px}px 80px` }}>
         <div style={{ maxWidth: isDesktop ? 640 : 500, margin: '0 auto' }}>
 
-          {/* Serî */}
-          <div style={{ textAlign: 'center', marginBottom: 28 }}>
-            <div style={{ width: 72, height: 72, borderRadius: '50%', background: 'linear-gradient(135deg, #0E7490, #06B6D4)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto', marginBottom: SPACING.md, fontSize: '2rem' }}>🎓</div>
-            <div style={{ fontSize: isMobile ? '1.2rem' : '1.4rem', fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginBottom: 6 }}>
-              Hîndarî
+          {/* Hero — tinted card like HomeView */}
+          <div style={{
+            background: isDark
+              ? 'linear-gradient(135deg, rgba(13,148,136,0.22) 0%, rgba(13,148,136,0.08) 100%)'
+              : 'linear-gradient(135deg, rgba(13,148,136,0.10) 0%, rgba(13,148,136,0.04) 100%)',
+            border: `1px solid ${isDark ? 'rgba(13,148,136,0.30)' : 'rgba(13,148,136,0.18)'}`,
+            borderRadius: 16,
+            padding: '16px',
+            display: 'flex', alignItems: 'center', gap: 12,
+            marginBottom: SPACING.xl,
+          }}>
+            <div style={{
+              width: 48, height: 48, borderRadius: 12,
+              background: 'rgba(13,148,136,0.18)',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              flexShrink: 0, fontSize: '1.5rem',
+            }} aria-hidden="true">
+              🎓
             </div>
-            <div style={{ fontSize: FONT_SIZE.base, color: t.textSecondary }}>
-              {ALL_CONCEPTS.length} têgeh · Pirsan hilbijêre · Biceribîne
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{
+                fontSize: isMobile ? '1.05rem' : '1.15rem',
+                fontWeight: FONT_WEIGHT.extrabold, color: t.text, lineHeight: 1.2,
+              }}>
+                Hîndarî
+              </div>
+              <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 2 }}>
+                {ALL_CONCEPTS.length} têgeh · pirsan hilbijêre û biceribîne
+              </div>
             </div>
           </div>
 
@@ -335,20 +356,28 @@ export default function ExerciseView({ theme, isDark, sounds }) {
             </div>
           </div>
 
-          {/* Bişkoja destpêkê */}
+          {/* Bişkoja destpêkê — logo coral gradient (Splash/Match/Write ile uyumlu) */}
           <button
             onClick={startExercise}
             disabled={filteredConcepts.length < 4 || activeTypes.length === 0}
             style={{
-              width: '100%', padding: isMobile ? '15px' : '17px',
-              borderRadius: RADIUS.xl, border: 'none',
-              background: filteredConcepts.length < 4 ? t.border : 'linear-gradient(135deg, #0E7490, #06B6D4)',
+              width: '100%', padding: isMobile ? '14px' : '16px',
+              borderRadius: 14, border: 'none',
+              background: filteredConcepts.length < 4
+                ? t.border
+                : 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)',
               color: filteredConcepts.length < 4 ? t.textMuted : '#fff',
-              fontSize: isMobile ? FONT_SIZE.md : '1.05rem', fontWeight: FONT_WEIGHT.bold,
+              fontSize: isMobile ? FONT_SIZE.md : '1.05rem',
+              fontWeight: FONT_WEIGHT.extrabold,
               cursor: filteredConcepts.length < 4 ? 'not-allowed' : 'pointer',
-              transition: `all ${DURATION.fast}`, minHeight: 52, fontFamily: 'inherit',
+              transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+              minHeight: 52, fontFamily: 'inherit',
+              boxShadow: filteredConcepts.length < 4 ? 'none' : '0 6px 16px rgba(234,88,12,0.28)',
               WebkitTapHighlightColor: 'transparent',
+              letterSpacing: '0.01em',
             }}
+            onMouseEnter={e => { if (filteredConcepts.length >= 4) { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 22px rgba(234,88,12,0.38)'; } }}
+            onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = filteredConcepts.length < 4 ? 'none' : '0 6px 16px rgba(234,88,12,0.28)'; }}
           >
             Dest pê bike →
           </button>

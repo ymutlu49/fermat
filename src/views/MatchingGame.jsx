@@ -1,3 +1,5 @@
+// ─── FerMat — Cot Bîne (matching game) ─────────────────────────────────────
+// Logo palette: teal #0D9488 · coral #EA580C · green #15803D · dark #0F4C5C
 import { useState, useCallback } from 'react';
 import {
   SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN,
@@ -5,7 +7,7 @@ import {
 } from '@data';
 import { shuffle } from '@utils/helpers.js';
 import { IconStar } from '@components/icons';
-import { ProgressBar, PageContainer } from '@components/ui';
+import { PageContainer } from '@components/ui';
 
 // Format display text: title case for Kurdish terms
 function formatCardText(text, type) {
@@ -19,7 +21,7 @@ function formatCardText(text, type) {
 
 export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP }) {
   const t = theme;
-  const [gamePhase, setGamePhase] = useState('select'); // select | playing | complete
+  const [gamePhase, setGamePhase] = useState('select');
   const [pairCount, setPairCount] = useState(6);
   const [cards, setCards] = useState([]);
   const [flippedIds, setFlippedIds] = useState([]);
@@ -28,7 +30,6 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
   const [isChecking, setIsChecking] = useState(false);
 
   const buildGame = useCallback((pairs) => {
-    // Filter out concepts with duplicate ku or tr values to avoid matching confusion
     const seenKu = new Set();
     const seenTr = new Set();
     const uniqueConcepts = concepts.filter(c => {
@@ -79,58 +80,118 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
   }, [isChecking, matchedKeys, flippedIds, cards, sounds, pairCount]);
 
   const difficultyOptions = [
-    { pairs: 4, label: 'Asan', desc: '4 cot', color: t.success },
-    { pairs: 6, label: 'Navîncî', desc: '6 cot', color: t.warning },
-    { pairs: 8, label: 'Dijwar', desc: '8 cot', color: t.error },
+    { pairs: 4, label: 'Asan',    desc: '4 cot', tint: '#15803D', rgb: '21,128,61' },
+    { pairs: 6, label: 'Navîncî', desc: '6 cot', tint: '#0D9488', rgb: '13,148,136' },
+    { pairs: 8, label: 'Dijwar',  desc: '8 cot', tint: '#EA580C', rgb: '234,88,12' },
   ];
 
   // ── Select phase ──
   if (gamePhase === 'select') {
     return (
       <PageContainer>
-        <div style={{ textAlign: 'center' }}>
+        <div style={{
+          fontSize: FONT_SIZE.xs, fontWeight: FONT_WEIGHT.bold,
+          color: t.textMuted, textTransform: 'uppercase',
+          letterSpacing: '0.06em', marginBottom: 10,
+        }}>
+          Cot Bîne
+        </div>
+
+        {/* Hero header — gradient like HomeView */}
+        <div style={{
+          background: isDark
+            ? 'linear-gradient(135deg, rgba(13,148,136,0.22) 0%, rgba(13,148,136,0.08) 100%)'
+            : 'linear-gradient(135deg, rgba(13,148,136,0.10) 0%, rgba(13,148,136,0.04) 100%)',
+          border: `1px solid ${isDark ? 'rgba(13,148,136,0.30)' : 'rgba(13,148,136,0.18)'}`,
+          borderRadius: 16,
+          padding: '16px',
+          display: 'flex', alignItems: 'center', gap: 12,
+          marginBottom: SPACING.lg,
+        }}>
           <div style={{
-            width: 72, height: 72, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #0D9488, #14B8A6)',
+            width: 44, height: 44, borderRadius: 12,
+            background: 'rgba(13,148,136,0.18)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto', marginBottom: SPACING.md, fontSize: '2rem',
-          }}>
+            flexShrink: 0, fontSize: '1.4rem',
+          }} aria-hidden="true">
             🧩
           </div>
-          <div style={{ fontSize: '1.4rem', fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginBottom: SPACING.sm }}>
-            Cot Bîne
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.extrabold, color: t.text }}>
+              Kurdî û Tirkî cotan bîne
+            </div>
+            <div style={{ fontSize: FONT_SIZE.xs, color: t.textMuted, marginTop: 2 }}>
+              Astekê hilbijêre û dest pê bike
+            </div>
           </div>
-          <div style={{ fontSize: '0.9rem', color: t.textSecondary, marginBottom: SPACING.xl }}>
-            Kurdî û Tirkî cotan bîne
-          </div>
-
-          <div style={{ display: 'flex', gap: SPACING.md, marginBottom: SPACING.xl }}>
-            {difficultyOptions.map(opt => (
-              <button key={opt.pairs} onClick={() => setPairCount(opt.pairs)} style={{
-                flex: 1, padding: SPACING.lg + 'px ' + SPACING.sm + 'px',
-                borderRadius: RADIUS.lg, cursor: 'pointer', fontFamily: 'inherit',
-                border: '2px solid ' + (pairCount === opt.pairs ? opt.color : t.border),
-                background: pairCount === opt.pairs ? opt.color + '15' : t.surface,
-                transition: 'all ' + DURATION.fast,
-              }}>
-                <div style={{ fontSize: '1.2rem', marginBottom: SPACING.xs }}>
-                  {opt.pairs === 4 ? '🟢' : opt.pairs === 6 ? '🟡' : '🔴'}
-                </div>
-                <div style={{ fontWeight: FONT_WEIGHT.bold, color: t.text }}>{opt.label}</div>
-                <div style={{ fontSize: FONT_SIZE.sm, color: t.textSecondary }}>{opt.desc}</div>
-              </button>
-            ))}
-          </div>
-
-          <button onClick={() => buildGame(pairCount)} style={{
-            width: '100%', padding: SPACING.lg + 'px', borderRadius: 12, border: 'none',
-            background: '#0D9488', color: t.textOnPrimary,
-            fontSize: '1.1rem', fontWeight: FONT_WEIGHT.bold, cursor: 'pointer',
-            minHeight: TOUCH_MIN,
-          }}>
-            Dest pê bike
-          </button>
         </div>
+
+        {/* Difficulty cards — same tinted card pattern */}
+        <div style={{
+          display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)',
+          gap: 8, marginBottom: SPACING.lg,
+        }}>
+          {difficultyOptions.map(opt => {
+            const isSel = pairCount === opt.pairs;
+            return (
+              <button key={opt.pairs} onClick={() => setPairCount(opt.pairs)} style={{
+                padding: '14px 8px',
+                borderRadius: 14,
+                cursor: 'pointer',
+                fontFamily: 'inherit',
+                background: isSel
+                  ? (isDark
+                      ? `linear-gradient(135deg, rgba(${opt.rgb},0.30) 0%, rgba(${opt.rgb},0.12) 100%)`
+                      : `linear-gradient(135deg, rgba(${opt.rgb},0.14) 0%, rgba(${opt.rgb},0.06) 100%)`)
+                  : t.surface,
+                border: `1.5px solid ${isSel ? opt.tint : t.border}`,
+                transition: 'all 0.15s ease',
+                display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4,
+                WebkitTapHighlightColor: 'transparent',
+              }}>
+                <div style={{
+                  width: 28, height: 28, borderRadius: 8,
+                  background: `rgba(${opt.rgb},0.18)`,
+                  display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  fontWeight: FONT_WEIGHT.extrabold,
+                  fontSize: '0.85rem',
+                  color: opt.tint,
+                }}>
+                  {opt.pairs}
+                </div>
+                <div style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginTop: 2 }}>
+                  {opt.label}
+                </div>
+                <div style={{ fontSize: '0.65rem', color: t.textMuted, fontWeight: FONT_WEIGHT.medium }}>
+                  {opt.desc}
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* CTA — logo coral gradient (matches Splash) */}
+        <button onClick={() => buildGame(pairCount)} style={{
+          width: '100%',
+          padding: '14px 24px',
+          borderRadius: 16,
+          border: 'none',
+          background: 'linear-gradient(135deg, #EA580C 0%, #C2410C 100%)',
+          color: '#fff',
+          fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.extrabold,
+          cursor: 'pointer',
+          boxShadow: '0 6px 16px rgba(234,88,12,0.28)',
+          minHeight: TOUCH_MIN + 4,
+          fontFamily: 'inherit',
+          letterSpacing: '0.01em',
+          WebkitTapHighlightColor: 'transparent',
+          transition: 'transform 0.15s ease, box-shadow 0.15s ease',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 10px 22px rgba(234,88,12,0.38)'; }}
+        onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 6px 16px rgba(234,88,12,0.28)'; }}
+        >
+          Dest pê bike
+        </button>
       </PageContainer>
     );
   }
@@ -140,40 +201,68 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
     const stars = moves <= pairCount * 2 ? 3 : moves <= pairCount * 3 ? 2 : 1;
     return (
       <PageContainer>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{
-            width: 80, height: 80, borderRadius: '50%',
-            background: 'linear-gradient(135deg, #0D9488, #14B8A6)',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            margin: '0 auto', marginBottom: SPACING.lg, fontSize: '2.5rem',
-          }}>
-            🎉
-          </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginBottom: SPACING.sm }}>
+        {/* Hero gradient like Splash but inline */}
+        <div style={{
+          background: isDark
+            ? 'linear-gradient(135deg, #0D3D4A 0%, #0F4C5C 60%, #EA580C 140%)'
+            : 'linear-gradient(135deg, #0F4C5C 0%, #1A6B7F 55%, #EA580C 140%)',
+          borderRadius: 20,
+          padding: '24px 20px',
+          textAlign: 'center',
+          color: '#fff',
+          boxShadow: isDark ? '0 6px 20px rgba(0,0,0,0.3)' : '0 8px 24px rgba(15,76,92,0.20)',
+          marginBottom: SPACING.lg,
+          position: 'relative', overflow: 'hidden',
+        }}>
+          <div aria-hidden="true" style={{
+            position: 'absolute', top: -30, right: -30,
+            width: 140, height: 140, borderRadius: '50%',
+            background: 'rgba(255,255,255,0.08)', pointerEvents: 'none',
+          }} />
+          <div style={{ fontSize: '2.6rem', marginBottom: 8, lineHeight: 1, position: 'relative' }}>🎉</div>
+          <div style={{ fontSize: '1.4rem', fontWeight: FONT_WEIGHT.extrabold, marginBottom: 8, position: 'relative' }}>
             Pîroz be!
           </div>
-          <div style={{ display: 'flex', gap: SPACING.xs, justifyContent: 'center', marginBottom: SPACING.lg }}>
-            {[1, 2, 3].map(s => <IconStar key={s} size={ICON_SIZE.xl} color="#F59E0B" filled={s <= stars} />)}
+          <div style={{ display: 'flex', gap: 6, justifyContent: 'center', marginBottom: 8, position: 'relative' }}>
+            {[1, 2, 3].map(s => (
+              <IconStar key={s} size={ICON_SIZE.xl} color={s <= stars ? '#FCD34D' : 'rgba(255,255,255,0.25)'} filled={s <= stars} />
+            ))}
           </div>
-          <div style={{ color: t.textSecondary, marginBottom: SPACING.xl }}>{moves} gav · {pairCount} cot</div>
-          <div style={{ display: 'flex', gap: 10 }}>
-            <button onClick={() => buildGame(pairCount)} style={{
-              flex: 1, padding: '14px', borderRadius: 12,
-              border: '1px solid ' + t.border, background: t.surface,
-              color: t.text, fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold,
-              cursor: 'pointer', fontFamily: 'inherit', minHeight: TOUCH_MIN,
-            }}>
-              Dîsa bilîze
-            </button>
-            <button onClick={() => setGamePhase('select')} style={{
-              flex: 1, padding: '14px', borderRadius: 12, border: 'none',
-              background: '#0D9488', color: t.textOnPrimary,
-              fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold,
-              cursor: 'pointer', fontFamily: 'inherit', minHeight: TOUCH_MIN,
-            }}>
-              Asta Biguhêre
-            </button>
+          <div style={{
+            fontSize: FONT_SIZE.sm, color: 'rgba(255,255,255,0.78)',
+            fontWeight: FONT_WEIGHT.medium, position: 'relative',
+          }}>
+            {moves} gav · {pairCount} cot
           </div>
+        </div>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button onClick={() => buildGame(pairCount)} style={{
+            flex: 1, padding: '14px', borderRadius: 14,
+            border: `1.5px solid ${t.border}`, background: t.surface,
+            color: t.text, fontSize: '0.95rem', fontWeight: FONT_WEIGHT.semibold,
+            cursor: 'pointer', fontFamily: 'inherit', minHeight: TOUCH_MIN + 4,
+            transition: 'all 0.15s ease',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.borderColor = '#0D9488'; }}
+          onMouseLeave={e => { e.currentTarget.style.borderColor = t.border; }}
+          >
+            Dîsa bilîze
+          </button>
+          <button onClick={() => setGamePhase('select')} style={{
+            flex: 1, padding: '14px', borderRadius: 14, border: 'none',
+            background: 'linear-gradient(135deg, #0D9488 0%, #0F766E 100%)',
+            color: '#fff', fontSize: '0.95rem', fontWeight: FONT_WEIGHT.extrabold,
+            cursor: 'pointer', fontFamily: 'inherit', minHeight: TOUCH_MIN + 4,
+            boxShadow: '0 4px 12px rgba(13,148,136,0.30)',
+            transition: 'all 0.15s ease',
+            WebkitTapHighlightColor: 'transparent',
+          }}
+          onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-1px)'; }}
+          onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; }}
+          >
+            Asta biguhêre
+          </button>
         </div>
       </PageContainer>
     );
@@ -183,23 +272,48 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
   const cols = 4;
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'transparent' }}>
-      {/* Header */}
+      {/* Header — pill stats + gradient progress */}
       <div style={{
-        padding: `${SPACING.md}px 16px`,
+        padding: '12px 16px',
         background: isDark ? 'rgba(26,35,50,0.95)' : 'rgba(255,255,255,0.95)',
         backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)',
         borderBottom: '1px solid ' + (isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.06)'),
       }}>
         <div style={{ maxWidth: 520, margin: '0 auto' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: SPACING.sm }}>
-            <span style={{ fontSize: FONT_SIZE.base, fontWeight: FONT_WEIGHT.semibold, color: t.text }}>
+          <div style={{
+            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+            marginBottom: 6, gap: 8,
+          }}>
+            <span style={{
+              fontSize: '0.75rem', fontWeight: FONT_WEIGHT.bold, color: t.text,
+              padding: '4px 10px', borderRadius: 99,
+              background: isDark ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.04)',
+              letterSpacing: '0.02em',
+            }}>
               Gav: {moves}
             </span>
-            <span style={{ fontSize: FONT_SIZE.base, fontWeight: FONT_WEIGHT.semibold, color: t.text }}>
-              {matchedKeys.size}/{pairCount}
+            <span style={{
+              fontSize: '0.75rem', fontWeight: FONT_WEIGHT.bold, color: '#15803D',
+              padding: '4px 10px', borderRadius: 99,
+              background: isDark ? 'rgba(21,128,61,0.18)' : 'rgba(21,128,61,0.10)',
+              letterSpacing: '0.02em',
+            }}>
+              ✓ {matchedKeys.size} / {pairCount}
             </span>
           </div>
-          <ProgressBar value={matchedKeys.size} max={pairCount} color={t.success} bgColor={t.border} height={6} />
+          <div style={{
+            height: 4, borderRadius: 99,
+            background: isDark ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%',
+              width: ((matchedKeys.size / pairCount) * 100) + '%',
+              background: 'linear-gradient(90deg, #0D9488, #EA580C)',
+              borderRadius: 99,
+              transition: 'width 0.3s ease-out',
+            }} />
+          </div>
         </div>
       </div>
 
@@ -208,81 +322,90 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
         <div style={{ maxWidth: 520, margin: '0 auto' }}>
           {/* Legend */}
           <div style={{
-            display: 'flex', gap: SPACING.md, justifyContent: 'center',
+            display: 'flex', gap: 8, justifyContent: 'center',
             marginBottom: SPACING.md,
           }}>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: FONT_SIZE.xs, color: t.textMuted }}>
-              <span style={{ width: 10, height: 10, borderRadius: 2, background: '#0D9488' }} /> Kurdî
-            </span>
-            <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: FONT_SIZE.xs, color: t.textMuted }}>
-              <span style={{ width: 10, height: 10, borderRadius: 2, background: '#EA580C' }} /> Tirkî
-            </span>
+            <LegendChip color="#0D9488" rgb="13,148,136" label="Kurdî" isDark={isDark} />
+            <LegendChip color="#EA580C" rgb="234,88,12" label="Tirkî" isDark={isDark} />
           </div>
 
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(' + cols + ', 1fr)',
-            gap: SPACING.sm + 2,
+            gap: 8,
           }}>
             {cards.map(card => {
               const isFlippedCard = flippedIds.includes(card.id);
               const isMatched = matchedKeys.has(card.key);
               const isVisible = isFlippedCard || isMatched;
               const isKu = card.type === 'ku';
+              const rgb = isKu ? '13,148,136' : '234,88,12';
+              const accent = isKu ? '#0D9488' : '#EA580C';
 
               return (
                 <button
                   key={card.id}
                   onClick={() => handleCardClick(card)}
+                  aria-label={isVisible ? card.text : 'Kart girtî'}
                   style={{
-                    minHeight: 72,
-                    borderRadius: RADIUS.lg,
+                    minHeight: 76,
+                    borderRadius: 12,
                     cursor: isVisible ? 'default' : 'pointer',
                     fontFamily: 'inherit',
-                    fontSize: '0.75rem',
+                    fontSize: '0.74rem',
                     fontWeight: FONT_WEIGHT.bold,
                     padding: '6px',
                     transition: 'all 0.3s',
                     background: isMatched
-                      ? t.successLight
-                      : isFlippedCard
-                        ? (isKu ? (isDark ? 'rgba(13,148,136,0.15)' : 'rgba(13,148,136,0.08)') : (isDark ? 'rgba(234,88,12,0.15)' : 'rgba(234,88,12,0.08)'))
-                        : t.primary,
+                      ? (isDark ? 'rgba(21,128,61,0.18)' : 'rgba(21,128,61,0.08)')
+                      : isVisible
+                        ? (isDark ? `rgba(${rgb},0.18)` : `rgba(${rgb},0.08)`)
+                        : (isDark
+                            ? 'linear-gradient(135deg, rgba(13,148,136,0.22) 0%, rgba(15,76,92,0.30) 100%)'
+                            : 'linear-gradient(135deg, #0D9488 0%, #0F766E 100%)'),
                     color: isMatched
-                      ? t.success
-                      : isFlippedCard
+                      ? '#15803D'
+                      : isVisible
                         ? t.text
-                        : t.textOnPrimary,
-                    border: '2px solid ' + (
-                      isMatched ? t.success
-                        : isFlippedCard ? (isKu ? '#0D9488' : '#EA580C')
-                        : t.primaryLight
+                        : '#fff',
+                    border: '1.5px solid ' + (
+                      isMatched ? '#15803D'
+                        : isVisible ? accent
+                        : 'transparent'
                     ),
-                    transform: isMatched ? 'scale(0.95)' : 'none',
-                    boxShadow: isMatched ? 'none' : t.cardShadow,
+                    transform: isMatched ? 'scale(0.94)' : 'none',
+                    opacity: isMatched ? 0.85 : 1,
+                    boxShadow: isMatched
+                      ? 'none'
+                      : isVisible
+                        ? `0 2px 8px rgba(${rgb},0.20)`
+                        : '0 4px 12px rgba(13,148,136,0.25)',
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     textAlign: 'center',
-                    gap: 4,
+                    gap: 3,
+                    WebkitTapHighlightColor: 'transparent',
                   }}
                 >
                   {isVisible ? (
                     <>
                       <span style={{
-                        fontSize: '0.58rem',
+                        fontSize: '0.55rem',
                         fontWeight: FONT_WEIGHT.extrabold,
                         textTransform: 'uppercase',
-                        letterSpacing: '0.06em',
-                        color: isMatched ? t.success : (isKu ? '#0D9488' : '#EA580C'),
-                        opacity: 0.8,
+                        letterSpacing: '0.08em',
+                        color: isMatched ? '#15803D' : accent,
+                        opacity: 0.85,
                       }}>
                         {isKu ? 'KU' : 'TR'}
                       </span>
                       <span>{formatCardText(card.text, card.type)}</span>
                     </>
-                  ) : '?'}
+                  ) : (
+                    <span style={{ fontSize: '1.5rem', opacity: 0.85 }}>?</span>
+                  )}
                 </button>
               );
             })}
@@ -290,5 +413,22 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
         </div>
       </div>
     </div>
+  );
+}
+
+function LegendChip({ color, rgb, label, isDark }) {
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 5,
+      fontSize: '0.7rem', fontWeight: FONT_WEIGHT.semibold,
+      color, padding: '3px 10px', borderRadius: 99,
+      background: isDark ? `rgba(${rgb},0.18)` : `rgba(${rgb},0.10)`,
+      border: `1px solid rgba(${rgb},0.30)`,
+    }}>
+      <span aria-hidden="true" style={{
+        width: 6, height: 6, borderRadius: '50%', background: color,
+      }} />
+      {label}
+    </span>
   );
 }
