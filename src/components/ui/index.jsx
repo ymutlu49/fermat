@@ -390,11 +390,31 @@ export function Modal({ isOpen, onClose, theme, children, maxWidth = 420, ariaLa
 }
 
 // ── ToastContainer ────────────────────────────────────────────────────────────
+// Logo-palette toasts. Each type gets a gradient + matching shadow so the
+// notification visually echoes the in-app pill / button language.
 const TOAST_ICONS = { success: IconCheck, error: IconX, info: IconSearch };
+
+const TOAST_STYLES = {
+  success: {
+    bg:     'linear-gradient(135deg, #15803D 0%, #0D9488 100%)',  // logo green→teal
+    shadow: 'rgba(21,128,61,0.35)',
+  },
+  error: {
+    bg:     'linear-gradient(135deg, #DC2626 0%, #C2410C 100%)',  // red→coral
+    shadow: 'rgba(220,38,38,0.35)',
+  },
+  info: {
+    bg:     'linear-gradient(135deg, #0D9488 0%, #0F4C5C 100%)',  // logo teal→dark
+    shadow: 'rgba(13,148,136,0.35)',
+  },
+  warning: {
+    bg:     'linear-gradient(135deg, #D97706 0%, #EA580C 100%)',  // amber→coral
+    shadow: 'rgba(217,119,6,0.35)',
+  },
+};
 
 export function ToastContainer({ toasts, theme }) {
   const t = theme || THEME.light;
-  const typeColors = { success: t.success, error: t.error, info: t.primary, warning: t.warning };
   return (
     <div style={{
       position: 'fixed',
@@ -411,22 +431,30 @@ export function ToastContainer({ toasts, theme }) {
     }}>
       {toasts.map(toast => {
         const ToastIcon = TOAST_ICONS[toast.type];
+        const style = TOAST_STYLES[toast.type] || TOAST_STYLES.info;
         return (
-          <div key={toast.id} style={{
-            display: 'flex', alignItems: 'center', gap: SPACING.sm,
-            background: typeColors[toast.type] || t.primary,
-            color: '#fff',
-            padding: `${SPACING.md - 1}px ${SPACING.xl - 2}px`,
-            borderRadius: RADIUS.full,
-            fontSize: FONT_SIZE.base,
-            fontWeight: FONT_WEIGHT.semibold,
-            boxShadow: '0 4px 16px rgba(0,0,0,0.2)',
-            animation: `fadeInUp 0.3s ease-out`,
-            whiteSpace: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            maxWidth: '100%',
-          }}>
+          <div
+            key={toast.id}
+            role="status"
+            aria-live="polite"
+            style={{
+              display: 'flex', alignItems: 'center', gap: 8,
+              background: style.bg,
+              color: '#fff',
+              padding: '10px 18px',
+              borderRadius: 9999,
+              fontSize: FONT_SIZE.base,
+              fontWeight: FONT_WEIGHT.semibold,
+              boxShadow: `0 6px 18px ${style.shadow}, 0 1px 3px rgba(0,0,0,0.15)`,
+              border: '1px solid rgba(255,255,255,0.15)',
+              animation: `fadeInUp 0.3s ease-out`,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              maxWidth: '100%',
+              letterSpacing: '0.01em',
+            }}
+          >
             {ToastIcon && <ToastIcon size={16} color="#fff" />}
             {toast.message}
           </div>

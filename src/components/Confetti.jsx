@@ -1,7 +1,18 @@
 // ─── FerMat — Confetti Celebration Effect ───────────────────────
 import { useEffect, useState } from 'react';
 
-const COLORS = ['#E76F51', '#4ECDC4', '#F4D35E', '#2D6A4F', '#6366F1', '#F43F5E', '#22C55E', '#3B82F6'];
+// Logo palette anchors + a few festive accents (gold, deeper red) that still
+// sit in the same warm/earth family as the brand. No off-palette blues/aquas.
+const COLORS = [
+  '#0D9488', // logo teal
+  '#EA580C', // logo coral
+  '#15803D', // logo green
+  '#0F4C5C', // logo dark teal
+  '#FCD34D', // gold (festive)
+  '#F59E0B', // amber (festive)
+  '#0F766E', // deeper teal
+  '#C2410C', // deeper coral
+];
 
 function randomBetween(a, b) { return Math.random() * (b - a) + a; }
 
@@ -70,6 +81,7 @@ export function Confetti({ active, duration = 2500 }) {
 }
 
 // ── Achievement Popup ────────────────────────────────────────────────────────
+// Same gradient grammar as HomeView Hero: logo dark teal → mid teal → coral.
 export function AchievementPopup({ achievement, onClose }) {
   if (!achievement) return null;
 
@@ -77,43 +89,89 @@ export function AchievementPopup({ achievement, onClose }) {
     <div style={{
       position: 'fixed', inset: 0, zIndex: 9998,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
-      background: 'rgba(0,0,0,0.4)',
+      background: 'rgba(0,0,0,0.45)',
+      backdropFilter: 'blur(4px)',
+      WebkitBackdropFilter: 'blur(4px)',
       animation: 'fadeIn 0.2s ease-out',
       pointerEvents: 'auto',
+      padding: 20,
     }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{
-        background: 'linear-gradient(135deg, #0F4C5C 0%, #1A6B7F 60%, #E76F51 100%)',
-        borderRadius: 24,
-        padding: '32px 28px',
-        textAlign: 'center',
-        maxWidth: 320,
-        width: '90%',
-        animation: 'bounceIn 0.4s ease-out',
-        boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
-      }}>
-        <div style={{ fontSize: 56, marginBottom: 12 }}>{achievement.icon}</div>
-        <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.7)', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: 6 }}>
-          Destkeftiyeke Nû!
+      <div
+        onClick={e => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Destkeftiyeke nû"
+        style={{
+          position: 'relative',
+          background: 'linear-gradient(135deg, #0F4C5C 0%, #1A6B7F 55%, #EA580C 130%)',
+          borderRadius: 24,
+          padding: '32px 28px',
+          textAlign: 'center',
+          maxWidth: 340,
+          width: '100%',
+          animation: 'bounceIn 0.4s ease-out',
+          boxShadow: '0 20px 60px rgba(15,76,92,0.45), 0 6px 16px rgba(234,88,12,0.20)',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Decorative blob (same pattern as HomeView Hero) */}
+        <div aria-hidden="true" style={{
+          position: 'absolute', top: -50, right: -50,
+          width: 160, height: 160, borderRadius: '50%',
+          background: 'rgba(255,255,255,0.10)',
+          pointerEvents: 'none',
+        }} />
+        <div aria-hidden="true" style={{
+          position: 'absolute', bottom: -40, left: -30,
+          width: 110, height: 110, borderRadius: '50%',
+          background: 'rgba(252,211,77,0.12)',
+          pointerEvents: 'none',
+        }} />
+        <div style={{ position: 'relative', fontSize: 56, marginBottom: 12, lineHeight: 1 }}>
+          {achievement.icon}
         </div>
-        <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#fff', marginBottom: 8 }}>
+        <div style={{
+          position: 'relative',
+          fontSize: '0.7rem', color: 'rgba(255,255,255,0.78)',
+          fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.12em', marginBottom: 6,
+        }}>
+          ✨ Destkeftiyeke Nû!
+        </div>
+        <div style={{
+          position: 'relative',
+          fontSize: '1.4rem', fontWeight: 800, color: '#fff', marginBottom: 8,
+          letterSpacing: '-0.01em',
+        }}>
           {achievement.title}
         </div>
-        <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.8)', marginBottom: 20, lineHeight: 1.4 }}>
+        <div style={{
+          position: 'relative',
+          fontSize: '0.88rem', color: 'rgba(255,255,255,0.85)',
+          marginBottom: 22, lineHeight: 1.5, fontWeight: 500,
+        }}>
           {achievement.desc}
         </div>
         <button
           onClick={onClose}
           style={{
+            position: 'relative',
             padding: '12px 32px',
             borderRadius: 9999,
-            border: 'none',
-            background: 'rgba(255,255,255,0.2)',
+            border: '1px solid rgba(255,255,255,0.25)',
+            background: 'rgba(255,255,255,0.18)',
             color: '#fff',
             fontSize: '0.9rem',
             fontWeight: 700,
             cursor: 'pointer',
             backdropFilter: 'blur(8px)',
+            WebkitBackdropFilter: 'blur(8px)',
+            fontFamily: 'inherit',
+            letterSpacing: '0.02em',
+            transition: 'background 0.15s ease, transform 0.15s ease',
+            WebkitTapHighlightColor: 'transparent',
           }}
+          onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.28)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
+          onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.18)'; e.currentTarget.style.transform = 'translateY(0)'; }}
         >
           Baş e!
         </button>
@@ -122,24 +180,34 @@ export function AchievementPopup({ achievement, onClose }) {
   );
 }
 
-// ── XP Gain Toast ────────────────────────────────────────────────────────────
+// ── XP Gain Toast — logo green→teal gradient ────────────────────────────────
 export function XPToast({ xp, visible }) {
   if (!visible || !xp) return null;
   return (
-    <div style={{
-      position: 'fixed',
-      top: 70, right: 16,
-      zIndex: 9997,
-      background: 'linear-gradient(135deg, #059669, #10B981)',
-      color: '#fff',
-      padding: '8px 18px',
-      borderRadius: 9999,
-      fontSize: '0.85rem',
-      fontWeight: 800,
-      boxShadow: '0 4px 16px rgba(16,185,129,0.4)',
-      animation: 'fadeInUp 0.3s ease-out, fadeIn 0.3s ease-out reverse 2s forwards',
-      pointerEvents: 'none',
-    }}>
+    <div
+      role="status"
+      aria-live="polite"
+      style={{
+        position: 'fixed',
+        top: 70, right: 16,
+        zIndex: 9997,
+        background: 'linear-gradient(135deg, #15803D 0%, #0D9488 100%)',
+        color: '#fff',
+        padding: '8px 18px',
+        borderRadius: 9999,
+        fontSize: '0.85rem',
+        fontWeight: 800,
+        boxShadow: '0 6px 18px rgba(13,148,136,0.40), 0 1px 3px rgba(21,128,61,0.30)',
+        animation: 'fadeInUp 0.3s ease-out, fadeIn 0.3s ease-out reverse 2s forwards',
+        pointerEvents: 'none',
+        letterSpacing: '0.02em',
+        display: 'inline-flex',
+        alignItems: 'center',
+        gap: 6,
+        border: '1px solid rgba(255,255,255,0.15)',
+      }}
+    >
+      <span aria-hidden="true" style={{ fontSize: '0.95em' }}>⚡</span>
       +{xp} XP
     </div>
   );
