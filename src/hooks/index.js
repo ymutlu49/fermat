@@ -11,3 +11,4 @@ export { useFavorites        } from './useFavorites.js';
 export { useHashRouter       } from './useHashRouter.js';
 export { useBackgroundMusic  } from './useBackgroundMusic.js';
 export { useLocale           } from './useLocale.js';
+export { useInstallPrompt    } from './useInstallPrompt.js';

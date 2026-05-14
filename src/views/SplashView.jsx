@@ -1,10 +1,12 @@
 // ─── FerMat — Splash / Landing View ──────────────────────────────────────────
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { IconArrowRight } from '@components/icons';
+import { useInstallPrompt } from '@hooks';
 
 export default function SplashView({ onStart }) {
   const conceptCount = ALL_CONCEPTS.length;
   const sectionCount = Object.keys(SECTIONS).length;
+  const install = useInstallPrompt();
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
@@ -116,6 +118,67 @@ export default function SplashView({ onStart }) {
           Dest pê bike
           <IconArrowRight size={18} color="#fff" />
         </button>
+
+        {/* Install PWA — Android/desktop: native prompt; iOS: manual instructions */}
+        {!install.isInstalled && (install.canPrompt || install.showIOSInstructions) && (
+          <div style={{
+            marginTop: SPACING.md,
+            animation: 'fadeIn 0.5s ease-out 0.6s both',
+            width: '100%', maxWidth: 280,
+          }}>
+            {install.canPrompt && (
+              <button
+                onClick={install.promptInstall}
+                aria-label="Sepanê saz bike"
+                style={{
+                  width: '100%',
+                  padding: '10px 16px',
+                  borderRadius: RADIUS.lg,
+                  border: '1px solid rgba(255,255,255,0.25)',
+                  background: 'rgba(255,255,255,0.08)',
+                  color: '#fff',
+                  fontSize: FONT_SIZE.sm,
+                  fontWeight: FONT_WEIGHT.semibold,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: 8,
+                  fontFamily: 'inherit',
+                  letterSpacing: '0.01em',
+                  minHeight: TOUCH_MIN - 6,
+                  backdropFilter: 'blur(4px)',
+                  WebkitBackdropFilter: 'blur(4px)',
+                  transition: 'background 0.2s',
+                }}
+                onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.14)'; }}
+                onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+              >
+                <span aria-hidden="true">📱</span>
+                Sepanê li telefonê saz bike
+              </button>
+            )}
+            {install.showIOSInstructions && (
+              <div style={{
+                padding: '10px 14px',
+                borderRadius: RADIUS.lg,
+                background: 'rgba(255,255,255,0.06)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                color: 'rgba(255,255,255,0.85)',
+                fontSize: FONT_SIZE.xs,
+                lineHeight: 1.5,
+                textAlign: 'center',
+              }}>
+                <div style={{ fontWeight: FONT_WEIGHT.semibold, marginBottom: 4 }}>
+                  📱 Bo sazkirina sepanê li iPhone'ê
+                </div>
+                <div style={{ color: 'rgba(255,255,255,0.65)' }}>
+                  Safari'yê veke → bişkoja Pay <span aria-hidden="true">⎙</span> → <em>"Bo Ekrana Mal Zêde Bike"</em>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Quote */}
         <div style={{
