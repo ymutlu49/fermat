@@ -1,5 +1,6 @@
-// ─── FerMat — All 201 Concepts ─────────────────────────────────
+// ─── FerMat — Concept Database (single source of truth) ───────
 // KRİTİK: Bu veriyi manual olarak değiştirme — tek kaynak budur.
+// Toplam kavram sayısı dinamik: ALL_CONCEPTS.length.
 /** @typedef {{ ku:string, tr:string, en:string, lv:string, df:string, ex:string, s:number, visual:Object }} Concept */
 export const ALL_CONCEPTS = [
   {

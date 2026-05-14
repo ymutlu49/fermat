@@ -7,6 +7,7 @@ export const SECTIONS = {
   4:  { name: "CÎYOMETRÎ",               short: "CÎYOMETRÎ",   tr: "Geometri",                 icon: "📐", colorIndex: 3 },
   5:  { name: "PÎVANDIN",                short: "PÎVANDIN",     tr: "Ölçme",                    icon: "📏", colorIndex: 4 },
   6:  { name: "KIRARÎYA DANEYAN",        short: "DANE",         tr: "Veri İşleme",              icon: "📊", colorIndex: 5 },
+  7:  { name: "DIBETÎ",                   short: "DIBETÎ",       tr: "Olasılık",                 icon: "🎲", colorIndex: 6 },
   9:  { name: "TÊGEHÊN CIHÎ",            short: "CIHÎ",         tr: "Uzamsal Kavramlar",        icon: "🧭", colorIndex: 8 },
   10: { name: "TÊGEHÊN CEBÎRÎ",          short: "CEBÎRÎ",       tr: "Cebirsel Kavramlar",       icon: "🔤", colorIndex: 9 },
 };

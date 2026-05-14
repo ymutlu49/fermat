@@ -1,11 +1,15 @@
 // ─── FerMat — Derbarê Ferhengê (About View) ─────────────────────
-import { SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION } from '@data';
+import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION } from '@data';
 import { useMediaQuery } from '@hooks';
+
+const APP_VERSION = '3.0.0';
 
 export default function AboutView({ theme, isDark }) {
   const t = theme;
   const { isMobile } = useMediaQuery();
   const px = isMobile ? SPACING.md : SPACING.xl;
+  const conceptCount = ALL_CONCEPTS.length;
+  const sectionCount = Object.keys(SECTIONS).length;
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', background: 'transparent', padding: `${SPACING.xl}px ${px}px 80px` }}>
@@ -117,7 +121,7 @@ export default function AboutView({ theme, isDark }) {
           textAlign: 'center', marginTop: SPACING.xl,
           fontSize: FONT_SIZE.xs, color: t.textMuted,
         }}>
-          Guherto 3.0.0 · 201 Têgeh · 9 Beş · 3 Ziman
+          Guherto {APP_VERSION} · {conceptCount} Têgeh · {sectionCount} Beş · 3 Ziman
         </div>
       </div>
     </div>

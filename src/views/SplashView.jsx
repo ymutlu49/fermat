@@ -1,8 +1,10 @@
 // ─── FerMat — Splash / Landing View ──────────────────────────────────────────
-import { SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
+import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { IconArrowRight } from '@components/icons';
 
 export default function SplashView({ onStart }) {
+  const conceptCount = ALL_CONCEPTS.length;
+  const sectionCount = Object.keys(SECTIONS).length;
   return (
     <div style={{
       flex: 1, display: 'flex', flexDirection: 'column',
@@ -69,9 +71,9 @@ export default function SplashView({ onStart }) {
           animation: 'fadeInUp 0.5s ease-out 0.15s both',
         }}>
           {[
-            { count: '201', label: 'Têgeh' },
-            { count: '9',   label: 'Beş' },
-            { count: '3',   label: 'Ziman' },
+            { count: String(conceptCount), label: 'Têgeh' },
+            { count: String(sectionCount), label: 'Beş' },
+            { count: '3',                  label: 'Ziman' },
           ].map((s, i) => (
             <div key={i} style={{ textAlign: 'center' }}>
               <div style={{

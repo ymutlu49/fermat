@@ -1,4 +1,5 @@
 // ─── FerMat — Gamification System ──────────────────────────────
+import { ALL_CONCEPTS } from './concepts.js';
 
 // ── XP Rewards ──────────────────────────────────────────────────────────────
 export const XP_REWARDS = {
@@ -33,7 +34,7 @@ export const ACHIEVEMENTS = [
   { id: 'ten_words',      icon: '📚', title: '10 Têgeh',        desc: '10 têgehan fêr bû',            condition: p => (p.knownCount || 0) >= 10 },
   { id: 'fifty_words',    icon: '🌟', title: '50 Têgeh',        desc: '50 têgehan fêr bû',            condition: p => (p.knownCount || 0) >= 50 },
   { id: 'hundred_words',  icon: '💎', title: '100 Têgeh',       desc: '100 têgehan fêr bû',           condition: p => (p.knownCount || 0) >= 100 },
-  { id: 'all_words',      icon: '👑', title: 'Hemû Têgeh!',     desc: 'Hemû têgehan fêr bû',          condition: p => (p.knownCount || 0) >= 205 },
+  { id: 'all_words',      icon: '👑', title: 'Hemû Têgeh!',     desc: 'Hemû têgehan fêr bû',          condition: p => (p.knownCount || 0) >= ALL_CONCEPTS.length },
 
   // Activity badges
   { id: 'quiz_master',    icon: '🧪', title: 'Azmûnvan',        desc: '10 azmûn temam kir',           condition: p => (p.quizCount || 0) >= 10 },
