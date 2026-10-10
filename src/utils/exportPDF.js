@@ -225,7 +225,7 @@ export function exportConceptsAsPDF(concepts, title = 'FerMat — Ferhenga Wêne
   <div class="footer">
     FerMat · Ferhenga Wêneyî ya Matematîkê
   </div>
-  <script>window.onload = () => { window.print(); };<\/script>
+  <script>window.onload = () => { window.print(); };</script>
 </body>
 </html>`;
 

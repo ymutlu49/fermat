@@ -310,7 +310,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "🔢",
         "label": "1000"
       }
     }
@@ -735,7 +735,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?�",
+        "icon": "➕",
         "label": "− × ÷"
       }
     }
@@ -751,7 +751,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "🧮",
         "label": "+ − × ÷"
       }
     }
@@ -784,7 +784,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?�",
+        "icon": "➕",
         "label": "+"
       }
     }
@@ -939,7 +939,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?�",
+        "icon": "➖",
         "label": "−"
       }
     }
@@ -1110,7 +1110,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "✖�?",
+        "icon": "✖️",
         "label": "×"
       }
     }
@@ -1194,7 +1194,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?�",
+        "icon": "➗",
         "label": "÷"
       }
     }
@@ -1278,7 +1278,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "🔢",
         "label": "13÷4=3 jêma1"
       }
     }
@@ -1923,7 +1923,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "🔄",
         "label": "Gerîn"
       }
     }
@@ -1952,7 +1952,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?��?",
+        "icon": "➡️",
         "label": "Guhêztin"
       }
     }
@@ -2175,7 +2175,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "💰",
         "label": "Pere"
       }
     }
@@ -2238,7 +2238,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "🥛",
         "label": "Lître"
       }
     }
@@ -2449,7 +2449,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "💡",
         "label": "Têgihîştin"
       }
     }
@@ -2482,7 +2482,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "🧠",
         "label": "Bîrkarî"
       }
     }
@@ -2513,7 +2513,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?�",
+        "icon": "❓",
         "label": "Pirsgirêk"
       }
     }
@@ -2545,7 +2545,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?��?",
+        "icon": "🧩",
         "label": "Rêbaz"
       }
     }
@@ -2561,7 +2561,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?��?",
+        "icon": "🎯",
         "label": "Dîyarkirin"
       }
     }
@@ -2577,7 +2577,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "💬",
         "label": "Bersiv"
       }
     }
@@ -2609,7 +2609,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?��?",
+        "icon": "📜",
         "label": "Peyt"
       }
     }
@@ -2625,7 +2625,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?��?",
+        "icon": "🔍",
         "label": "Peyîtandin"
       }
     }
@@ -2641,7 +2641,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "✔�?",
+        "icon": "✔️",
         "label": "Dupatkirin"
       }
     }
@@ -2657,7 +2657,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?�?�",
+        "icon": "💯",
         "label": "Teqezî"
       }
     }
@@ -2703,7 +2703,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "📚",
         "label": "Jêderk"
       }
     }
@@ -2719,7 +2719,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "💡",
         "label": "Têgihîn"
       }
     }
@@ -2735,7 +2735,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?�?��?",
+        "icon": "🛠️",
         "label": "Pêkanîn"
       }
     }
@@ -2751,7 +2751,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?",
+        "icon": "⭐",
         "label": "Nirxandin"
       }
     }
@@ -2767,7 +2767,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?�?�",
+        "icon": "📝",
         "label": "Hîndarî"
       }
     }
@@ -2847,7 +2847,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "↔�?",
+        "icon": "↔️",
         "label": "Pêş / Paş"
       }
     }
@@ -2942,7 +2942,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "�?��?",
+        "icon": "➡️",
         "label": "Pêşve"
       }
     }
@@ -2958,7 +2958,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "⬅�?",
+        "icon": "⬅️",
         "label": "Paşve"
       }
     }
@@ -2974,7 +2974,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?���",
+        "icon": "🧭",
         "label": "Berbi"
       }
     }
@@ -3054,7 +3054,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "⚖�?",
+        "icon": "⚖️",
         "label": "="
       }
     }
@@ -3362,7 +3362,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?�?��?",
+        "icon": "🏛️",
         "label": "Hîmî"
       }
     }
@@ -3449,7 +3449,7 @@ export const ALL_CONCEPTS = [
     "visual": {
       "type": "custom",
       "params": {
-        "icon": "?��?�?",
+        "icon": "👁️",
         "label": "Nêrîn"
       }
     }

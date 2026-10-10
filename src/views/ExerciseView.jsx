@@ -3,155 +3,13 @@ import { useState, useCallback, useEffect, useMemo } from 'react';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
 import { shuffle, getSectionColor } from '@utils/helpers.js';
 import { useMediaQuery } from '@hooks';
-import { IconCheck, IconX, IconRefresh, IconArrowRight, IconLightbulb } from '@components/icons';
+import { IconCheck, IconX, IconRefresh, IconArrowRight, IconLightbulb, IconShare } from '@components/icons';
 import { ProgressBar, SectionTag, ScoreCircle } from '@components/ui';
-
-// ─── Soru tipleri ─────────────────────────────────────────────────────────────
-const Q_TYPES = [
-  {
-    id: 'def_term',
-    label: 'Penase → Têgeh',
-    desc: 'Penaseyê bixwîne, têgeha rast hilbijêre',
-    emoji: '📖',
-  },
-  {
-    id: 'term_def',
-    label: 'Têgeh → Penase',
-    desc: 'Têgehê bibîne, penaseyê rast hilbijêre',
-    emoji: '🔍',
-  },
-  {
-    id: 'ku_tr',
-    label: 'Kurdî → Tirkî',
-    desc: 'Têgeha Kurdî bi Tirkî bide',
-    emoji: '🔄',
-  },
-  {
-    id: 'tr_ku',
-    label: 'Tirkî → Kurdî',
-    desc: 'Têgeha Tirkî bi Kurdî bide',
-    emoji: '🔁',
-  },
-  {
-    id: 'ex_term',
-    label: 'Mînak → Têgeh',
-    desc: 'Mînak bixwîne, têgeha rast hilbijêre',
-    emoji: '💬',
-  },
-];
+import { ConceptVisual } from '@components/visuals';
+import ShareSheet from '@components/ShareSheet.jsx';
+import { Q_TYPES, generateQuestions, mathQuestionsFor } from '@utils/exerciseQuestions.js';
 
 const EXERCISE_COUNT = 10;
-
-// ─── Pirsê ava bike ───────────────────────────────────────────────────────────
-function buildQuestion(concept, allConcepts, qType, sectionPool) {
-  // Xeletiyên pêşniyarkirî: pêşî ji heman beşê, paşê ji hemûyan
-  const distractorPool = sectionPool.filter(c => c.ku !== concept.ku);
-  const fallback = allConcepts.filter(c => c.ku !== concept.ku);
-  const source = distractorPool.length >= 3 ? distractorPool : fallback;
-  const distractors = shuffle(source).slice(0, 3);
-
-  switch (qType) {
-    case 'def_term': {
-      const correct = concept.ku;
-      const opts = shuffle([correct, ...distractors.map(d => d.ku)]);
-      return {
-        type: qType,
-        concept,
-        q: concept.df,
-        hint: 'Vê penaseyê xwedî kîjan têgeh e?',
-        opts,
-        ans: opts.indexOf(correct),
-        explain: `${concept.ku} — ${concept.tr}`,
-      };
-    }
-    case 'term_def': {
-      const correct = concept.df;
-      const opts = shuffle([correct, ...distractors.map(d => d.df)]);
-      return {
-        type: qType,
-        concept,
-        q: concept.ku,
-        hint: 'Penaseyê rast hilbijêre:',
-        opts,
-        ans: opts.indexOf(correct),
-        explain: concept.df,
-      };
-    }
-    case 'ku_tr': {
-      const correct = concept.tr;
-      const opts = shuffle([correct, ...distractors.map(d => d.tr)]);
-      return {
-        type: qType,
-        concept,
-        q: concept.ku,
-        hint: 'Bi Tirkî çawa tê gotin?',
-        opts,
-        ans: opts.indexOf(correct),
-        explain: `${concept.ku} = ${concept.tr} (${concept.en})`,
-      };
-    }
-    case 'tr_ku': {
-      const correct = concept.ku;
-      const opts = shuffle([correct, ...distractors.map(d => d.ku)]);
-      return {
-        type: qType,
-        concept,
-        q: concept.tr,
-        hint: 'Bi Kurdî çawa tê gotin?',
-        opts,
-        ans: opts.indexOf(correct),
-        explain: `${concept.tr} = ${concept.ku}`,
-      };
-    }
-    case 'ex_term': {
-      if (!concept.ex || concept.ex.trim().length < 5) return null;
-      const correct = concept.ku;
-      const opts = shuffle([correct, ...distractors.map(d => d.ku)]);
-      return {
-        type: qType,
-        concept,
-        q: concept.ex,
-        hint: 'Ev mînak ji bo kîjan têgehê ye?',
-        opts,
-        ans: opts.indexOf(correct),
-        explain: `${concept.ku} — ${concept.df}`,
-      };
-    }
-    default:
-      return null;
-  }
-}
-
-// ─── Rêza pirsan ava bike ─────────────────────────────────────────────────────
-function generateQuestions(concepts, allConcepts, activeTypes, count) {
-  if (concepts.length === 0 || activeTypes.length === 0) return [];
-
-  const picked = shuffle(concepts).slice(0, Math.min(count * 2, concepts.length));
-  const questions = [];
-
-  for (const concept of picked) {
-    if (questions.length >= count) break;
-    const sectionPool = concepts; // same filtered section
-    const typeId = activeTypes[Math.floor(Math.random() * activeTypes.length)];
-    const q = buildQuestion(concept, allConcepts, typeId, sectionPool);
-    if (q) questions.push(q);
-  }
-
-  // Eger têr nebe, ji hemûyan zêde bike
-  if (questions.length < count) {
-    const extra = shuffle(allConcepts).slice(0, count * 2);
-    for (const concept of extra) {
-      if (questions.length >= count) break;
-      const already = questions.some(q => q.concept.ku === concept.ku);
-      if (already) continue;
-      const typeId = activeTypes[Math.floor(Math.random() * activeTypes.length)];
-      const q = buildQuestion(concept, allConcepts, typeId, allConcepts);
-      if (q) questions.push(q);
-    }
-  }
-
-  return questions.slice(0, count);
-}
 
 // ─── Ana komponent ────────────────────────────────────────────────────────────
 export default function ExerciseView({ theme, isDark, sounds }) {
@@ -168,6 +26,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
   const [score, setScore]             = useState(0);
   const [wrongList, setWrongList]     = useState([]);
   const [showExplain, setShowExplain] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   // Beşa hilbijartî ya têgehan
   const filteredConcepts = useMemo(() => {
@@ -186,7 +45,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
   }, []);
 
   const startExercise = useCallback(() => {
-    const qs = generateQuestions(filteredConcepts, ALL_CONCEPTS, activeTypes, EXERCISE_COUNT);
+    const qs = generateQuestions(filteredConcepts, ALL_CONCEPTS, activeTypes, EXERCISE_COUNT, sectionFilter);
     if (qs.length === 0) return;
     setQuestions(qs);
     setCurrent(0);
@@ -195,10 +54,10 @@ export default function ExerciseView({ theme, isDark, sounds }) {
     setWrongList([]);
     setShowExplain(false);
     setPhase('playing');
-  }, [filteredConcepts, activeTypes]);
+  }, [filteredConcepts, activeTypes, sectionFilter]);
 
   const handleSelect = useCallback((idx) => {
-    if (selected !== null) return;
+    if (selected !== null || idx >= questions[current].opts.length) return;
     setSelected(idx);
     setShowExplain(true);
     const q = questions[current];
@@ -220,14 +79,22 @@ export default function ExerciseView({ theme, isDark, sounds }) {
   useEffect(() => {
     if (phase !== 'playing') return;
     const handler = (e) => {
+      if (isShareOpen) return;
       if (['1','2','3','4'].includes(e.key)) handleSelect(parseInt(e.key) - 1);
       if (e.key === 'Enter' && selected !== null) handleNext();
     };
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
-  }, [phase, selected, handleSelect, handleNext]);
+  }, [phase, selected, handleSelect, handleNext, isShareOpen]);
 
   const contentMaxW = isDesktop ? 660 : '100%';
+
+  const currentQuestion = phase === 'playing' ? questions[current] : null;
+  const shareExercise = useMemo(() => currentQuestion && ({
+    question: currentQuestion,
+    typeLabel: Q_TYPES.find(qt => qt.id === currentQuestion.type)?.label || 'Hîndarî',
+  }), [currentQuestion]);
+  const mathCount = mathQuestionsFor(sectionFilter).length;
 
   // ── DESTPÊK ──────────────────────────────────────────────────────────────────
   if (phase === 'start') {
@@ -348,7 +215,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
             <span style={{ fontSize: '1.3rem' }}>📋</span>
             <div>
               <div style={{ fontSize: '0.88rem', fontWeight: FONT_WEIGHT.bold, color: t.text }}>
-                {filteredConcepts.length} têgeh peyda bûn
+                {filteredConcepts.length} têgeh · {mathCount} pirsên matematîkê
               </div>
               <div style={{ fontSize: FONT_SIZE.sm, color: t.textMuted }}>
                 {EXERCISE_COUNT} pirs dê bên çêkirin · {activeTypes.length} tîpa pirs çalak e
@@ -418,7 +285,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
                 ✗ Bersivên xelet ({wrongList.length})
               </div>
               {wrongList.map((q, i) => {
-                const secColors = getSectionColor(q.concept.s, isDark);
+                const secColors = getSectionColor(q.s, isDark);
                 return (
                   <div key={i} style={{
                     padding: '11px 0',
@@ -439,7 +306,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
                       display: '-webkit-box', WebkitLineClamp: 2,
                       WebkitBoxOrient: 'vertical', overflow: 'hidden',
                     }}>
-                      {q.q}
+                      {q.q || q.hint}
                     </div>
                     {/* Bersiva rast */}
                     <div style={{
@@ -495,12 +362,13 @@ export default function ExerciseView({ theme, isDark, sounds }) {
 
   // ── LÎSTIN ────────────────────────────────────────────────────────────────────
   const q = questions[current];
-  const secColors = getSectionColor(q.concept.s, isDark);
+  const secColors = getSectionColor(q.s, isDark);
   const answered = selected !== null;
   const qTypeMeta = Q_TYPES.find(qt => qt.id === q.type);
 
-  // Bersiva dirêj e? (penase û mînak dirêj dibin)
-  const isLongOpt = q.type === 'term_def' || q.type === 'ex_term';
+  // Bersiv an pirs dirêj e? (penase, mînak û pirsên nivîskî dirêj dibin)
+  const isLongOpt = q.opts.some(opt => opt.length > 40);
+  const isLongQ = q.q.length > 30;
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', background: 'transparent', overflow: 'hidden' }}>
@@ -522,7 +390,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
               <span style={{ color: t.textMuted }}> · </span>
               <span style={{ color: t.error, fontWeight: FONT_WEIGHT.bold }}>✗ {current - score}</span>
             </span>
-            <SectionTag sectionId={q.concept.s} isDark={isDark} size="sm" />
+            <SectionTag sectionId={q.s} isDark={isDark} size="sm" />
           </div>
         </div>
       </div>
@@ -538,7 +406,23 @@ export default function ExerciseView({ theme, isDark, sounds }) {
             borderRadius: SPACING.lg,
             padding: isMobile ? `${SPACING.lg}px 14px` : `22px ${SPACING.xl}px`,
             marginBottom: 14, textAlign: 'center',
+            position: 'relative',
           }}>
+            {/* Parve bike — pirs wek wêneyê Instagramê */}
+            <button
+              onClick={() => setIsShareOpen(true)}
+              aria-label="Parve bike"
+              style={{
+                position: 'absolute', top: 8, right: 8,
+                width: 40, height: 40, borderRadius: '50%', border: 'none',
+                background: secColors.accent + '20', cursor: 'pointer',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              <IconShare size={18} color={secColors.accent} />
+            </button>
+
             {/* Tip etiketi */}
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
@@ -550,26 +434,49 @@ export default function ExerciseView({ theme, isDark, sounds }) {
               {qTypeMeta?.emoji} {qTypeMeta?.label}
             </div>
 
+            {/* Wêne (Wêne → Têgeh) */}
+            {q.visual && (
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <ConceptVisual visual={q.visual} theme={t} size={isMobile ? 140 : 170} />
+              </div>
+            )}
+
             {/* Pirsa sereke */}
-            <div style={{
-              fontSize: q.type === 'def_term' || q.type === 'ex_term'
-                ? (isMobile ? '0.9rem' : '0.95rem')
-                : (isMobile ? '1.3rem' : '1.55rem'),
-              fontWeight: q.type === 'def_term' || q.type === 'ex_term' ? FONT_WEIGHT.medium : FONT_WEIGHT.extrabold,
-              color: secColors.text,
-              lineHeight: 1.55,
-              fontStyle: q.type === 'ex_term' ? 'italic' : 'normal',
-            }}>
-              {q.q}
-            </div>
+            {q.q && (
+              <div style={{
+                fontSize: isLongQ
+                  ? (isMobile ? '0.95rem' : '1.05rem')
+                  : (isMobile ? '1.3rem' : '1.55rem'),
+                fontWeight: isLongQ ? FONT_WEIGHT.semibold : FONT_WEIGHT.extrabold,
+                color: secColors.text,
+                lineHeight: 1.55,
+                fontStyle: q.type === 'ex_term' ? 'italic' : 'normal',
+              }}>
+                {q.q}
+              </div>
+            )}
+
+            {/* Penaseya ku tê pirsîn (Rast an Xelet) */}
+            {q.sub && (
+              <div style={{
+                marginTop: 10, padding: '10px 12px', borderRadius: 12,
+                background: t.surface, borderLeft: `4px solid ${secColors.accent}`,
+                fontSize: isMobile ? '0.9rem' : '0.95rem', color: t.text,
+                lineHeight: 1.55, textAlign: 'left',
+              }}>
+                {q.sub}
+              </div>
+            )}
 
             {/* Alîkariya pirsê */}
-            <div style={{
-              fontSize: '0.72rem', color: secColors.text,
-              opacity: 0.6, marginTop: 10, fontWeight: FONT_WEIGHT.semibold,
-            }}>
-              {q.hint}
-            </div>
+            {q.hint && (
+              <div style={{
+                fontSize: '0.72rem', color: secColors.text,
+                opacity: 0.6, marginTop: 10, fontWeight: FONT_WEIGHT.semibold,
+              }}>
+                {q.hint}
+              </div>
+            )}
           </div>
 
           {/* Vebijêrk */}
@@ -700,6 +607,10 @@ export default function ExerciseView({ theme, isDark, sounds }) {
             </button>
           </div>
         </div>
+      )}
+
+      {isShareOpen && shareExercise && (
+        <ShareSheet exercise={shareExercise} theme={t} isDark={isDark} onClose={() => setIsShareOpen(false)} />
       )}
     </div>
   );

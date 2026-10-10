@@ -12,3 +12,4 @@ export { default as ConceptMapView } from './ConceptMapView.jsx';
 export { default as WorksheetView } from './WorksheetView.jsx';
 export { default as FeedbackView } from './FeedbackView.jsx';
 export { default as AboutView } from './AboutView.jsx';
+export { default as ShareStudioView } from './ShareStudioView.jsx';

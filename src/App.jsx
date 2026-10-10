@@ -31,6 +31,7 @@ const FeedbackView   = lazy(() => import('@views/FeedbackView.jsx'));
 const AboutView      = lazy(() => import('@views/AboutView.jsx'));
 const GamesHubView   = lazy(() => import('@views/GamesHubView.jsx'));
 const MoreHubView    = lazy(() => import('@views/MoreHubView.jsx'));
+const ShareStudioView = lazy(() => import('@views/ShareStudioView.jsx'));
 
 import { trackEvent, trackSession } from '@utils/analytics.js';
 
@@ -47,7 +48,7 @@ const NAV_ITEMS = [
 
 // Views that belong to "games" and "more" hub tabs
 const GAMES_VIEWS = ['quiz', 'match', 'write'];
-const MORE_VIEWS = ['exercise', 'about', 'feedback', 'conceptmap', 'worksheet'];
+const MORE_VIEWS = ['exercise', 'about', 'feedback', 'conceptmap', 'worksheet', 'share'];
 
 const VIEW_TITLES = {
   home:       'FerMat',
@@ -65,6 +66,7 @@ const VIEW_TITLES = {
   nexse:      'Nexşeya Têgehan',
   conceptmap: 'Nexşeya Têgehan',
   worksheet:  'Rûpelên Xebatê',
+  share:      'Parvekirin',
 };
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -288,6 +290,12 @@ export default function App() {
             {view === 'worksheet' && (
               <WorksheetView
                 theme={theme} isDark={isDark}
+              />
+            )}
+            {view === 'share' && (
+              <ShareStudioView
+                theme={theme} isDark={isDark}
+                concepts={ALL_CONCEPTS}
               />
             )}
             {view === 'about' && (

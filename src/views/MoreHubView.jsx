@@ -5,10 +5,10 @@
 import { ALL_CONCEPTS, SECTIONS, FONT_SIZE, FONT_WEIGHT, SPACING } from '@data';
 import { PageContainer } from '@components/ui';
 import {
-  IconLightbulb, IconMap, IconClipboard, IconInfo, IconMessage, IconChevronRight,
+  IconLightbulb, IconMap, IconClipboard, IconInfo, IconMessage, IconChevronRight, IconShare,
 } from '@components/icons';
 
-const APP_VERSION = '3.0.0';
+const APP_VERSION = '3.1.0';
 
 export default function MoreHubView({ theme, isDark, setView }) {
   const t = theme;
@@ -37,6 +37,14 @@ export default function MoreHubView({ theme, isDark, setView }) {
       icon: IconClipboard,
       title: 'Rûpelên Xebatê',
       desc: 'Rûpelên çapkirî',
+      tint: '#EA580C',         // logo coral
+      rgb:  '234,88,12',
+    },
+    {
+      id: 'share',
+      icon: IconShare,
+      title: 'Parvekirin',
+      desc: 'Têgehan wek wêne daxîne',
       tint: '#EA580C',         // logo coral
       rgb:  '234,88,12',
     },

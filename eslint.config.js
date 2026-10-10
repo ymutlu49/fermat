@@ -30,6 +30,13 @@ export default [
         clearTimeout: 'readonly',
         setInterval: 'readonly',
         clearInterval: 'readonly',
+        Image: 'readonly',
+        Blob: 'readonly',
+        File: 'readonly',
+        XMLSerializer: 'readonly',
+        TextEncoder: 'readonly',
+        TextDecoder: 'readonly',
+        MessageChannel: 'readonly',
         // Service worker
         self: 'readonly',
         caches: 'readonly',

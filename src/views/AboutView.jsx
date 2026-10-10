@@ -2,7 +2,7 @@
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION } from '@data';
 import { useMediaQuery } from '@hooks';
 
-const APP_VERSION = '3.0.0';
+const APP_VERSION = '3.1.0';
 
 export default function AboutView({ theme, isDark }) {
   const t = theme;
@@ -81,7 +81,7 @@ export default function AboutView({ theme, isDark }) {
               color: t.primary, fontWeight: FONT_WEIGHT.semibold,
               lineHeight: 1.6,
             }}>
-              "Matematîk bi her zimanî diaxive, bi kurdî jî."
+              &quot;Matematîk bi her zimanî diaxive, bi kurdî jî.&quot;
             </div>
           </div>
         </div>

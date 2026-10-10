@@ -367,7 +367,7 @@ function wrapHTML(title, subtitle, bodyHtml, answerHtml = '') {
     FerMat &middot; Prof. Dr. Yilmaz MUTLU
   </div>
 
-  <script>window.onload = () => { window.print(); };<\/script>
+  <script>window.onload = () => { window.print(); };</script>
 </body>
 </html>`;
 }

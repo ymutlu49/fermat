@@ -7,7 +7,8 @@ import {
 } from '@data';
 import { filterConcepts, getLevelColor, getSectionColor } from '@utils/helpers.js';
 import { useMediaQuery, useSpeech, useFavorites } from '@hooks';
-import { IconSearch, IconX, IconArrowLeft, IconArrowRight } from '@components/icons';
+import { IconSearch, IconX, IconArrowLeft, IconArrowRight, IconShare } from '@components/icons';
+import ShareSheet from '@components/ShareSheet.jsx';
 import { Pill, SectionTag, SpeakButton, ConceptRow, ListSection } from '@components/ui';
 import { ConceptVisual } from '@components/visuals';
 import { SYLLABLES, RELATED_CONCEPTS } from '@data';
@@ -260,17 +261,19 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
   const lvColor  = getLevelColor(concept.lv);
   const visualSize = isMobile ? 120 : 160;
   const isFav = isFavorite(concept.ku + '_' + concept.s);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   // Close on Escape, navigate with Arrow keys
   useEffect(() => {
     const fn = (e) => {
+      if (isShareOpen) return;
       if (e.key === 'Escape') onClose();
       if (e.key === 'ArrowLeft') onPrev();
       if (e.key === 'ArrowRight') onNext();
     };
     window.addEventListener('keydown', fn);
     return () => window.removeEventListener('keydown', fn);
-  }, [onClose, onPrev, onNext]);
+  }, [onClose, onPrev, onNext, isShareOpen]);
 
   return (
     <div
@@ -545,6 +548,25 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
             </button>
           </div>
 
+          {/* Share — renders the concept as an Instagram-sized image */}
+          <button
+            onClick={() => setIsShareOpen(true)}
+            style={{
+              width: '100%', padding: '12px 16px', minHeight: 48,
+              borderRadius: 14, border: 'none',
+              background: `linear-gradient(135deg, ${colors.accent}, #EA580C)`,
+              color: '#fff',
+              fontFamily: 'inherit', fontSize: '0.9rem',
+              fontWeight: FONT_WEIGHT.bold, cursor: 'pointer',
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+              marginBottom: 10,
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            <IconShare size={17} color="#fff" />
+            Parve bike
+          </button>
+
           {/* Close — subtle outline rather than full gradient (less visual weight) */}
           <button
             onClick={onClose}
@@ -573,6 +595,11 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
           </button>
         </div>
       </div>
+      {isShareOpen && (
+        <div onClick={e => e.stopPropagation()}>
+          <ShareSheet concept={concept} theme={t} isDark={isDark} onClose={() => setIsShareOpen(false)} />
+        </div>
+      )}
     </div>
   );
 }

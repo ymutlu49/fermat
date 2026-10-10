@@ -210,10 +210,10 @@ export default function SplashView({ onStart }) {
                 textAlign: 'center',
               }}>
                 <div style={{ fontWeight: FONT_WEIGHT.semibold, marginBottom: 4 }}>
-                  📱 Bo sazkirina sepanê li iPhone'ê
+                  📱 Bo sazkirina sepanê li iPhone&apos;ê
                 </div>
                 <div style={{ color: 'rgba(255,255,255,0.65)' }}>
-                  Safari'yê veke → bişkoja Pay <span aria-hidden="true">⎙</span> → <em>"Bo Ekrana Mal Zêde Bike"</em>
+                  Safari&apos;yê veke → bişkoja Pay <span aria-hidden="true">⎙</span> → <em>&quot;Bo Ekrana Mal Zêde Bike&quot;</em>
                 </div>
               </div>
             )}
@@ -227,7 +227,7 @@ export default function SplashView({ onStart }) {
           lineHeight: 1.55, animation: 'fadeIn 0.8s ease-out 0.5s both',
           maxWidth: 280,
         }}>
-          "Matematîk bi her zimanî diaxive, bi kurdî jî."
+          &quot;Matematîk bi her zimanî diaxive, bi kurdî jî.&quot;
         </div>
       </div>
 
