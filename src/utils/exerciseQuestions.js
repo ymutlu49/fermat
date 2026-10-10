@@ -13,7 +13,7 @@ export const Q_TYPES = [
   { id: 'tr_ku',       label: 'Tirkî → Kurdî',      desc: 'Têgeha Tirkî bi Kurdî bide',              emoji: '🔁' },
   { id: 'en_ku',       label: 'Îngilîzî → Kurdî',   desc: 'Têgeha Îngilîzî bi Kurdî bide',           emoji: '🌍' },
   { id: 'ex_term',     label: 'Mînak → Têgeh',      desc: 'Mînak bixwîne, têgeha rast hilbijêre',    emoji: '💬' },
-  { id: 'visual_term', label: 'Wêne → Têgeh',       desc: 'Wêne bibîne, têgeha rast hilbijêre',      emoji: '🖼️' },
+  { id: 'visual_term', label: 'Wêne → Têgeh',       desc: 'Li wêne binêre, têgeha rast hilbijêre',      emoji: '🖼️' },
   { id: 'true_false',  label: 'Rast an Xelet',      desc: 'Têgeh û penase: rast e an xelet e?',      emoji: '⚖️' },
   { id: 'math',        label: 'Pirsên Matematîkê',  desc: 'Pirsê bixwîne, bersiva rast hilbijêre',   emoji: '🧮' },
 ];

@@ -4,7 +4,7 @@ import {
   ALL_CONCEPTS, SECTIONS, ACHIEVEMENTS, LEITNER_KNOWN_BOX,
   SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT,
 } from '@data';
-import { getSectionColor } from '@utils/helpers.js';
+import { getSectionColor, ACTIVE_SECTIONS } from '@utils/helpers.js';
 import {
   ScoreCircle, PageContainer, SectionCard, SectionTitle, StatRow, Modal, ProgressBar,
 } from '@components/ui';
@@ -72,7 +72,7 @@ export default function StatsView({ theme, isDark, concepts, progress, setProgre
         <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
           {[
             { color: t.success, label: 'Zanî', count: knownCount },
-            { color: t.warning, label: 'Fêrbûn', count: learningCount },
+            { color: t.warningText, label: 'Fêrbûn', count: learningCount },
             { color: t.textMuted, label: 'Nû', count: newCount },
           ].map(seg => (
             <span key={seg.label} style={{ fontSize: FONT_SIZE.xs, color: seg.color, fontWeight: FONT_WEIGHT.medium }}>
@@ -90,7 +90,7 @@ export default function StatsView({ theme, isDark, concepts, progress, setProgre
       {/* Section distribution */}
       <SectionTitle theme={t}>Beş</SectionTitle>
       <SectionCard theme={t}>
-        {Object.entries(SECTIONS).map(([id, sec], i, arr) => {
+        {ACTIVE_SECTIONS.map(([id, sec], i, arr) => {
           const count = sectionCounts[id] || 0;
           const pct = concepts.length > 0 ? Math.round(count / concepts.length * 100) : 0;
           return (
@@ -336,7 +336,7 @@ function AchievementsGrid({ unlockedIds, theme: t, isDark }) {
                 {unlocked ? a.icon : '🔒'}
               </div>
               <div style={{
-                fontSize: '0.65rem', fontWeight: FONT_WEIGHT.semibold,
+                fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.semibold,
                 color: unlocked ? t.text : t.textMuted,
                 lineHeight: 1.2,
               }}>

@@ -9,7 +9,7 @@ import { Confetti, AchievementPopup, XPToast } from '@components/Confetti.jsx';
 import {
   IconVolume, IconVolumeMute, IconSun, IconMoon,
   IconHome, IconBook, IconCards, IconBarChart,
-  IconMoreHorizontal, IconGamepad,
+  IconMoreHorizontal, IconGamepad, IconArrowLeft,
 } from '@components/icons';
 
 // Eager: shown on first paint (Splash) and primary landing (Home).
@@ -122,6 +122,8 @@ export default function App() {
 
   // ── Derived layout values ─────────────────────────────────────────────────
   const navHeight = isMobile ? 50 : 52;
+  // Sub-views get a back arrow to their hub; top-level tabs show the logo.
+  const parentView = GAMES_VIEWS.includes(view) ? 'games' : MORE_VIEWS.includes(view) ? 'more' : null;
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
@@ -157,15 +159,22 @@ export default function App() {
             padding: `0 ${isMobile ? SPACING.md : SPACING.lg}px`,
             background: isDark ? '#0D3D4A' : '#0F4C5C',
             flexShrink: 0, zIndex: 10,
-            minHeight: 48,
+            minHeight: 52,
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <img
-                src={import.meta.env.BASE_URL + 'favicon.svg'}
-                alt="FerMat"
-                style={{ width: 28, height: 28, borderRadius: 6, flexShrink: 0 }}
-              />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, minWidth: 0 }}>
+              {parentView ? (
+                <IconBtn onClick={() => handleSetView(parentView)} label="Vegere" theme={t}>
+                  <IconArrowLeft size={20} color="#FFFFFF" />
+                </IconBtn>
+              ) : (
+                <img
+                  src={import.meta.env.BASE_URL + 'favicon.svg'}
+                  alt=""
+                  style={{ width: 28, height: 28, borderRadius: 6, flexShrink: 0 }}
+                />
+              )}
               <span style={{
+                overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap',
                 fontSize: FONT_SIZE.md, fontWeight: FONT_WEIGHT.bold, color: '#FFFFFF',
               }}>
                 {VIEW_TITLES[view] || 'FerMat'}
@@ -174,14 +183,14 @@ export default function App() {
             <div style={{ display: 'flex', alignItems: 'center', gap: 2 }}>
               <IconBtn onClick={toggleSound} label={isSoundEnabled ? 'Dengê daxe' : 'Deng veke'} theme={t}>
                 {isSoundEnabled
-                  ? <IconVolume size={18} color="rgba(255,255,255,0.7)" />
-                  : <IconVolumeMute size={18} color="rgba(255,255,255,0.5)" />
+                  ? <IconVolume size={20} color="rgba(255,255,255,0.85)" />
+                  : <IconVolumeMute size={20} color="rgba(255,255,255,0.6)" />
                 }
               </IconBtn>
               <IconBtn onClick={toggleTheme} label={isDark ? 'Ronahîyê veke' : 'Tarîyê veke'} theme={t}>
                 {isDark
-                  ? <IconSun size={18} color="rgba(255,255,255,0.7)" />
-                  : <IconMoon size={18} color="rgba(255,255,255,0.7)" />
+                  ? <IconSun size={20} color="rgba(255,255,255,0.85)" />
+                  : <IconMoon size={20} color="rgba(255,255,255,0.85)" />
                 }
               </IconBtn>
             </div>
@@ -401,10 +410,10 @@ export default function App() {
                       transition: 'background 0.2s ease',
                     }}
                   >
-                    <Icon size={20} color={isActive ? '#0D9488' : t.textMuted} />
+                    <Icon size={22} color={isActive ? '#0D9488' : t.textMuted} />
                   </span>
                   <span style={{
-                    fontSize: '0.6rem',
+                    fontSize: '0.6875rem',
                     fontWeight: isActive ? FONT_WEIGHT.bold : FONT_WEIGHT.medium,
                     color: isActive ? '#0D9488' : t.textMuted,
                     lineHeight: 1,
@@ -464,7 +473,7 @@ function IconBtn({ children, onClick, label, theme: t }) {
       onClick={onClick}
       aria-label={label}
       style={{
-        width: 36, height: 36,
+        width: 44, height: 44,
         borderRadius: '50%',
         border: 'none',
         background: 'transparent',

@@ -1,4 +1,5 @@
 // ─── FerMat — Rûpelên Xebatê (Worksheet Generator) ─────────────
+import { ACTIVE_SECTIONS } from '@utils/helpers.js';
 import { useState, useMemo } from 'react';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { getSectionColor } from '@utils/helpers.js';
@@ -63,7 +64,7 @@ export default function WorksheetView({ theme, isDark }) {
   }, [sectionFilter]);
 
   // Section entries for the pill bar
-  const sectionEntries = useMemo(() => Object.entries(SECTIONS), []);
+  const sectionEntries = ACTIVE_SECTIONS;
 
   // Handle generate
   const handleGenerate = () => {

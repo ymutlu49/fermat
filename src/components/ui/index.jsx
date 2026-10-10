@@ -25,7 +25,7 @@ export function Pill({ label, isActive = false, color, icon, onClick, children, 
       aria-pressed={isActive}
       style={{
         padding: icon ? '7px 14px 7px 10px' : '7px 14px',
-        minHeight: 38,
+        minHeight: 40,
         borderRadius: RADIUS.full,
         cursor: 'pointer',
         fontFamily: 'inherit',
@@ -36,7 +36,7 @@ export function Pill({ label, isActive = false, color, icon, onClick, children, 
         background: isActive
           ? `linear-gradient(135deg, ${tint} 0%, ${shade(tint, -12)} 100%)`
           : (isDark ? `${tint}1A` : `${tint}10`),
-        color: isActive ? '#fff' : tint,
+        color: isActive ? '#fff' : (isDark ? tint : shade(tint, -70)),
         boxShadow: isActive
           ? `0 4px 12px ${tint}55, 0 1px 2px ${tint}33`
           : 'none',
@@ -622,7 +622,8 @@ export function SpeakButton({ text, speak, isSpeaking, theme, size = 32 }) {
       aria-label={'Bibêje: ' + text}
       title="Bibêje"
       style={{
-        width: size, height: size,
+        // Visual size stays `size`; the hit area never drops below 40px.
+        width: Math.max(size, 40), height: Math.max(size, 40),
         borderRadius: '50%',
         border: 'none',
         background: isSpeaking ? t.primarySoft : 'transparent',
@@ -635,7 +636,7 @@ export function SpeakButton({ text, speak, isSpeaking, theme, size = 32 }) {
         padding: 0,
       }}
     >
-      <IconVolume size={size * 0.55} color={isSpeaking ? t.primary : t.textMuted} />
+      <IconVolume size={Math.max(size * 0.55, 16)} color={isSpeaking ? t.primary : t.textMuted} />
     </span>
   );
 }

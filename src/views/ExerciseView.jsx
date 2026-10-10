@@ -1,7 +1,7 @@
 // ─── FerMat — Hîndarî (Concept-based Exercise) ──────────────────
 import { useState, useCallback, useEffect, useMemo } from 'react';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
-import { shuffle, getSectionColor } from '@utils/helpers.js';
+import { shuffle, getSectionColor, ACTIVE_SECTIONS } from '@utils/helpers.js';
 import { useMediaQuery } from '@hooks';
 import { IconCheck, IconX, IconRefresh, IconArrowRight, IconLightbulb, IconShare } from '@components/icons';
 import { ProgressBar, SectionTag, ScoreCircle } from '@components/ui';
@@ -145,7 +145,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
                 onClick={() => setSectionFilter(null)}
                 theme={t}
               />
-              {Object.entries(SECTIONS).map(([id, sec]) => {
+              {ACTIVE_SECTIONS.map(([id, sec]) => {
                 const sid = parseInt(id);
                 const colors = getSectionColor(sid, isDark);
                 return (
@@ -293,7 +293,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
                   }}>
                     {/* Tip etiketi */}
                     <div style={{
-                      fontSize: '0.68rem', fontWeight: FONT_WEIGHT.bold,
+                      fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.bold,
                       color: secColors.accent, marginBottom: RADIUS.sm,
                       textTransform: 'uppercase', letterSpacing: '0.04em',
                     }}>
@@ -427,7 +427,7 @@ export default function ExerciseView({ theme, isDark, sounds }) {
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 5,
               background: secColors.accent + '20', color: secColors.accent,
-              fontSize: '0.68rem', fontWeight: FONT_WEIGHT.extrabold,
+              fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.extrabold,
               padding: `${RADIUS.sm}px 10px`, borderRadius: RADIUS.md, marginBottom: SPACING.md,
               textTransform: 'uppercase', letterSpacing: '0.05em',
             }}>
@@ -633,7 +633,7 @@ function Chip({ label, isActive, color, onClick, theme: t }) {
     <button
       onClick={onClick}
       style={{
-        padding: '7px 13px', minHeight: 38, borderRadius: RADIUS.full,
+        padding: '7px 13px', minHeight: 40, borderRadius: RADIUS.full,
         border: '1.5px solid ' + (isActive ? color : t.border),
         background: isActive ? color + '18' : 'transparent',
         color: isActive ? color : t.textSecondary,

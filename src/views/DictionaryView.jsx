@@ -5,7 +5,7 @@ import {
   SCROLL_TOP_THRESHOLD,
   SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN,
 } from '@data';
-import { filterConcepts, getLevelColor, getSectionColor } from '@utils/helpers.js';
+import { filterConcepts, getLevelColor, getSectionColor, ACTIVE_SECTIONS } from '@utils/helpers.js';
 import { useMediaQuery, useSpeech, useFavorites } from '@hooks';
 import { IconSearch, IconX, IconArrowLeft, IconArrowRight, IconShare } from '@components/icons';
 import ShareSheet from '@components/ShareSheet.jsx';
@@ -165,7 +165,7 @@ export default function DictionaryView({ theme, isDark, concepts, initialSection
             isDark={isDark}
             onClick={() => setActiveSectionId(null)}
           />
-          {Object.entries(SECTIONS).map(([id, sec]) => {
+          {ACTIVE_SECTIONS.map(([id, sec]) => {
             const sid = parseInt(id);
             const colors = getSectionColor(sid, isDark);
             return (
@@ -413,7 +413,7 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
               marginBottom: 10,
             }}>
               <div style={{
-                fontSize: '0.62rem', fontWeight: FONT_WEIGHT.extrabold, color: colors.accent,
+                fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.extrabold, color: colors.accent,
                 marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em',
                 display: 'flex', alignItems: 'center', gap: 5,
               }}>
@@ -438,7 +438,7 @@ function ConceptModal({ concept, theme: t, isDark, modalIdx, total, onClose, onN
               marginBottom: 18,
             }}>
               <div style={{
-                fontSize: '0.62rem', fontWeight: FONT_WEIGHT.extrabold, color: '#EA580C',
+                fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.extrabold, color: '#EA580C',
                 marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.08em',
                 display: 'flex', alignItems: 'center', gap: 5,
               }}>

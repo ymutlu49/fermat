@@ -1,5 +1,9 @@
 // ─── FerMat — Pure Utility Functions ───────────────────────────
-import { SECTIONS, SECTION_COLORS } from '@data';
+import { SECTIONS, SECTION_COLORS, ALL_CONCEPTS } from '@data';
+
+/** [id, section] pairs for sections that actually contain concepts. */
+export const ACTIVE_SECTIONS = Object.entries(SECTIONS)
+  .filter(([id]) => ALL_CONCEPTS.some(c => c.s === Number(id)));
 
 /** Fisher-Yates shuffle — returns new array */
 export function shuffle(array) {

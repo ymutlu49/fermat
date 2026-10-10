@@ -93,7 +93,7 @@ export default function HomeView({ theme, isDark, progress, setView, gamificatio
           </div>
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{
-              fontSize: '0.65rem', fontWeight: FONT_WEIGHT.bold,
+              fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.bold,
               textTransform: 'uppercase', letterSpacing: '0.08em',
               color: 'rgba(255,255,255,0.65)',
             }}>
@@ -130,7 +130,7 @@ export default function HomeView({ theme, isDark, progress, setView, gamificatio
             </div>
             <div style={{
               display: 'flex', justifyContent: 'space-between', marginTop: 4,
-              fontSize: '0.65rem', color: 'rgba(255,255,255,0.7)',
+              fontSize: '0.6875rem', color: 'rgba(255,255,255,0.7)',
             }}>
               <span>{xp} XP</span>
               <span>{next.xpRequired} XP · {next.title}</span>
@@ -204,7 +204,7 @@ export default function HomeView({ theme, isDark, progress, setView, gamificatio
             <span style={{ fontSize: FONT_SIZE.xs, color: t.success, fontWeight: FONT_WEIGHT.semibold }}>
               ● {knownCount} zanî
             </span>
-            <span style={{ fontSize: FONT_SIZE.xs, color: t.warning, fontWeight: FONT_WEIGHT.semibold }}>
+            <span style={{ fontSize: FONT_SIZE.xs, color: t.warningText, fontWeight: FONT_WEIGHT.semibold }}>
               ● {learningCount} fêrbûn
             </span>
           </div>

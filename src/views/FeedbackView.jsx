@@ -45,7 +45,7 @@ export default function FeedbackView({ theme, isDark }) {
           An jî rasterast bi e-nameyê bişîne:
         </div>
         <a href="mailto:y.mutlu@alparslan.edu.tr?subject=[FerMat] Pêşniyar"
-          style={{ fontSize: FONT_SIZE.sm, color: t.primary, fontWeight: FONT_WEIGHT.medium, textDecoration: 'none' }}>
+          style={{ display: 'inline-block', padding: '12px 0', fontSize: FONT_SIZE.base, color: t.primary, fontWeight: FONT_WEIGHT.semibold, textDecoration: 'none' }}>
           y.mutlu@alparslan.edu.tr
         </a>
       </div>

@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react';
 import { SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, ICON_SIZE, TOUCH_MIN } from '@data';
-import { getSectionColor, getLevelColor } from '@utils/helpers.js';
+import { getSectionColor, getLevelColor, ACTIVE_SECTIONS } from '@utils/helpers.js';
 import { useMediaQuery } from '@hooks';
 import { IconArrowLeft, IconArrowRight } from '@components/icons';
 import { SectionTag } from '@components/ui';
@@ -72,7 +72,7 @@ export default function NexşeView({ theme, isDark, concepts }) {
           >
             Hemû
           </button>
-          {Object.entries(SECTIONS).map(([id, sec]) => {
+          {ACTIVE_SECTIONS.map(([id, sec]) => {
             const sid = parseInt(id);
             const colors = getSectionColor(sid, isDark);
             const isActive = activeSectionId === sid;
@@ -188,7 +188,7 @@ function NexşeCard({ concept, colors, levelColor, theme: t, onClick, isMobile }
         <div style={{
           position: 'absolute', top: 6, right: 7,
           background: levelColor + '22', color: levelColor,
-          fontSize: '0.58rem', fontWeight: FONT_WEIGHT.extrabold,
+          fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.extrabold,
           padding: '2px 5px', borderRadius: 6,
           letterSpacing: '0.03em',
         }}>
@@ -314,7 +314,7 @@ function NexşeModal({ concept, theme: t, isDark, modalIdx, total, onClose, onNe
               border: '1px solid ' + colors.accent + '30',
             }}>
               <div style={{
-                fontSize: '0.68rem', fontWeight: FONT_WEIGHT.extrabold, color: colors.text,
+                fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.extrabold, color: colors.text,
                 marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em',
               }}>
                 📖 Penase
@@ -333,7 +333,7 @@ function NexşeModal({ concept, theme: t, isDark, modalIdx, total, onClose, onNe
               border: '1px solid ' + (isDark ? '#F97316' : '#F97316') + '30',
             }}>
               <div style={{
-                fontSize: '0.68rem', fontWeight: FONT_WEIGHT.extrabold, color: '#F97316',
+                fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.extrabold, color: '#F97316',
                 marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.05em',
               }}>
                 💡 Mînak

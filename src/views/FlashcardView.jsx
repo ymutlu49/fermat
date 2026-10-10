@@ -248,7 +248,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               </div>
               <div style={{
                 position: 'absolute', bottom: 10, right: 12,
-                fontSize: '0.65rem',
+                fontSize: '0.6875rem',
                 fontWeight: FONT_WEIGHT.semibold,
                 color: sectionColors.text,
                 background: isDark ? 'rgba(255,255,255,0.08)' : 'rgba(255,255,255,0.55)',
@@ -288,7 +288,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
               )}
               {currentConcept.ex && (
                 <div style={{ background: t.accentSoft || '#FFF0EC', borderRadius: RADIUS.md, padding: SPACING.sm + 'px 10px', fontSize: '0.8rem', color: t.text, lineHeight: 1.5, fontStyle: 'italic' }}>
-                  <strong style={{ color: '#E76F51' }}>Mînak: </strong>{currentConcept.ex}
+                  <strong style={{ color: '#C2410C' }}>Mînak: </strong>{currentConcept.ex}
                 </div>
               )}
               <div style={{ display: 'flex', gap: 6, marginTop: 'auto', paddingTop: 10 }}>
@@ -307,7 +307,7 @@ export default function FlashcardView({ theme, isDark, concepts, progress, setPr
           }}>
             {[
               { box: 0, label: 'Nizanim',   emoji: '😕', color: t.error,   bg: t.error + '12' },
-              { box: 1, label: 'Fêr dibim', emoji: '🤔', color: t.warning, bg: t.warning + '15' },
+              { box: 1, label: 'Fêr dibim', emoji: '🤔', color: t.warningText, bg: t.warning + '15' },
               { box: 2, label: 'Dizanim',   emoji: '😊', color: t.success, bg: t.success + '12' },
             ].map(btn => (
               <button key={btn.box} onClick={() => handleRate(btn.box)} style={{

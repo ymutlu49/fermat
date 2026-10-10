@@ -2,6 +2,7 @@
 // Same visual grammar as HomeView's action cards: soft tinted gradient +
 // tinted icon container + dark text + chevron. Each item carries its own
 // accent colour from the logo palette family.
+import { ACTIVE_SECTIONS } from '@utils/helpers.js';
 import { ALL_CONCEPTS, SECTIONS, FONT_SIZE, FONT_WEIGHT, SPACING } from '@data';
 import { PageContainer } from '@components/ui';
 import {
@@ -13,7 +14,7 @@ const APP_VERSION = '3.1.0';
 export default function MoreHubView({ theme, isDark, setView }) {
   const t = theme;
   const conceptCount = ALL_CONCEPTS.length;
-  const sectionCount = Object.keys(SECTIONS).length;
+  const sectionCount = ACTIVE_SECTIONS.length;
 
   const items = [
     {

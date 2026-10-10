@@ -162,7 +162,7 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
                 <div style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginTop: 2 }}>
                   {opt.label}
                 </div>
-                <div style={{ fontSize: '0.65rem', color: t.textMuted, fontWeight: FONT_WEIGHT.medium }}>
+                <div style={{ fontSize: '0.6875rem', color: t.textMuted, fontWeight: FONT_WEIGHT.medium }}>
                   {opt.desc}
                 </div>
               </button>
@@ -392,7 +392,7 @@ export default function MatchingGame({ theme, isDark, concepts, sounds, awardXP 
                   {isVisible ? (
                     <>
                       <span style={{
-                        fontSize: '0.55rem',
+                        fontSize: '0.6875rem',
                         fontWeight: FONT_WEIGHT.extrabold,
                         textTransform: 'uppercase',
                         letterSpacing: '0.08em',

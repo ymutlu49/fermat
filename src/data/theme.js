@@ -8,7 +8,8 @@ export const RADIUS = { sm: 4, md: 8, lg: 14, xl: 20, full: 9999 };
 
 // ── Typography ──────────────────────────────────────────────────────────────
 export const FONT_SIZE = {
-  xs: '0.65rem', sm: '0.75rem', base: '0.875rem', md: '1rem',
+  // xs/sm were 10.4px/12px — below comfortable reading size on a phone.
+  xs: '0.72rem', sm: '0.8125rem', base: '0.875rem', md: '1rem',
   lg: '1.25rem', xl: '1.5rem', xxl: '2rem',
 };
 export const FONT_WEIGHT = {
@@ -30,11 +31,11 @@ export const THEME = {
     primary: '#0D9488', primaryLight: '#14B8A6', primarySoft: '#E6FAF8',
     accent: '#EA580C', accentHover: '#C2410C', accentSoft: '#FFF0EC',
     success: '#15803D', successLight: '#DCFCE7',
-    warning: '#E9C46A', warningLight: '#FFF8E1',
+    warning: '#E9C46A', warningLight: '#FFF8E1', warningText: '#A16207',
     error: '#E63946', errorLight: '#FFE8EA',
     bg: '#FAFBFC', surface: '#FFFFFF', surfaceHover: '#F5F7FA',
     surfaceElevated: '#FFFFFF', border: '#E2E8F0', borderLight: '#F0F4F8',
-    text: '#1A2332', textSecondary: '#64748B', textMuted: '#6B7A8D',
+    text: '#1A2332', textSecondary: '#586579', textMuted: '#5B6A7C',
     textOnPrimary: '#FFFFFF', textOnAccent: '#FFFFFF',
     cardShadow: '0 1px 4px rgba(0,0,0,0.06)',
     cardShadowHover: '0 2px 8px rgba(0,0,0,0.10)',
@@ -44,7 +45,7 @@ export const THEME = {
     primary: '#2DD4BF', primaryLight: '#5EEAD4', primarySoft: '#0D2B2A',
     accent: '#FB923C', accentHover: '#F97316', accentSoft: '#2B1A1A',
     success: '#52B788', successLight: '#1A2F25',
-    warning: '#F4D35E', warningLight: '#2B2614',
+    warning: '#F4D35E', warningLight: '#2B2614', warningText: '#F4D35E',
     error: '#FF6B6B', errorLight: '#2B1A1A',
     bg: '#0F1419', surface: '#1A2332', surfaceHover: '#243044',
     surfaceElevated: '#1E2A3A', border: '#2A3A4E', borderLight: '#1E2A3A',

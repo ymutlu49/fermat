@@ -1,4 +1,5 @@
 // ─── FerMat — Derbarê Ferhengê (About View) ─────────────────────
+import { ACTIVE_SECTIONS } from '@utils/helpers.js';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION } from '@data';
 import { useMediaQuery } from '@hooks';
 
@@ -9,7 +10,7 @@ export default function AboutView({ theme, isDark }) {
   const { isMobile } = useMediaQuery();
   const px = isMobile ? SPACING.md : SPACING.xl;
   const conceptCount = ALL_CONCEPTS.length;
-  const sectionCount = Object.keys(SECTIONS).length;
+  const sectionCount = ACTIVE_SECTIONS.length;
 
   return (
     <div style={{ flex: 1, overflowY: 'auto', background: 'transparent', padding: `${SPACING.xl}px ${px}px 80px` }}>

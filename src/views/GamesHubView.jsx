@@ -196,7 +196,7 @@ function GameCard({ game, onClick, t, isDark, isRecommended }) {
           </div>
           {isRecommended && (
             <span style={{
-              fontSize: '0.6rem',
+              fontSize: '0.6875rem',
               fontWeight: FONT_WEIGHT.extrabold,
               color: game.tint,
               padding: '2px 8px',

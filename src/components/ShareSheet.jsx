@@ -141,7 +141,7 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(caption);
-      flash('Hat kopîkirin ✓');
+      flash('Jêyek hat girtin ✓');
     } catch {
       flash('Xeletîyek çêbû');
     }
@@ -210,7 +210,7 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
           {canShareFile() && (
             <SheetButton onClick={handleShare} disabled={!isReady} icon={IconShare} label="Parve bike" t={t} />
           )}
-          <SheetButton onClick={handleCopy} icon={IconCopy} label="Nivîsê kopî bike" t={t} />
+          <SheetButton onClick={handleCopy} icon={IconCopy} label="Jêyek bigire" title="Ji nivîsê jêyek bigire" t={t} />
         </div>
         <div role="status" aria-live="polite" style={{
           minHeight: 20, marginTop: 8, textAlign: 'center',
@@ -223,11 +223,12 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
   );
 }
 
-function SheetButton({ onClick, disabled = false, primary = false, icon: Icon, label, t }) {
+function SheetButton({ onClick, disabled = false, primary = false, icon: Icon, label, title, t }) {
   const color = primary ? '#FFFFFF' : t.text;
   return (
     <button
       type="button" onClick={onClick} disabled={disabled}
+      title={title} aria-label={title}
       style={{
         flex: 1, minHeight: 48, padding: '10px 8px',
         borderRadius: 14, cursor: disabled ? 'default' : 'pointer',

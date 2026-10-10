@@ -30,7 +30,7 @@ export const EXERCISES = [
     q: '100 + 200 = ?',
     opts: ['200', '300', '400', '250'],
     ans: 1,
-    explain: '100 û 200 bihevra 300 dikin.',
+    explain: '100 û 200 bi hev re 300 dikin.',
   },
   {
     id: 'h05', s: 1, lv: '1-2',
@@ -63,7 +63,7 @@ export const EXERCISES = [
   {
     id: 'h09', s: 1, lv: '3-4',
     q: 'Di van hejmarên neyînî de ya herî mezin kîjan e?',
-    opts: ['-5', '-1', '-10', '-3'],
+    opts: ['−5', '−1', '−10', '−3'],
     ans: 1,
     explain: 'Di hejmarên neyînî de ya herî nêzî sifirê ya herî mezin e: −1 > −3 > −5 > −10.',
   },
@@ -81,14 +81,14 @@ export const EXERCISES = [
     q: '5 + 3 = ?',
     opts: ['7', '9', '8', '6'],
     ans: 2,
-    explain: '5 û 3 bihevra 8 dikin.',
+    explain: '5 û 3 bi hev re 8 dikin.',
   },
   {
     id: 'k02', s: 2, lv: 'P-1',
     q: '9 − 4 = ?',
     opts: ['4', '6', '5', '3'],
     ans: 2,
-    explain: '9 ji 4 kêm kirin, encam 5 e.',
+    explain: '4 ji 9 kêm kirin, encam 5 e.',
   },
   {
     id: 'k03', s: 2, lv: '1-2',
@@ -160,7 +160,7 @@ export const EXERCISES = [
     q: 'Di van parjimaran de ya herî mezin kîjan e?',
     opts: ['1/4', '1/3', '1/2', '1/6'],
     ans: 2,
-    explain: 'Jimara jêrîn çiqas biçûk be, parjimar çiqas mezin e. 1/2 herî mezin e.',
+    explain: 'Jimareya jêrîn çiqas piçûk be, parjimar ewqas mezin e. 1/2 herî mezin e.',
   },
   {
     id: 'p03', s: 3, lv: '1-2',
@@ -216,7 +216,7 @@ export const EXERCISES = [
     q: '2/3 + 1/4 = ?',
     opts: ['3/7', '11/12', '3/12', '8/12'],
     ans: 1,
-    explain: 'Jimareya jêrîn wekî bikin (12): 2/3 = 8/12, 1/4 = 3/12. 8/12 + 3/12 = 11/12.',
+    explain: 'Jimareya jêrîn wekhev bikin (12): 2/3 = 8/12, 1/4 = 3/12. 8/12 + 3/12 = 11/12.',
   },
 
   // ── Beş 4: CÎYOMETRÎ ─────────────────────────────────────────────────────
@@ -243,10 +243,10 @@ export const EXERCISES = [
   },
   {
     id: 'c04', s: 4, lv: '1-2',
-    q: 'Di her sêgoşeyekê de komên sê goşeyan çend derece ye?',
+    q: 'Di her sêgoşeyekê de koma sê goşeyan çend derece ye?',
     opts: ['90°', '270°', '360°', '180°'],
     ans: 3,
-    explain: 'Di her sêgoşeyekê de komên sê goşeyan her tim 180° ye.',
+    explain: 'Di her sêgoşeyekê de koma sê goşeyan her tim 180° ye.',
   },
   {
     id: 'c05', s: 4, lv: '2-3',
@@ -267,7 +267,7 @@ export const EXERCISES = [
     q: 'Çemberek xwedî çend kêleka rast e?',
     opts: ['1', '2', '0', 'Bêsînor'],
     ans: 2,
-    explain: 'Çember xwedî tu kêleka rast nîne, ew xetek girtî û gêrok e.',
+    explain: 'Çember xwedî tu kêleka rast nîne, ew xeteke girtî û gêrok e.',
   },
   {
     id: 'c08', s: 4, lv: '3-4',
@@ -376,7 +376,7 @@ export const EXERCISES = [
     q: 'Di daneyên 3, 3, 5, 7, 3 de tekelî (mod) çi ye?',
     opts: ['5', '7', '3', '4'],
     ans: 2,
-    explain: 'Tekelî ew nirxe ku herî zêde dubare dibe. 3 sê caran hatiye, ji ber vê mod = 3.',
+    explain: 'Tekelî ew nirx e ku herî zêde dubare dibe. 3 sê caran hatiye, ji ber vê mod = 3.',
   },
   {
     id: 'd03', s: 6, lv: '2-3',
@@ -390,11 +390,11 @@ export const EXERCISES = [
     q: 'Di daneyên rêzkî 1, 3, 5, 7, 9 de navend (medyan) çi ye?',
     opts: ['3', '5', '7', '1'],
     ans: 1,
-    explain: 'Di 5 daneyên rêzkî de navend ya 3emîn e → 5.',
+    explain: 'Di 5 daneyên rêzkî de navend ya 3yemîn e → 5.',
   },
   {
     id: 'd05', s: 6, lv: '2-3',
-    q: 'Di nîgara stûnan de beşa herî bilind tişta herî zêde nîşan dide. Ev nîgar ji bo çi tê bikaranîn?',
+    q: 'Di nîgara stûnan de beşa herî bilind tiştê herî zêde nîşan dide. Ev nîgar ji bo çi tê bikaranîn?',
     opts: ['Berawirdkirin', 'Germahî', 'Lez', 'Reng'],
     ans: 0,
     explain: 'Nîgara stûnan ji bo berawirdkirina nirxan tê bikaranîn.',
@@ -404,7 +404,7 @@ export const EXERCISES = [
     q: 'Di daneyên 4, 8, 2, 10, 6 de navend (medyan) çi ye?',
     opts: ['4', '8', '6', '10'],
     ans: 2,
-    explain: 'Rêzkirin: 2, 4, 6, 8, 10. Navend = 6 (hejmara 3emîn).',
+    explain: 'Rêzkirin: 2, 4, 6, 8, 10. Navend = 6 (hejmara 3yemîn).',
   },
   {
     id: 'd07', s: 6, lv: '3-4',
@@ -416,7 +416,7 @@ export const EXERCISES = [
   {
     id: 'd08', s: 6, lv: '3-4',
     q: 'Belavbûn (rêje) çawa tê hesabkirin?',
-    opts: ['Navincî − Kêmtirîn', 'Mezintirîn − Kêmtirîn', 'Navincî × 2', 'Hemû bihev zêde bike'],
+    opts: ['Navincî − Kêmtirîn', 'Mezintirîn − Kêmtirîn', 'Navincî × 2', 'Hemû bi hev zêde bike'],
     ans: 1,
     explain: 'Belavbûn = nirxa herî mezin − nirxa herî kêm.',
   },
@@ -432,16 +432,16 @@ export const EXERCISES = [
   {
     id: 'pw02', s: 8, lv: '1-2',
     q: 'Mînak di fêrkirinê de çima girîng e?',
-    opts: ['Bê manaye', 'Têgehê bi jiyanê ve girê dide, fêmkirinê hêsan dike', 'Tenê ji bo ceribandnê ye', 'Xwendekaran tirsîne'],
+    opts: ['Bêmane ye', 'Têgehê bi jiyanê ve girê dide, fêmkirinê hêsan dike', 'Tenê ji bo ceribandinê ye', 'Xwendekaran ditirsîne'],
     ans: 1,
     explain: 'Mînak têgehên razber bi rewşên rojane ve girê dide û fêmkirinê kûr dike.',
   },
   {
     id: 'pw03', s: 8, lv: '2-3',
-    q: 'Di fêrkirina matematîkê de "têkilî" çi tê wateya?',
+    q: 'Di fêrkirina matematîkê de "têkilî" tê wateya çi?',
     opts: ['Xeletiyeke hesabê', 'Têgehekê negirtin', 'Girêdana di navbera du têgehan de', 'Hesabkirina xelet'],
     ans: 2,
-    explain: 'Têkilî girêdana di navbera du têgeh an raman de ye ku di matematîkê de pir girîng e.',
+    explain: 'Têkilî girêdana di navbera du têgehan an ramanan de ye ku di matematîkê de pir girîng e.',
   },
   {
     id: 'pw04', s: 8, lv: '3-4',
@@ -452,10 +452,10 @@ export const EXERCISES = [
   },
   {
     id: 'pw05', s: 8, lv: '3-4',
-    q: 'Di matematîkê de nîşana "=" çi tê wateya?',
+    q: 'Di matematîkê de nîşana "=" tê wateya çi?',
     opts: ['Ji mezintir', 'Ji piçûktir', 'Wekhev e', 'Zêde bike'],
     ans: 2,
-    explain: 'Nîşana = nîşan dide ku du aliyan nirxên wan wekhev in. Mînak: 3 + 4 = 7.',
+    explain: 'Nîşana = nîşan dide ku nirxên her du aliyan wekhev in. Mînak: 3 + 4 = 7.',
   },
 
   // ── Beş 9: TÊGEHÊN CIHÎ ──────────────────────────────────────────────────
@@ -478,7 +478,7 @@ export const EXERCISES = [
     q: 'Teswîrek ji rastê bo çepê hatiye zivirandin. Çend derece zivirandiye?',
     opts: ['90°', '45°', '180°', '360°'],
     ans: 2,
-    explain: 'Zivirîna ji rastê bo çepê 180° e (nîv dorê).',
+    explain: 'Zivirîna ji rastê bo çepê 180° ye (nîv dorê).',
   },
   {
     id: 'ci04', s: 9, lv: '2-3',

@@ -1,12 +1,13 @@
 // ─── FerMat — Splash / Landing View ──────────────────────────────────────────
 // Logo palette: teal #0D9488 · coral #EA580C · green #15803D · dark #0F4C5C
+import { ACTIVE_SECTIONS } from '@utils/helpers.js';
 import { ALL_CONCEPTS, SECTIONS, SPACING, RADIUS, FONT_SIZE, FONT_WEIGHT, DURATION, TOUCH_MIN } from '@data';
 import { IconArrowRight } from '@components/icons';
 import { useInstallPrompt } from '@hooks';
 
 export default function SplashView({ onStart }) {
   const conceptCount = ALL_CONCEPTS.length;
-  const sectionCount = Object.keys(SECTIONS).length;
+  const sectionCount = ACTIVE_SECTIONS.length;
   const install = useInstallPrompt();
   return (
     <div style={{
@@ -122,7 +123,7 @@ export default function SplashView({ onStart }) {
                 {s.count}
               </div>
               <div style={{
-                fontSize: '0.66rem', color: 'rgba(255,255,255,0.75)',
+                fontSize: '0.6875rem', color: 'rgba(255,255,255,0.75)',
                 fontWeight: FONT_WEIGHT.semibold, marginTop: 4,
                 letterSpacing: '0.04em', textTransform: 'uppercase',
               }}>

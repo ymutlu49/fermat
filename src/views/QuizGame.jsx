@@ -242,7 +242,7 @@ export default function QuizGame({ theme, isDark, concepts, progress, setProgres
           }} />
           <div style={{
             position: 'relative',
-            fontSize: '0.62rem', fontWeight: FONT_WEIGHT.extrabold, color: sectionColors.accent,
+            fontSize: '0.6875rem', fontWeight: FONT_WEIGHT.extrabold, color: sectionColors.accent,
             marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.10em',
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5,
           }}>

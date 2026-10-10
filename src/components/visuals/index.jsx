@@ -2626,12 +2626,16 @@ export function RegroupingVisual({ params = {}, theme, size = 160 }) {
 export function CustomVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
-  const { icon = '🔢', label = '', formula = '' } = params;
+  // Thumbnails show the emoji only: 8–13px labels are clipped at list size.
+  const isCompact = size < 64;
+  const { icon = '🔢' } = params;
+  const label = isCompact ? '' : (params.label || '');
+  const formula = isCompact ? '' : (params.formula || '');
   const formulaFs = formula.length > 14 ? 9 : formula.length > 10 ? 11 : 13;
   const labelFs   = label.length > 16 ? 8 : 10;
   const hasFormulaOrLabel = formula || label;
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={label || icon}>
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={params.label || icon}>
       <defs>
         <radialGradient id={`${uid}_disc`} cx="50%" cy="50%" r="55%">
           <stop offset="0%"   stopColor={c.fill1} stopOpacity="0.14" />
@@ -2642,7 +2646,7 @@ export function CustomVisual({ params = {}, theme, size = 160 }) {
       <circle cx={size / 2} cy={size * (hasFormulaOrLabel ? 0.40 : 0.50)} r={size * 0.32}
         fill={`url(#${uid}_disc)`} />
       <text x={size / 2} y={size * (hasFormulaOrLabel ? 0.40 : 0.50)} textAnchor="middle"
-        fontSize={size * 0.32} dominantBaseline="middle">{icon}</text>
+        fontSize={size * (isCompact ? 0.5 : 0.32)} dominantBaseline="middle">{icon}</text>
       {formula && (
         <text x={size / 2} y={size * 0.68} textAnchor="middle"
           fontSize={formulaFs} fontWeight={800} fill={c.fill1} fontFamily="'Inter',system-ui,monospace">
@@ -2660,59 +2664,75 @@ export function CustomVisual({ params = {}, theme, size = 160 }) {
 }
 
 // ─── 26. ConceptVisual (router) ──────────────────────────────────────────────
+// Drawn visuals lay themselves out in absolute units and break down (negative
+// rect sizes, clipped labels) below roughly this size, so thumbnails are
+// rendered at THUMB_RENDER_SIZE and scaled down as a faithful miniature.
+const THUMB_RENDER_SIZE = 96;
+
 export function ConceptVisual({ visual, theme, size = 160 }) {
   if (!visual || visual.type === 'none') return null;
   const c = vColors(theme);
   const t = theme;
   const p = visual.params || {};
+  const frame = size;
+  const isThumb = frame < THUMB_RENDER_SIZE;
 
-  const renderInner = () => {
+  const renderInner = (rs) => {
     switch (visual.type) {
-      case 'number_line':    return <NumberLineVisual params={p} theme={t} size={size} />;
-      case 'counting':       return <CountingVisual params={p} theme={t} size={size} />;
-      case 'blocks':         return <BlocksVisual params={p} theme={t} size={size} />;
-      case 'fraction':       return <FractionVisual params={p} theme={t} size={size} />;
-      case 'operation':      return <OperationVisual params={p} theme={t} size={size} />;
-      case 'compare':        return <CompareVisual params={p} theme={t} size={size} />;
-      case 'point':          return <GeometryVisual visual={visual} params={{...p, type:'point'}} theme={t} size={size} />;
-      case 'line':           return <GeometryVisual visual={visual} params={{...p, type: p.type || 'line'}} theme={t} size={size} />;
-      case 'triangle':       return <GeometryVisual visual={visual} params={{...p, type: p.type || 'triangle'}} theme={t} size={size} />;
-      case 'quadrilateral':  return <GeometryVisual visual={visual} params={{...p, type: p.type || 'quadrilateral'}} theme={t} size={size} />;
-      case 'circle':         return <GeometryVisual visual={visual} params={{...p, type:'circle'}} theme={t} size={size} />;
-      case 'angle':          return <GeometryVisual visual={visual} params={{...p, type:'angle'}} theme={t} size={size} />;
-      case 'geometry_3d':    return <Geometry3DVisual params={p} theme={t} size={size} />;
-      case 'coordinate':     return <CoordinateVisual params={p} theme={t} size={size} />;
-      case 'symmetry':       return <SymmetryVisual params={p} theme={t} size={size} />;
-      case 'ruler':          return <RulerVisual params={p} theme={t} size={size} />;
-      case 'scale':          return <ScaleVisual params={p} theme={t} size={size} />;
-      case 'clock':          return <ClockVisual params={p} theme={t} size={size} />;
-      case 'bar_chart':      return <BarChartVisual params={p} theme={t} size={size} />;
-      case 'pie_chart':      return <PieChartVisual params={p} theme={t} size={size} />;
-      case 'table':          return <TableVisual params={p} theme={t} size={size} />;
-      case 'dice':           return <DiceVisual params={p} theme={t} size={size} />;
-      case 'probability':    return <ProbabilityVisual params={p} theme={t} size={size} />;
-      case 'variable':       return <AlgebraVisual params={{...p, type:'variable'}} theme={t} size={size} />;
-      case 'equation':       return <AlgebraVisual params={{...p, type:'equation'}} theme={t} size={size} />;
-      case 'pattern':        return <PatternVisual params={p} theme={t} size={size} />;
-      case 'set':            return <SetVisual params={p} theme={t} size={size} />;
-      case 'number_grid':    return <NumberGridVisual params={p} theme={t} size={size} />;
-      case 'arrow_sequence': return <ArrowSequenceVisual params={p} theme={t} size={size} />;
-      case 'area_model':     return <AreaModelVisual params={p} theme={t} size={size} />;
-      case 'regrouping':     return <RegroupingVisual params={p} theme={t} size={size} />;
-      default:               return <CustomVisual params={p} theme={t} size={size} />;
+      case 'number_line':    return <NumberLineVisual params={p} theme={t} size={rs} />;
+      case 'counting':       return <CountingVisual params={p} theme={t} size={rs} />;
+      case 'blocks':         return <BlocksVisual params={p} theme={t} size={rs} />;
+      case 'fraction':       return <FractionVisual params={p} theme={t} size={rs} />;
+      case 'operation':      return <OperationVisual params={p} theme={t} size={rs} />;
+      case 'compare':        return <CompareVisual params={p} theme={t} size={rs} />;
+      case 'point':          return <GeometryVisual visual={visual} params={{...p, type:'point'}} theme={t} size={rs} />;
+      case 'line':           return <GeometryVisual visual={visual} params={{...p, type: p.type || 'line'}} theme={t} size={rs} />;
+      case 'triangle':       return <GeometryVisual visual={visual} params={{...p, type: p.type || 'triangle'}} theme={t} size={rs} />;
+      case 'quadrilateral':  return <GeometryVisual visual={visual} params={{...p, type: p.type || 'quadrilateral'}} theme={t} size={rs} />;
+      case 'circle':         return <GeometryVisual visual={visual} params={{...p, type:'circle'}} theme={t} size={rs} />;
+      case 'angle':          return <GeometryVisual visual={visual} params={{...p, type:'angle'}} theme={t} size={rs} />;
+      case 'geometry_3d':    return <Geometry3DVisual params={p} theme={t} size={rs} />;
+      case 'coordinate':     return <CoordinateVisual params={p} theme={t} size={rs} />;
+      case 'symmetry':       return <SymmetryVisual params={p} theme={t} size={rs} />;
+      case 'ruler':          return <RulerVisual params={p} theme={t} size={rs} />;
+      case 'scale':          return <ScaleVisual params={p} theme={t} size={rs} />;
+      case 'clock':          return <ClockVisual params={p} theme={t} size={rs} />;
+      case 'bar_chart':      return <BarChartVisual params={p} theme={t} size={rs} />;
+      case 'pie_chart':      return <PieChartVisual params={p} theme={t} size={rs} />;
+      case 'table':          return <TableVisual params={p} theme={t} size={rs} />;
+      case 'dice':           return <DiceVisual params={p} theme={t} size={rs} />;
+      case 'probability':    return <ProbabilityVisual params={p} theme={t} size={rs} />;
+      case 'variable':       return <AlgebraVisual params={{...p, type:'variable'}} theme={t} size={rs} />;
+      case 'equation':       return <AlgebraVisual params={{...p, type:'equation'}} theme={t} size={rs} />;
+      case 'pattern':        return <PatternVisual params={p} theme={t} size={rs} />;
+      case 'set':            return <SetVisual params={p} theme={t} size={rs} />;
+      case 'number_grid':    return <NumberGridVisual params={p} theme={t} size={rs} />;
+      case 'arrow_sequence': return <ArrowSequenceVisual params={p} theme={t} size={rs} />;
+      case 'area_model':     return <AreaModelVisual params={p} theme={t} size={rs} />;
+      case 'regrouping':     return <RegroupingVisual params={p} theme={t} size={rs} />;
+      default:               return <CustomVisual params={p} theme={t} size={frame} />;
     }
   };
 
+  const inner = renderInner(isThumb ? THUMB_RENDER_SIZE : frame);
+  const isScaled = isThumb && inner.type !== CustomVisual;
   return (
     <div style={{
-      width: size, height: size, flexShrink: 0,
-      borderRadius: 12,
+      width: frame, height: frame, flexShrink: 0,
+      borderRadius: isThumb ? 8 : 12,
       background: c.soft1,
       border: '1px solid ' + c.line,
       display: 'flex', alignItems: 'center', justifyContent: 'center',
       overflow: 'hidden',
     }}>
-      {renderInner()}
+      {isScaled ? (
+        <div style={{
+          width: THUMB_RENDER_SIZE, height: THUMB_RENDER_SIZE, flexShrink: 0,
+          transform: `scale(${frame / THUMB_RENDER_SIZE})`,
+        }}>
+          {inner}
+        </div>
+      ) : inner}
     </div>
   );
 }
