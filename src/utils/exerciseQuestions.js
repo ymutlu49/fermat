@@ -44,10 +44,11 @@ export function mathQuestionsFor(sectionId) {
     : MATH_QUESTIONS.filter(q => q.s === sectionId);
 }
 
-/** Free-text label visuals would print the answer; drawn ones do not. */
+/** Free-text label visuals and labelled position scenes would print the
+ *  answer; plain drawn ones do not. */
 export function hasDrawnVisual(concept) {
   const type = concept.visual?.type;
-  return Boolean(type) && type !== 'none' && type !== 'custom';
+  return Boolean(type) && type !== 'none' && type !== 'custom' && type !== 'spatial';
 }
 
 function termChoice(concept, distractors, qType, fields) {

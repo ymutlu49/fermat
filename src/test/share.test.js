@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { ALL_CONCEPTS } from '../data/concepts.js';
 import {
-  slugify, toHashtag, shareFileName, wrapLines, buildCaption, normalizeHandle,
+  slugify, toHashtag, shareFileName, wrapLines, buildCaption, normalizeHandle, sectionRevealsAnswer,
 } from '../utils/shareText.js';
 import { buildZip, crc32 } from '../utils/zipStore.js';
 
@@ -49,6 +49,18 @@ describe('shareText', () => {
     expect(caption).toContain('#FerMat');
     expect(caption.endsWith('@fermat')).toBe(true);
     expect(buildCaption(concept)).not.toContain('@');
+  });
+});
+
+describe('sectionRevealsAnswer', () => {
+  it('flags answers that are (part of) the section name', () => {
+    expect(sectionRevealsAnswer(1, 'HEJMAR')).toBe(true);        // section short = HEJMAR
+    expect(sectionRevealsAnswer(1, 'hejmar')).toBe(true);
+    expect(sectionRevealsAnswer(2, 'KIRARÎ')).toBe(true);
+    expect(sectionRevealsAnswer(1, 'HEJMARA XWEZAYÎ')).toBe(true); // contains the pill text
+    expect(sectionRevealsAnswer(1, 'SIFIR')).toBe(false);
+    expect(sectionRevealsAnswer(4, 'SÊGOŞE')).toBe(false);
+    expect(sectionRevealsAnswer(1, '')).toBe(false);
   });
 });
 

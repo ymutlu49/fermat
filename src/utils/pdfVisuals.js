@@ -39,6 +39,7 @@ const ICONS = {
 // Map visual.type to icon key
 const TYPE_MAP = {
   counting: 'counting',
+  ordinal: 'counting',
   number_line: 'number_line',
   number_grid: 'number_grid',
   blocks: 'blocks',

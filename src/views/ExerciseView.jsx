@@ -8,6 +8,7 @@ import { ProgressBar, SectionTag, ScoreCircle } from '@components/ui';
 import { ConceptVisual } from '@components/visuals';
 import ShareSheet from '@components/ShareSheet.jsx';
 import { Q_TYPES, generateQuestions, mathQuestionsFor } from '@utils/exerciseQuestions.js';
+import { sectionRevealsAnswer } from '@utils/shareText.js';
 
 const EXERCISE_COUNT = 10;
 
@@ -390,7 +391,10 @@ export default function ExerciseView({ theme, isDark, sounds }) {
               <span style={{ color: t.textMuted }}> · </span>
               <span style={{ color: t.error, fontWeight: FONT_WEIGHT.bold }}>✗ {current - score}</span>
             </span>
-            <SectionTag sectionId={q.s} isDark={isDark} size="sm" />
+            {/* Beş nayê nîşandan heke navê wê bersiv be (mînak: HEJMAR) */}
+            {(answered || !sectionRevealsAnswer(q.s, q.opts[q.ans])) && (
+              <SectionTag sectionId={q.s} isDark={isDark} size="sm" />
+            )}
           </div>
         </div>
       </div>

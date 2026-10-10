@@ -12,7 +12,7 @@ import { SECTIONS } from '@data/sections.js';
 import { THEME, SECTION_COLORS } from '@data/theme.js';
 import { SYLLABLES } from '@data/conceptMeta.js';
 import { ConceptVisual } from '@components/visuals';
-import { wrapLines, normalizeHandle } from './shareText.js';
+import { wrapLines, normalizeHandle, sectionRevealsAnswer } from './shareText.js';
 
 // Instagram: 4:5 feed post, 1:1 square, 9:16 story. Story keeps content out
 // of the top/bottom strips the app covers with its own chrome.
@@ -126,8 +126,8 @@ async function loadConceptVisual(concept, { hideLabel = false } = {}) {
   if (!concept.visual || concept.visual.type === 'none') return null;
   let visual = concept.visual;
   // On a question card the free-text label would give the answer away.
-  if (hideLabel && visual.params?.label) {
-    visual = { ...visual, params: { ...visual.params, label: '' } };
+  if (hideLabel) {
+    visual = { ...visual, params: { ...visual.params, label: '', showLabels: false } };
   }
   // Leave the caller's stack first: this is reached from a React effect, and
   // flushSync must not run while React is still committing.
@@ -430,7 +430,9 @@ export async function renderShareCard({ concept, format = 'post', template = 'te
   const section = SECTIONS[concept.s];
 
   drawBackground(ctx, fmt, p);
-  const headerBottom = drawHeader(ctx, fmt, p, logo, section?.short);
+  // A question card never names the section: for terms like HEJMAR or
+  // KIRARÎ the section pill is the answer itself.
+  const headerBottom = drawHeader(ctx, fmt, p, logo, isQuestion ? '' : section?.short);
   drawFooter(ctx, fmt, p, normalizeHandle(handle) || 'Ferhenga Matematîkê', isQuestion ? '' : 'Asta ' + concept.lv);
 
   const top = headerBottom + 40;
@@ -611,7 +613,8 @@ export async function renderExerciseCard({ question, typeLabel, format = 'post',
   const width = fmt.w - PAD * 2;
 
   drawBackground(ctx, fmt, p);
-  const headerBottom = drawHeader(ctx, fmt, p, logo, SECTIONS[question.s]?.short);
+  const hidesSection = !reveal && sectionRevealsAnswer(question.s, question.opts[question.ans]);
+  const headerBottom = drawHeader(ctx, fmt, p, logo, hidesSection ? '' : SECTIONS[question.s]?.short);
   drawFooter(ctx, fmt, p, normalizeHandle(handle) || 'Ferhenga Matematîkê', reveal ? 'Bersiv' : 'Pirs');
 
   const top = headerBottom + 36;

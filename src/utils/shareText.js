@@ -4,6 +4,32 @@
 // the Instagram caption that accompanies a card.
 import { SECTIONS } from '@data/sections.js';
 
+// Fixed block appended to every caption (concept and exercise posts alike),
+// so the account's posts all end the same way.
+export const CAPTION_FOOTER = [
+  '📚 FerMat — Ferhenga Matematîkê ya Kurdî',
+  'Kurdî · Tirkî · Îngilîzî',
+  '📲 Sepan: jimaro.app',
+  '🔖 Tomar bike · ↗️ Parve bike · ➕ Me bişopîne',
+];
+
+// Hashtags: the first five identify the account; the rest widen reach in
+// Kurdish, Turkish and English. Per-post tags are inserted between the two.
+export const CAPTION_TAGS_CORE = ['#FerMat', '#FerhengaMatematîkê', '#matematîk', '#kurdî', '#kurmancî'];
+export const CAPTION_TAGS_REACH = [
+  '#zimanêkurdî', '#ferheng', '#perwerde', '#zarok', '#mamoste',
+  '#matematik', '#kürtçe', '#kürtçematematik', '#kurdish', '#mathematics',
+];
+
+/** Footer + hashtags (+ handle) shared by every caption. */
+function captionTail(extraTags, handle) {
+  const tags = [...CAPTION_TAGS_CORE, ...extraTags, ...CAPTION_TAGS_REACH].filter(Boolean);
+  const lines = ['', ...CAPTION_FOOTER, '', [...new Set(tags)].join(' ')];
+  const normalized = normalizeHandle(handle);
+  if (normalized) lines.push(normalized);
+  return lines;
+}
+
 const HAWAR_ASCII = { ê: 'e', î: 'i', û: 'u', ç: 'c', ş: 's' };
 
 /** "HEJMARA XWEZAYÎ" → "hejmara-xwezayi" (safe on every file system). */
@@ -73,14 +99,22 @@ export function buildCaption(concept, handle = '') {
   lines.push('');
   if (concept.df) lines.push('📖 ' + concept.df);
   if (concept.ex) lines.push('💬 ' + concept.ex);
-  lines.push('');
-  const tags = ['#FerMat', '#matematîk', '#kurdî', '#kurmancî', '#ferheng'];
-  if (section) tags.push(toHashtag(section.short));
-  tags.push('#matematik', '#kürtçe');
-  lines.push([...new Set(tags.filter(Boolean))].join(' '));
-  const normalized = normalizeHandle(handle);
-  if (normalized) lines.push(normalized);
+  lines.push(...captionTail([section ? toHashtag(section.short) : ''], handle));
   return lines.join('\n');
+}
+
+/**
+ * True when showing the section name next to a question would give the
+ * answer away — e.g. the HEJMAR section pill beside "sayı → ?" (HEJMAR).
+ */
+export function sectionRevealsAnswer(sectionId, answer) {
+  const section = SECTIONS[sectionId];
+  const target = String(answer || '').toLocaleUpperCase('ku').trim();
+  if (!section || !target) return false;
+  return [section.short, section.name].some(name => {
+    const label = name.toLocaleUpperCase('ku');
+    return label.includes(target) || target.includes(label);
+  });
 }
 
 /** '  fermat ' → '@fermat'; '' stays ''. */
@@ -89,8 +123,6 @@ export function normalizeHandle(handle) {
   return clean ? '@' + clean : '';
 }
 
-const EXERCISE_TAGS_HEAD = ['#FerMat', '#matematîk', '#kurdî', '#kurmancî', '#hîndarî'];
-const EXERCISE_TAGS_TAIL = ['#matematik', '#kürtçe'];
 
 /** Stable slug for an exercise: bank id, or concept + type for generated ones. */
 export function exerciseSlug(question) {
@@ -116,11 +148,7 @@ export function buildExerciseCaption(question, handle = '') {
   if (question.hint) lines.push(question.hint);
   lines.push('');
   question.opts.forEach((opt, i) => lines.push(`${'ABCD'[i]}) ${opt}`));
-  lines.push('');
   const section = SECTIONS[question.s];
-  const tags = [...EXERCISE_TAGS_HEAD, section ? toHashtag(section.short) : '', ...EXERCISE_TAGS_TAIL];
-  lines.push([...new Set(tags.filter(Boolean))].join(' '));
-  const normalized = normalizeHandle(handle);
-  if (normalized) lines.push(normalized);
+  lines.push(...captionTail(['#hîndarî', section ? toHashtag(section.short) : ''], handle));
   return lines.join('\n');
 }

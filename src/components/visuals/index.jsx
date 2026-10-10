@@ -2728,6 +2728,221 @@ export function CustomVisual({ params = {}, theme, size = 160 }) {
   );
 }
 
+// ─── 27. SpatialVisual ───────────────────────────────────────────────────────
+// Position words shown the way they are taught in preschool: a small scene
+// with a reference object and counters placed relative to it, each labelled
+// with the word it stands for (labels come from the dictionary's own terms).
+// `showLabels: false` drops the words, e.g. for question cards.
+function ScenePill({ x, y, text, color, unit }) {
+  const fontSize = 12.5 * unit;
+  const width = text.length * fontSize * 0.62 + 16 * unit;
+  const height = 19 * unit;
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <rect x={-width / 2} y={-height / 2} width={width} height={height} rx={height / 2}
+        fill={color} opacity="0.15" />
+      <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+        fontSize={fontSize} fontWeight={800} fill={color}>{text}</text>
+    </g>
+  );
+}
+
+function SceneArrow({ x1, y1, x2, y2, color, width }) {
+  const angle = Math.atan2(y2 - y1, x2 - x1);
+  const head = width * 3.4;
+  const bx = x2 - Math.cos(angle) * head, by = y2 - Math.sin(angle) * head;
+  const nx = Math.sin(angle) * head * 0.62, ny = -Math.cos(angle) * head * 0.62;
+  return (
+    <g>
+      <line x1={x1} y1={y1} x2={bx} y2={by} stroke={color} strokeWidth={width} strokeLinecap="round" />
+      <polygon points={`${x2},${y2} ${bx + nx},${by + ny} ${bx - nx},${by - ny}`} fill={color} />
+    </g>
+  );
+}
+
+export function SpatialVisual({ params = {}, theme, size = 160 }) {
+  const uid = useId().replace(/:/g, '');
+  const c = vColors(theme);
+  const { scene = 'above_below', showLabels = true } = params;
+  const u = size / 160;
+  const at = f => f * size;
+  const r = at(0.09);
+  // Reference objects (table, box, house) share one warm neutral.
+  const wood = lighten(c.fill4, 0.15), woodEdge = darken(c.fill4, 0.30);
+
+  const ball = (key, fx, fy, tone, radius = r) => (
+    <Sphere key={key} x={at(fx)} y={at(fy)} r={radius}
+      base={tone === 2 ? c.fill2 : c.fill1} gradientId={`${uid}_g${tone}`} filterId={`${uid}_rich`} />
+  );
+  const label = (key, fx, fy, text, tone) => (showLabels
+    ? <ScenePill key={key} x={at(fx)} y={at(fy)} text={text} color={tone === 2 ? c.fill2 : c.fill1} unit={u} />
+    : null);
+  const block = (key, fx, fy, fw, fh) => (
+    <rect key={key} x={at(fx)} y={at(fy)} width={at(fw)} height={at(fh)} rx={4 * u}
+      fill={wood} stroke={woodEdge} strokeWidth={1.6 * u} filter={`url(#${uid}_rich)`} />
+  );
+  const ground = (key, fy, fx1 = 0.08, fx2 = 0.92) => (
+    <line key={key} x1={at(fx1)} y1={at(fy)} x2={at(fx2)} y2={at(fy)}
+      stroke={c.muted} strokeWidth={1.6 * u} strokeLinecap="round" opacity="0.55" />
+  );
+
+  let content;
+  let ariaLabel;
+  switch (scene) {
+    case 'up':
+    case 'down': {
+      const isUp = scene === 'up';
+      const tone = isUp ? 1 : 2;
+      ariaLabel = isUp ? 'jor' : 'jêr';
+      content = [
+        ground('g', 0.86),
+        <SceneArrow key="a" x1={at(0.5)} y1={at(isUp ? 0.74 : 0.30)} x2={at(0.5)} y2={at(isUp ? 0.26 : 0.70)}
+          color={tone === 2 ? c.fill2 : c.fill1} width={7 * u} />,
+        ball('b', 0.5, isUp ? 0.77 : 0.23, tone),
+        label('l', 0.5, isUp ? 0.13 : 0.93, isUp ? 'Jor' : 'Jêr', tone),
+      ];
+      break;
+    }
+    case 'left_right':
+      ariaLabel = 'rast û çep';
+      content = [
+        ground('g', 0.74),
+        block('o', 0.43, 0.40, 0.14, 0.34),
+        ball('l', 0.20, 0.65, 2), ball('r', 0.80, 0.65, 1),
+        label('ll', 0.20, 0.42, 'Çep', 2), label('lr', 0.80, 0.42, 'Rast', 1),
+        <SceneArrow key="al" x1={at(0.36)} y1={at(0.88)} x2={at(0.10)} y2={at(0.88)} color={c.fill2} width={4 * u} />,
+        <SceneArrow key="ar" x1={at(0.64)} y1={at(0.88)} x2={at(0.90)} y2={at(0.88)} color={c.fill1} width={4 * u} />,
+      ];
+      break;
+    case 'front_back':
+      ariaLabel = 'pêş û paş';
+      content = [
+        <rect key="back" x={at(0.42)} y={at(0.22)} width={at(0.38)} height={at(0.38)} rx={6 * u}
+          fill={c.soft1} stroke={c.fill1} strokeWidth={2 * u} filter={`url(#${uid}_rich)`} />,
+        <rect key="front" x={at(0.20)} y={at(0.42)} width={at(0.38)} height={at(0.38)} rx={6 * u}
+          fill={c.fill2} stroke={darken(c.fill2, 0.15)} strokeWidth={2 * u} filter={`url(#${uid}_rich)`} />,
+        label('lb', 0.74, 0.12, 'Paş', 1), label('lf', 0.39, 0.91, 'Pêş', 2),
+      ];
+      break;
+    case 'inside_outside':
+      ariaLabel = 'hundur û derve';
+      content = [
+        ground('g', 0.82),
+        <path key="box" d={`M${at(0.16)},${at(0.42)} V${at(0.80)} H${at(0.58)} V${at(0.42)}`}
+          fill={wood} fillOpacity="0.35" stroke={woodEdge} strokeWidth={4 * u}
+          strokeLinecap="round" strokeLinejoin="round" />,
+        ball('in', 0.37, 0.69, 1), ball('out', 0.80, 0.72, 2),
+        label('li', 0.37, 0.30, 'Hundur', 1), label('lo', 0.80, 0.52, 'Derve', 2),
+      ];
+      break;
+    case 'near_far':
+      ariaLabel = 'nêzîk û dûr';
+      content = [
+        ground('g', 0.80),
+        // House: the thing the two counters are near to / far from
+        <polygon key="roof" points={`${at(0.07)},${at(0.56)} ${at(0.19)},${at(0.42)} ${at(0.31)},${at(0.56)}`}
+          fill={c.fill2} stroke={darken(c.fill2, 0.15)} strokeWidth={1.4 * u} strokeLinejoin="round" />,
+        block('house', 0.10, 0.56, 0.18, 0.24),
+        ball('near', 0.46, 0.71, 1), ball('far', 0.86, 0.73, 2, r * 0.72),
+        label('ln', 0.46, 0.51, 'Nêzîk', 1), label('lf', 0.84, 0.56, 'Dûr', 2),
+      ];
+      break;
+    case 'between':
+      ariaLabel = 'navbêr';
+      content = [
+        ground('g', 0.74),
+        block('a', 0.10, 0.44, 0.20, 0.30), block('b', 0.70, 0.44, 0.20, 0.30),
+        ball('m', 0.5, 0.65, 2),
+        label('l', 0.5, 0.40, 'Navbêr', 2),
+      ];
+      break;
+    case 'forward':
+    case 'backward': {
+      const isForward = scene === 'forward';
+      const tone = isForward ? 1 : 2;
+      ariaLabel = isForward ? 'pêşve' : 'paşve';
+      content = [
+        ground('g', 0.72),
+        ball('b', isForward ? 0.22 : 0.78, 0.63, tone),
+        <SceneArrow key="a" x1={at(isForward ? 0.38 : 0.62)} y1={at(0.63)} x2={at(isForward ? 0.88 : 0.12)} y2={at(0.63)}
+          color={tone === 2 ? c.fill2 : c.fill1} width={6 * u} />,
+        label('l', isForward ? 0.62 : 0.38, 0.42, isForward ? 'Pêşve' : 'Paşve', tone),
+      ];
+      break;
+    }
+    default: // above_below
+      ariaLabel = 'ser û bin';
+      content = [
+        ground('g', 0.86),
+        // Table: slab + two legs
+        block('leg1', 0.28, 0.54, 0.045, 0.32), block('leg2', 0.675, 0.54, 0.045, 0.32),
+        block('top', 0.22, 0.48, 0.56, 0.07),
+        ball('on', 0.5, 0.39, 1), ball('under', 0.5, 0.77, 2),
+        label('lo', 0.5, 0.18, 'Ser', 1), label('lu', 0.86, 0.70, 'Bin', 2),
+      ];
+  }
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label={ariaLabel}>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={2.2} opacityNear={0.18} opacityFar={0.10} />
+        <SphereGradient id={`${uid}_g1`} base={c.fill1} cx="32%" cy="28%" />
+        <SphereGradient id={`${uid}_g2`} base={c.fill2} cx="32%" cy="28%" />
+      </defs>
+      {content}
+    </svg>
+  );
+}
+
+// ─── 28. OrdinalVisual ───────────────────────────────────────────────────────
+// A queue of counters numbered in order; `highlight` (1-based) picks out one
+// position so "first / second / third" is about place, not quantity.
+export function OrdinalVisual({ params = {}, theme, size = 160 }) {
+  const uid = useId().replace(/:/g, '');
+  const c = vColors(theme);
+  const count = Math.max(2, Math.min(params.count ?? 5, 7));
+  const highlight = params.highlight ?? null;
+  const u = size / 160;
+  const cell = (size * 0.86) / count;
+  const r = Math.min(cell * 0.38, 15 * u);
+  const startX = size * 0.07 + cell / 2;
+  const rowY = size * 0.56;
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
+      aria-label={highlight ? `rêza ${highlight}` : 'hejmarên rêzebûnê'}>
+      <defs>
+        <RichShadow id={`${uid}_rich`} near={0.8} far={2.2} opacityNear={0.18} opacityFar={0.10} />
+        <SphereGradient id={`${uid}_g1`} base={c.fill1} cx="32%" cy="28%" />
+        <SphereGradient id={`${uid}_g2`} base={c.fill2} cx="32%" cy="28%" />
+      </defs>
+      {Array.from({ length: count }, (_, i) => {
+        const x = startX + i * cell;
+        const isHi = highlight === i + 1;
+        const isDim = highlight !== null && !isHi;
+        const color = isHi ? c.fill2 : c.fill1;
+        return (
+          <g key={i}>
+            <Sphere x={x} y={rowY} r={isHi ? r * 1.18 : r} base={color}
+              gradientId={`${uid}_g${isHi ? 2 : 1}`} filterId={`${uid}_rich`} opacity={isDim ? 0.45 : 1} />
+            {isHi && (
+              <circle cx={x} cy={rowY - r * 1.18 - 16 * u} r={12 * u} fill={c.fill2} opacity="0.16" />
+            )}
+            <text x={x} y={rowY - (isHi ? r * 1.18 + 16 * u : r + 11 * u) + 1} textAnchor="middle" dominantBaseline="middle"
+              fontSize={(isHi ? 14 : 10.5) * u} fontWeight={isHi ? 900 : 700}
+              fill={isHi ? c.fill2 : c.dim} opacity={isDim ? 0.7 : 1}>
+              {i + 1}.
+            </text>
+          </g>
+        );
+      })}
+      {/* Counting direction */}
+      <SceneArrow x1={size * 0.12} y1={size * 0.84} x2={size * 0.88} y2={size * 0.84}
+        color={c.muted} width={2.4 * u} />
+    </svg>
+  );
+}
+
 // ─── 26. ConceptVisual (router) ──────────────────────────────────────────────
 // Drawn visuals lay themselves out in absolute units and break down (negative
 // rect sizes, clipped labels) below roughly this size, so thumbnails are
@@ -2775,6 +2990,8 @@ export function ConceptVisual({ visual, theme, size = 160 }) {
       case 'arrow_sequence': return <ArrowSequenceVisual params={p} theme={t} size={rs} />;
       case 'area_model':     return <AreaModelVisual params={p} theme={t} size={rs} />;
       case 'regrouping':     return <RegroupingVisual params={p} theme={t} size={rs} />;
+      case 'spatial':        return <SpatialVisual params={p} theme={t} size={rs} />;
+      case 'ordinal':        return <OrdinalVisual params={p} theme={t} size={rs} />;
       default:               return <CustomVisual params={p} theme={t} size={frame} />;
     }
   };

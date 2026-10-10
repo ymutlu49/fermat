@@ -665,11 +665,9 @@ export const ALL_CONCEPTS = [
     "ex": "Ew di rêzê de sêyem e.",
     "s": 1,
     "visual": {
-      "type": "counting",
+      "type": "ordinal",
       "params": {
-        "count": 4,
-        "shape": "circle",
-        "color": "accent"
+        "count": 5
       }
     }
   },
@@ -682,11 +680,10 @@ export const ALL_CONCEPTS = [
     "ex": "Yîlmaz di rêzê de yekem e.",
     "s": 1,
     "visual": {
-      "type": "counting",
+      "type": "ordinal",
       "params": {
-        "count": 3,
-        "shape": "circle",
-        "color": "accent"
+        "count": 5,
+        "highlight": 1
       }
     }
   },
@@ -699,11 +696,10 @@ export const ALL_CONCEPTS = [
     "ex": "Hevalê min di pêşbaziyê de duyem e.",
     "s": 1,
     "visual": {
-      "type": "counting",
+      "type": "ordinal",
       "params": {
-        "count": 2,
-        "shape": "square",
-        "color": "primary"
+        "count": 5,
+        "highlight": 2
       }
     }
   },
@@ -716,11 +712,10 @@ export const ALL_CONCEPTS = [
     "ex": "Dîkê di pêşbaziyê de sêyem bû.",
     "s": 1,
     "visual": {
-      "type": "counting",
+      "type": "ordinal",
       "params": {
-        "count": 3,
-        "shape": "triangle",
-        "color": "accent"
+        "count": 5,
+        "highlight": 3
       }
     }
   },
@@ -2815,9 +2810,9 @@ export const ALL_CONCEPTS = [
     "ex": "Pirtûk li ser maseyê ye.",
     "s": 9,
     "visual": {
-      "type": "coordinate",
+      "type": "spatial",
       "params": {
-        "direction": "above_below"
+        "scene": "above_below"
       }
     }
   },
@@ -2830,9 +2825,9 @@ export const ALL_CONCEPTS = [
     "ex": "Bi destê xwe yê rastê binivise.",
     "s": 9,
     "visual": {
-      "type": "coordinate",
+      "type": "spatial",
       "params": {
-        "direction": "left_right"
+        "scene": "left_right"
       }
     }
   },
@@ -2845,10 +2840,9 @@ export const ALL_CONCEPTS = [
     "ex": "Li pêşiya min bisekine.",
     "s": 9,
     "visual": {
-      "type": "custom",
+      "type": "spatial",
       "params": {
-        "icon": "↔️",
-        "label": "Pêş / Paş"
+        "scene": "front_back"
       }
     }
   },
@@ -2861,9 +2855,9 @@ export const ALL_CONCEPTS = [
     "ex": "Top di hundurê qutiyê de ye.",
     "s": 9,
     "visual": {
-      "type": "coordinate",
+      "type": "spatial",
       "params": {
-        "direction": "inside_outside"
+        "scene": "inside_outside"
       }
     }
   },
@@ -2876,9 +2870,9 @@ export const ALL_CONCEPTS = [
     "ex": "Mal nêzîkî dibistanê ye.",
     "s": 9,
     "visual": {
-      "type": "coordinate",
+      "type": "spatial",
       "params": {
-        "direction": "near_far"
+        "scene": "near_far"
       }
     }
   },
@@ -2891,13 +2885,9 @@ export const ALL_CONCEPTS = [
     "ex": "Sêv di navbera çay û nanê li ser maseyê de ye.",
     "s": 9,
     "visual": {
-      "type": "number_line",
+      "type": "spatial",
       "params": {
-        "start": 1,
-        "end": 5,
-        "highlight": [
-          3
-        ]
+        "scene": "between"
       }
     }
   },
@@ -2910,9 +2900,9 @@ export const ALL_CONCEPTS = [
     "ex": "Balonê ber bi jor diçe.",
     "s": 9,
     "visual": {
-      "type": "coordinate",
+      "type": "spatial",
       "params": {
-        "direction": "above_below"
+        "scene": "up"
       }
     }
   },
@@ -2925,9 +2915,9 @@ export const ALL_CONCEPTS = [
     "ex": "Top ber bi jêr ket.",
     "s": 9,
     "visual": {
-      "type": "coordinate",
+      "type": "spatial",
       "params": {
-        "direction": "above_below"
+        "scene": "down"
       }
     }
   },
@@ -2940,10 +2930,9 @@ export const ALL_CONCEPTS = [
     "ex": "Du gavan pêşve bimeşe.",
     "s": 9,
     "visual": {
-      "type": "custom",
+      "type": "spatial",
       "params": {
-        "icon": "➡️",
-        "label": "Pêşve"
+        "scene": "forward"
       }
     }
   },
@@ -2956,10 +2945,9 @@ export const ALL_CONCEPTS = [
     "ex": "Du gavan paşve bimeşe.",
     "s": 9,
     "visual": {
-      "type": "custom",
+      "type": "spatial",
       "params": {
-        "icon": "⬅️",
-        "label": "Paşve"
+        "scene": "backward"
       }
     }
   },
