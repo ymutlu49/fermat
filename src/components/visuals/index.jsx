@@ -87,7 +87,7 @@ export function NumberLineVisual({ params = {}, theme, size = 160 }) {
                 </text>
               </g>
             ) : (
-              <text x={x} y={lineY + 20} textAnchor="middle" fontSize={9.5}
+              <text x={x} y={lineY + 21} textAnchor="middle" fontSize={11}
                 fontWeight="600" fill={c.dim}>
                 {n}
               </text>
@@ -460,90 +460,95 @@ export function FractionVisual({ params = {}, theme, size = 160 }) {
   );
 }
 
-// ─── 5. OperationVisual ──────────────────────────────────────────────────────
-// Polished: counters are glossy spheres (radial gradient + specular). The
-// operation symbol sits inside a tinted badge so it reads as a "function"
-// applied between operands; result lives in a logo-coral pill at the right.
-// Subtraction marks removed tokens with a red cross overlay + lower opacity.
-export function OperationVisual({ params = {}, theme, size = 160 }) {
-  const uid = useId().replace(/:/g, '');
-  const c = vColors(theme);
-  const { op = 'add', a = 3, b = 2 } = params;
-  const aCount = Math.min(a, 7), bCount = Math.min(b, 7);
-  const slots = op === 'sub' ? aCount + 2 : aCount + bCount + 4;
-  const r = Math.min((size * 0.80) / (slots * 2.2), 13);
-  const gapX = r * 2.3;
-  const midY = size * 0.42;
-  const opSyms = { add: '+', sub: '−', mul: '×', div: '÷' };
-  const symText = opSyms[op];
-  const symColor = op === 'add' ? c.fill3 : op === 'sub' ? c.fill5 : op === 'mul' ? c.fill2 : c.fill4;
-  const result = op === 'add' ? a + b : op === 'sub' ? a - b : op === 'mul' ? a * b : b !== 0 ? Math.floor(a / b) : 0;
-
-  // Sphere counter
-  const sphere = (key, x, y, base, gid) => (
-    <g key={key} filter={`url(#${uid}_rich)`}>
+// Glossy counter shared by the operation and comparison visuals.
+function Sphere({ x, y, r, base, gradientId, filterId, opacity = 1 }) {
+  return (
+    <g filter={`url(#${filterId})`} opacity={opacity}>
       <circle cx={x} cy={y} r={r} fill={base} />
-      <circle cx={x} cy={y} r={r} fill={`url(#${gid})`} />
+      <circle cx={x} cy={y} r={r} fill={`url(#${gradientId})`} />
       <ellipse cx={x - r * 0.32} cy={y - r * 0.40} rx={r * 0.30} ry={r * 0.18}
         fill="#fff" opacity="0.55" />
     </g>
   );
+}
 
-  const items = [];
+// Equation caption under a visual: tinted pill sized to its text.
+function EquationPill({ x, y, text, color, unit }) {
+  const fontSize = 14 * unit;
+  const width = text.length * fontSize * 0.60 + 26 * unit;
+  const height = 26 * unit;
+  return (
+    <g transform={`translate(${x}, ${y})`}>
+      <rect x={-width / 2} y={-height / 2} width={width} height={height} rx={height / 2}
+        fill={color} opacity="0.12" />
+      <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
+        fontSize={fontSize} fontWeight={800} fill={color}>{text}</text>
+    </g>
+  );
+}
+
+// ─── 5. OperationVisual ──────────────────────────────────────────────────────
+// Each operation gets the model children actually use for it, laid out on a
+// unit grid and scaled to fit, with the equation as a caption underneath:
+//   add  — two groups of counters joined by a "+"
+//   sub  — one row, the subtracted counters crossed out
+//   mul  — an a × b array (a rows of b)
+//   div  — a counters shared into b boxes; any remainder sits outside
+export function OperationVisual({ params = {}, theme, size = 160 }) {
+  const uid = useId().replace(/:/g, '');
+  const c = vColors(theme);
+  const { op = 'add' } = params;
+  const a = Math.max(0, params.a ?? 3), b = Math.max(0, params.b ?? 2);
+  const unit = size / 160;
+  const symText = { add: '+', sub: '−', mul: '×', div: '÷' }[op] || '+';
+  // fill4 (amber) is too pale for text, so division uses a darker amber.
+  const symColor = op === 'add' ? c.fill3 : op === 'sub' ? c.fill5 : op === 'mul' ? c.fill2 : (theme?.warningText || '#A16207');
+  const result = op === 'add' ? a + b : op === 'sub' ? a - b : op === 'mul' ? a * b : b !== 0 ? Math.floor(a / b) : 0;
+
+  // Layout in grid cells (1 cell = one counter); `marks` are the extras.
+  const counters = [];   // { gx, gy, tone: 1|2, crossed }
+  const boxes = [];      // { gx, gy, gw, gh } — division groups
+  let symbolAt = null;   // { gx, gy }
+  let gridW = 1, gridH = 1;
+
   if (op === 'sub') {
-    for (let i = 0; i < aCount; i++) {
-      const x = r + 4 + i * gapX;
-      const isRemoved = i >= aCount - bCount;
-      if (isRemoved) {
-        // Dim sphere + red cross
-        items.push(
-          <g key={`s${i}`} opacity="0.40">
-            {sphere(`g${i}`, x, midY, c.fill1, `${uid}_g1`)}
-          </g>
-        );
-        items.push(
-          <g key={`x${i}`}>
-            <line x1={x - r * 0.85} y1={midY - r * 0.85} x2={x + r * 0.85} y2={midY + r * 0.85}
-              stroke={c.fill5} strokeWidth={2.5} strokeLinecap="round" />
-            <line x1={x + r * 0.85} y1={midY - r * 0.85} x2={x - r * 0.85} y2={midY + r * 0.85}
-              stroke={c.fill5} strokeWidth={2.5} strokeLinecap="round" />
-          </g>
-        );
-      } else {
-        items.push(sphere(`s${i}`, x, midY, c.fill1, `${uid}_g1`));
-      }
+    const n = Math.min(a, 10), removed = Math.min(b, n);
+    for (let i = 0; i < n; i++) counters.push({ gx: i, gy: 0, tone: 1, crossed: i >= n - removed });
+    gridW = Math.max(n, 1);
+  } else if (op === 'mul') {
+    const rows = Math.min(a, 6), cols = Math.min(b, 8);
+    for (let row = 0; row < rows; row++) {
+      for (let col = 0; col < cols; col++) counters.push({ gx: col, gy: row, tone: row % 2 ? 2 : 1 });
     }
+    gridW = Math.max(cols, 1); gridH = Math.max(rows, 1);
+  } else if (op === 'div' && b > 0) {
+    const groups = Math.min(b, 6), per = Math.min(result, 6);
+    const remainder = Math.min(a - result * b, 4);
+    const pitch = 1.45; // box width + gap between boxes
+    for (let g = 0; g < groups; g++) {
+      boxes.push({ gx: g * pitch, gy: 0, gw: 1, gh: Math.max(per, 1) });
+      for (let k = 0; k < per; k++) counters.push({ gx: g * pitch, gy: k, tone: 1 });
+    }
+    for (let k = 0; k < remainder; k++) counters.push({ gx: groups * pitch + 0.15, gy: k, tone: 2 });
+    gridW = (groups - 1) * pitch + 1 + (remainder > 0 ? pitch + 0.15 : 0);
+    gridH = Math.max(per, remainder, 1);
   } else {
-    for (let i = 0; i < aCount; i++) {
-      items.push(sphere(`a${i}`, r + 4 + i * gapX, midY, c.fill1, `${uid}_g1`));
-    }
-    const symX = r + 4 + aCount * gapX + gapX * 0.5;
-    items.push(
-      <g key="sym">
-        <rect x={symX - 12} y={midY - 12} width={24} height={24} rx={6}
-          fill={symColor} opacity="0.14" />
-        <text x={symX} y={midY + 5} textAnchor="middle"
-          fontSize={18} fontWeight={900} fill={symColor}>{symText}</text>
-      </g>
-    );
-    const bStartX = symX + gapX * 0.6;
-    for (let i = 0; i < bCount; i++) {
-      items.push(sphere(`b${i}`, bStartX + i * gapX, midY, c.fill2, `${uid}_g2`));
-    }
-    const eqX = bStartX + bCount * gapX + gapX * 0.5;
-    items.push(
-      <text key="eq" x={eqX} y={midY + 5} textAnchor="middle"
-        fontSize={16} fontWeight={700} fill={c.muted}>=</text>
-    );
-    items.push(
-      <g key="res">
-        <rect x={eqX + gapX * 0.55 - 12} y={midY - 13} width={26} height={26} rx={13}
-          fill={c.fill1} opacity="0.16" />
-        <text x={eqX + gapX * 0.55} y={midY + 5} textAnchor="middle"
-          fontSize={15} fontWeight={900} fill={c.fill1}>{result}</text>
-      </g>
-    );
+    const left = Math.min(a, 9), right = Math.min(b, 9);
+    const gap = 1.3; // room for the "+" between the two groups
+    for (let i = 0; i < left; i++) counters.push({ gx: i, gy: 0, tone: 1 });
+    symbolAt = { gx: left + (gap - 1) / 2, gy: 0 };
+    for (let i = 0; i < right; i++) counters.push({ gx: left + gap + i, gy: 0, tone: 2 });
+    gridW = left + gap + right;
   }
+
+  const areaX = size * 0.07, areaW = size * 0.86;
+  const areaY = size * 0.08, areaH = size * 0.58;
+  const cell = Math.min(areaW / gridW, areaH / gridH, 30 * unit);
+  const originX = areaX + (areaW - gridW * cell) / 2;
+  const originY = areaY + (areaH - gridH * cell) / 2;
+  const px = gx => originX + (gx + 0.5) * cell;
+  const py = gy => originY + (gy + 0.5) * cell;
+  const r = cell * 0.40;
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
@@ -553,46 +558,65 @@ export function OperationVisual({ params = {}, theme, size = 160 }) {
         <SphereGradient id={`${uid}_g1`} base={c.fill1} cx="32%" cy="28%" />
         <SphereGradient id={`${uid}_g2`} base={c.fill2} cx="32%" cy="28%" />
       </defs>
-      {items}
-      {/* Equation label as a pill below the visual */}
-      <g transform={`translate(${size / 2}, ${size * 0.78})`}>
-        <rect x={-44} y={-12} width={88} height={24} rx={12}
-          fill={symColor} opacity="0.10" />
-        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
-          fontSize={13} fontWeight={800} fill={symColor}>
-          {a} {symText} {b} = {result}
-        </text>
-      </g>
+
+      {boxes.map((box, i) => (
+        <rect key={`box${i}`}
+          x={px(box.gx) - cell * 0.58} y={originY - cell * 0.10}
+          width={cell * 1.16} height={box.gh * cell + cell * 0.20} rx={cell * 0.28}
+          fill={c.fill1} fillOpacity="0.08" stroke={c.fill1} strokeOpacity="0.45"
+          strokeWidth={1.4 * unit} strokeDasharray={`${4 * unit},${3 * unit}`} />
+      ))}
+
+      {counters.map((item, i) => (
+        <g key={`c${i}`}>
+          <Sphere x={px(item.gx)} y={py(item.gy)} r={r}
+            base={item.tone === 2 ? c.fill2 : c.fill1}
+            gradientId={`${uid}_g${item.tone}`} filterId={`${uid}_rich`}
+            opacity={item.crossed ? 0.35 : 1} />
+          {item.crossed && (
+            <g stroke={c.fill5} strokeWidth={Math.max(2, r * 0.22)} strokeLinecap="round">
+              <line x1={px(item.gx) - r * 0.8} y1={py(item.gy) - r * 0.8} x2={px(item.gx) + r * 0.8} y2={py(item.gy) + r * 0.8} />
+              <line x1={px(item.gx) + r * 0.8} y1={py(item.gy) - r * 0.8} x2={px(item.gx) - r * 0.8} y2={py(item.gy) + r * 0.8} />
+            </g>
+          )}
+        </g>
+      ))}
+
+      {symbolAt && (
+        <text x={px(symbolAt.gx)} y={py(symbolAt.gy) + 1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={cell * 1.05} fontWeight={900} fill={symColor}>{symText}</text>
+      )}
+
+      <EquationPill x={size / 2} y={size * 0.83} unit={unit} color={symColor}
+        text={`${a} ${symText} ${b} = ${result}`} />
     </svg>
   );
 }
 
 // ─── 6. CompareVisual ────────────────────────────────────────────────────────
-// Polished: two rows of glossy sphere counters (top teal, bottom coral) make
-// the inequality readable at a glance; the comparison symbol lives in its own
-// tinted badge to the right, scaled large enough to feel like the focal point.
+// Two left-aligned rows of counters (one-to-one correspondence shows which is
+// longer), each with its count in front, and the comparison written out as a
+// caption underneath so nothing overlaps the counters.
 export function CompareVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { a = 5, b = 3, type = 'greater' } = params;
-  const maxN = 8, r = size * 0.058, gapX = r * 2.3;
+  const unit = size / 160;
+  const maxN = 9;
   const aCount = Math.min(a, maxN), bCount = Math.min(b, maxN);
-  const rowY1 = size * 0.30, rowY2 = size * 0.62;
-
-  const sphere = (key, x, y, gid, base) => (
-    <g key={key} filter={`url(#${uid}_rich)`}>
-      <circle cx={x} cy={y} r={r} fill={base} />
-      <circle cx={x} cy={y} r={r} fill={`url(#${gid})`} />
-      <ellipse cx={x - r * 0.32} cy={y - r * 0.40} rx={r * 0.30} ry={r * 0.18}
-        fill="#fff" opacity="0.55" />
-    </g>
-  );
-
-  const makeRow = (n, gid, base, y) =>
-    Array.from({ length: n }, (_, i) => sphere(`${y}_${i}`, r + 4 + i * gapX, y, gid, base));
-
   const sym = type === 'greater' ? '>' : type === 'less' ? '<' : '=';
   const symColor = type === 'equal' ? c.fill3 : c.fill2;
+
+  const badgeR = 11 * unit;
+  const left = size * 0.07;
+  const rowStart = left + badgeR * 2 + 7 * unit;
+  const cell = Math.min((size * 0.93 - rowStart) / Math.max(aCount, bCount, 1), 20 * unit);
+  const r = cell * 0.42;
+  const rows = [
+    { n: aCount, label: a, y: size * 0.25, color: c.fill1, gid: `${uid}_top` },
+    { n: bCount, label: b, y: size * 0.50, color: c.fill2, gid: `${uid}_bottom` },
+  ];
+  const captionSize = 20 * unit;
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
@@ -602,27 +626,29 @@ export function CompareVisual({ params = {}, theme, size = 160 }) {
         <SphereGradient id={`${uid}_top`}    base={c.fill1} cx="32%" cy="28%" />
         <SphereGradient id={`${uid}_bottom`} base={c.fill2} cx="32%" cy="28%" />
       </defs>
-      {makeRow(aCount, `${uid}_top`, c.fill1, rowY1)}
-      {makeRow(bCount, `${uid}_bottom`, c.fill2, rowY2)}
 
-      {/* Comparison symbol in a tinted badge — focal point */}
-      <g transform={`translate(${size * 0.74}, ${size * 0.46})`}>
-        <rect x={-22} y={-22} width={44} height={44} rx={12}
+      {rows.map((row, i) => (
+        <g key={i}>
+          <circle cx={left + badgeR} cy={row.y} r={badgeR} fill={row.color} opacity="0.14" />
+          <text x={left + badgeR} y={row.y + 1} textAnchor="middle" dominantBaseline="middle"
+            fontSize={12 * unit} fontWeight={800} fill={row.color}>{row.label}</text>
+          {Array.from({ length: row.n }, (_, k) => (
+            <Sphere key={k} x={rowStart + (k + 0.5) * cell} y={row.y} r={r}
+              base={row.color} gradientId={row.gid} filterId={`${uid}_rich`} />
+          ))}
+        </g>
+      ))}
+
+      {/* Caption: a  >  b, the symbol in its own tinted badge */}
+      <g transform={`translate(${size / 2}, ${size * 0.80})`}>
+        <rect x={-16 * unit} y={-16 * unit} width={32 * unit} height={32 * unit} rx={9 * unit}
           fill={symColor} opacity="0.14" />
         <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
-          fontSize={30} fontWeight={900} fill={symColor}>{sym}</text>
-      </g>
-
-      {/* Count labels next to each row */}
-      <g transform={`translate(${r + 4 + aCount * gapX + r * 2.2}, ${rowY1})`}>
-        <rect x={-12} y={-9} width={24} height={18} rx={9} fill={c.fill1} opacity="0.12" />
-        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
-          fontSize={11} fontWeight={800} fill={c.fill1}>{a}</text>
-      </g>
-      <g transform={`translate(${r + 4 + bCount * gapX + r * 2.2}, ${rowY2})`}>
-        <rect x={-12} y={-9} width={24} height={18} rx={9} fill={c.fill2} opacity="0.12" />
-        <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
-          fontSize={11} fontWeight={800} fill={c.fill2}>{b}</text>
+          fontSize={captionSize * 1.15} fontWeight={900} fill={symColor}>{sym}</text>
+        <text x={-34 * unit} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={captionSize} fontWeight={900} fill={c.fill1}>{a}</text>
+        <text x={34 * unit} y={1} textAnchor="middle" dominantBaseline="middle"
+          fontSize={captionSize} fontWeight={900} fill={c.fill2}>{b}</text>
       </g>
     </svg>
   );
@@ -794,26 +820,29 @@ export function GeometryVisual({ visual, params = {}, theme, size = 160 }) {
   if (type === 'angle') {
     const { degrees = 60 } = params;
     const rad = (degrees * Math.PI) / 180;
-    const len = s * 0.92;
-    const x2 = cx + len, y2 = cy;
-    const x3 = cx + len * Math.cos(-rad), y3 = cy + len * Math.sin(-rad);
+    // Vertex sits bottom-left (centre for obtuse angles) so the arms can
+    // use most of the canvas.
+    const ox = degrees > 90 ? size * 0.5 : size * 0.20, oy = size * 0.76;
+    const len = size * (degrees > 90 ? 0.40 : 0.62);
+    const x2 = ox + len, y2 = oy;
+    const x3 = ox + len * Math.cos(-rad), y3 = oy + len * Math.sin(-rad);
     const arcR = len * 0.38;
     const large = degrees > 180 ? 1 : 0;
     // Filled arc using coral gradient so the angle wedge reads as a real surface
     return mkSvg(<>
-      <line x1={cx} y1={cy} x2={x2} y2={y2} stroke={`url(#${uid}_stroke)`} strokeWidth={2.8} strokeLinecap="round" />
-      <line x1={cx} y1={cy} x2={x3} y2={y3} stroke={`url(#${uid}_stroke)`} strokeWidth={2.8} strokeLinecap="round" />
+      <line x1={ox} y1={oy} x2={x2} y2={y2} stroke={`url(#${uid}_stroke)`} strokeWidth={3.2} strokeLinecap="round" />
+      <line x1={ox} y1={oy} x2={x3} y2={y3} stroke={`url(#${uid}_stroke)`} strokeWidth={3.2} strokeLinecap="round" />
       <path
-        d={`M${cx},${cy} L${cx+arcR},${cy} A${arcR},${arcR} 0 ${large},1 ${cx+arcR*Math.cos(-rad)},${cy+arcR*Math.sin(-rad)} Z`}
+        d={`M${ox},${oy} L${ox+arcR},${oy} A${arcR},${arcR} 0 ${large},1 ${ox+arcR*Math.cos(-rad)},${oy+arcR*Math.sin(-rad)} Z`}
         fill={c.soft2}
         stroke={c.fill2}
         strokeWidth={1.5}
         opacity={0.92}
       />
-      {vertex('o', cx, cy, 5)}
-      <text x={cx + arcR * 1.55 * Math.cos(-rad / 2)}
-        y={cy + arcR * 1.55 * Math.sin(-rad / 2) + 4}
-        textAnchor="middle" fontSize={12} fontWeight={800} fill={c.fill2}>{degrees}°</text>
+      {vertex('o', ox, oy, 6)}
+      <text x={ox + arcR * 1.55 * Math.cos(-rad / 2)}
+        y={oy + arcR * 1.55 * Math.sin(-rad / 2) + 4}
+        textAnchor="middle" fontSize={15} fontWeight={800} fill={c.fill2}>{degrees}°</text>
     </>, `${degrees} derece goşe`);
   }
   // Default triangle
@@ -1667,6 +1696,10 @@ export function TableVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { rows = 3, cols = 3, data = [] } = params;
+  // No data in the concept: draw a small tally — a shape per row, counts beside it.
+  const isSample = data.length === 0;
+  const SAMPLE_COUNTS = [[3, 5], [4, 2], [6, 1], [2, 4], [5, 3]];
+  const sampleColors = [c.fill1, c.fill2, c.fill3, c.fill6, c.fill5];
   const padX = 12, padY = size * 0.10;
   const tableW = size - padX * 2;
   const cellH = (size - padY - 12) / (rows + 1);
@@ -1745,14 +1778,34 @@ export function TableVisual({ params = {}, theme, size = 160 }) {
           const dataR = r - 1;
           const x = startX + col * cellW + cellW / 2;
           const y = startY + r * cellH + cellH / 2 + 3;
-          const text = isHeader
-            ? (data[-1] && data[-1][col]) || ''
-            : (data[dataR] && data[dataR][col]) || '';
+          if (isSample) {
+            if (isHeader) {
+              // Placeholder bar instead of a made-up column title
+              return (
+                <rect key={`t${r}${col}`} x={x - cellW * 0.22} y={y - 6} width={cellW * 0.44} height={5}
+                  rx={2.5} fill="#fff" opacity="0.75" />
+              );
+            }
+            if (col === 0) {
+              const shapeR = Math.min(cellH, cellW) * 0.24;
+              const fill = sampleColors[dataR % sampleColors.length];
+              return dataR % 3 === 1
+                ? <rect key={`t${r}${col}`} x={x - shapeR} y={y - 3 - shapeR} width={shapeR * 2} height={shapeR * 2} rx={shapeR * 0.3} fill={fill} />
+                : dataR % 3 === 2
+                  ? <polygon key={`t${r}${col}`} points={`${x},${y - 3 - shapeR} ${x + shapeR},${y - 3 + shapeR} ${x - shapeR},${y - 3 + shapeR}`} fill={fill} />
+                  : <circle key={`t${r}${col}`} cx={x} cy={y - 3} r={shapeR} fill={fill} />;
+            }
+          }
+          const text = isSample
+            ? String(SAMPLE_COUNTS[dataR % SAMPLE_COUNTS.length][(col - 1) % 2])
+            : isHeader
+              ? (data[-1] && data[-1][col]) || ''
+              : (data[dataR] && data[dataR][col]) || '';
           if (!text) return null;
           return (
             <text key={`t${r}${col}`} x={x} y={y} textAnchor="middle"
-              fontSize={isHeader ? 9 : 8.5}
-              fontWeight={isHeader ? 800 : 600}
+              fontSize={isHeader ? 9 : isSample ? Math.min(cellH * 0.5, 15) : 8.5}
+              fontWeight={isHeader || isSample ? 800 : 600}
               fill={isHeader ? '#fff' : c.text}
               letterSpacing={isHeader ? '0.04em' : '0'}>
               {text}
@@ -2012,6 +2065,8 @@ export function AlgebraVisual({ params = {}, theme, size = 160 }) {
     const tilt = balanced ? 0 : 9;
     const beamColor = balanced ? c.fill3 : c.fill2;
     const fontSize = equation.length > 14 ? 9 : equation.length > 10 ? 11 : 13;
+    const sides = equation.includes('=') ? equation.split('=').map(part => part.trim()) : null;
+    const sideSize = side => (side.length > 6 ? 10 : side.length > 3 ? 12 : 15);
     return (
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img"
         aria-label={equation}>
@@ -2067,6 +2122,15 @@ export function AlgebraVisual({ params = {}, theme, size = 160 }) {
           rx={20} ry={5.5} fill="none" stroke={beamColor} strokeWidth={2} />
         <ellipse cx={cx + size * 0.28} cy={baseY - postH - tilt + 16}
           rx={20} ry={5.5} fill="none" stroke={beamColor} strokeWidth={2} />
+
+        {/* Each side of the equation rests on its pan */}
+        {sides && sides.length === 2 && sides.map((side, i) => (
+          <text key={i}
+            x={cx + (i === 0 ? -1 : 1) * size * 0.28}
+            y={baseY - postH + (i === 0 ? tilt : -tilt) + 7}
+            textAnchor="middle" fontSize={sideSize(side)} fontWeight={900} fill={c.text}
+            fontFamily="'Inter',system-ui,monospace">{side}</text>
+        ))}
       </svg>
     );
   }
@@ -2204,8 +2268,9 @@ export function SetVisual({ params = {}, theme, size = 160 }) {
   const uid = useId().replace(/:/g, '');
   const c = vColors(theme);
   const { labels = ['A', 'B'] } = params;
-  const cx = size / 2, cy = size * 0.46, r = size * 0.30;
+  const cx = size / 2, cy = size * 0.56, r = size * 0.30;
   const offset = r * 0.62;
+  const labelY = cy - r - size * 0.09;
   const aCx = cx - offset * 0.7;
   const bCx = cx + offset * 0.7;
 
@@ -2252,12 +2317,12 @@ export function SetVisual({ params = {}, theme, size = 160 }) {
         fill={`url(#${uid}_intersect)`} clipPath={`url(#${uid}_clipA)`} />
 
       {/* Labels — tinted pills */}
-      <g transform={`translate(${aCx - r - 6}, ${cy})`}>
+      <g transform={`translate(${aCx - r * 0.45}, ${labelY})`}>
         <rect x={-14} y={-12} width={28} height={24} rx={12} fill={c.fill1} opacity="0.16" />
         <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
           fontSize={16} fontWeight={900} fill={c.fill1}>{labels[0]}</text>
       </g>
-      <g transform={`translate(${bCx + r + 6}, ${cy})`}>
+      <g transform={`translate(${bCx + r * 0.45}, ${labelY})`}>
         <rect x={-14} y={-12} width={28} height={24} rx={12} fill={c.fill2} opacity="0.16" />
         <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
           fontSize={16} fontWeight={900} fill={c.fill2}>{labels[1] || 'B'}</text>
