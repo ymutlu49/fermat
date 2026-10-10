@@ -32,7 +32,7 @@ export const SHARE_STYLES = {
   dark:  { id: 'dark',  label: 'Tarî' },
 };
 
-export const DEFAULT_SHARE_PREFS = { format: 'post', template: 'term', style: 'light', handle: '' };
+export const DEFAULT_SHARE_PREFS = { format: 'post', template: 'term', style: 'light', handle: '', music: 'aram' };
 
 const BRAND_DARK = '#0F4C5C';
 const CORAL = '#EA580C';
@@ -640,6 +640,64 @@ export async function renderExerciseCard({ question, typeLabel, format = 'post',
     block.draw(block.boxed ? PAD : fmt.w / 2, y);
     y += block.height;
   }
+  return canvas;
+}
+
+/**
+ * Closing slide of a reel: logo, name and where to find the app and its
+ * sister site. Addresses are drawn large because links in a video cannot
+ * be tapped.
+ * @returns {Promise<HTMLCanvasElement>}
+ */
+export async function renderOutroCard({ format = 'story', style = 'light', handle = '' } = {}) {
+  const fmt = SHARE_FORMATS[format] || SHARE_FORMATS.story;
+  const [logo] = await Promise.all([loadLogo(), ensureFonts()]);
+  const canvas = document.createElement('canvas');
+  canvas.width = fmt.w;
+  canvas.height = fmt.h;
+  const ctx = canvas.getContext('2d');
+  // Section 1's palette: the brand blue/teal family.
+  const p = paletteFor({ s: 1 }, style);
+  const width = fmt.w - PAD * 2;
+  const cx = fmt.w / 2;
+
+  drawBackground(ctx, fmt, p);
+  const links = [
+    { label: 'Sepan', address: 'jimaro.app', fill: '#0D9488' },
+    { label: 'Gav bi Gav', address: 'gavbigav.com', fill: '#EA580C' },
+  ];
+  const logoSize = 260, linkH = 132, linkGap = 86;
+  const title = headlineBlock(ctx, 'FerMat', { max: 132, min: 96, maxWidth: width, color: p.brand });
+  const tagline = textBlock(ctx, 'Ferhenga Matematîkê ya Kurdî', { weight: 600, size: 46, maxWidth: width, color: p.muted, align: 'center' });
+  const total = logoSize + 44 + title.height + 14 + tagline.height + 96 + links.length * linkH + (links.length - 1) * linkGap + 100;
+  let y = fmt.safeTop + (fmt.h - fmt.safeTop - fmt.safeBottom - total) / 2;
+
+  if (logo) ctx.drawImage(logo, cx - logoSize / 2, y, logoSize, logoSize);
+  y += logoSize + 44;
+  title.draw(cx, y);
+  y += title.height + 14;
+  tagline.draw(cx, y);
+  y += tagline.height + 96;
+
+  for (const link of links) {
+    ctx.font = font(700, 34);
+    ctx.fillStyle = p.muted;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(link.label, cx, y - 30);
+    ctx.font = font(900, 68);
+    const pillW = Math.max(620, ctx.measureText(link.address).width + 150);
+    fillRoundRect(ctx, cx - pillW / 2, y, pillW, linkH, linkH / 2, link.fill, 'rgba(15,76,92,0.18)');
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(link.address, cx, y + linkH / 2 + 3);
+    y += linkH + linkGap;
+  }
+
+  ctx.font = font(800, 44);
+  ctx.fillStyle = p.term;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(normalizeHandle(handle) || 'Me bişopîne', cx, y + 10);
   return canvas;
 }
 

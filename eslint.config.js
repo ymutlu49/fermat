@@ -37,6 +37,8 @@ export default [
         TextEncoder: 'readonly',
         TextDecoder: 'readonly',
         MessageChannel: 'readonly',
+        MediaRecorder: 'readonly',
+        performance: 'readonly',
         // Service worker
         self: 'readonly',
         caches: 'readonly',

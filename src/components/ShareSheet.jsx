@@ -9,9 +9,10 @@ import { Pill } from '@components/ui';
 import { IconX, IconDownload, IconShare, IconCopy } from '@components/icons';
 import {
   SHARE_FORMATS, SHARE_TEMPLATES, SHARE_STYLES, DEFAULT_SHARE_PREFS,
-  renderShareCard, renderExerciseCard, canvasToBlob, downloadBlob, canShareFile, shareImage,
+  renderShareCard, renderExerciseCard, renderOutroCard, canvasToBlob, downloadBlob, canShareFile, shareImage,
 } from '@utils/shareCard.js';
-import { buildCaption, shareFileName, buildExerciseCaption, exerciseFileName } from '@utils/shareText.js';
+import { REEL_TRACKS, recordReel, reelFormat, isReelSupported } from '@utils/reel.js';
+import { buildCaption, shareFileName, buildExerciseCaption, exerciseFileName, exerciseSlug, slugify } from '@utils/shareText.js';
 
 const PREFS_KEY = 'fermat_share_prefs_v1';
 const STATUS_RESET_MS = 2200;
@@ -80,8 +81,10 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
   const [slide, setSlide] = useState('question');
   const [preview, setPreview] = useState({ url: null, blob: null });
   const [status, setStatus] = useState('');
+  const [reelProgress, setReelProgress] = useState(null); // 0–1 while recording
   const statusTimer = useRef(null);
   const { format, template, style, handle } = prefs;
+  const music = REEL_TRACKS[prefs.music] ? prefs.music : 'aram';
 
   // Re-render the card whenever the concept or a preference changes.
   useEffect(() => {
@@ -138,6 +141,32 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
     try { await shareImage(preview.blob, fileName, caption); }
     catch { flash('Xeletîyek çêbû'); }
   };
+  // Reels: question → answer → links, always 9:16 whatever the image format is.
+  const reelExtension = reelFormat(music !== 'none')?.extension;
+  const handleReel = async () => {
+    if (reelProgress !== null) return;
+    setReelProgress(0);
+    try {
+      const look = { format: 'story', style, handle };
+      const slides = [
+        await (exercise
+          ? renderExerciseCard({ ...exercise, ...look, reveal: false })
+          : renderShareCard({ concept, ...look, template: 'question' })),
+        await (exercise
+          ? renderExerciseCard({ ...exercise, ...look, reveal: true })
+          : renderShareCard({ concept, ...look, template: 'term' })),
+        await renderOutroCard(look),
+      ];
+      const { blob, extension } = await recordReel({ slides, track: music, onProgress: setReelProgress });
+      const base = exercise ? `fermat-hindari-${exerciseSlug(exercise.question)}` : `fermat-${slugify(concept.ku)}`;
+      downloadBlob(blob, `${base}-reels.${extension}`);
+    } catch {
+      flash('Xeletîyek çêbû');
+    } finally {
+      setReelProgress(null);
+    }
+  };
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(caption);
@@ -218,6 +247,50 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
         }}>
           {status}
         </div>
+
+        {/* Reels — three-slide vertical video with an optional backing track */}
+        {isReelSupported() && (
+          <div style={{
+            marginTop: 4, paddingTop: SPACING.md,
+            borderTop: `1px solid ${t.border}`,
+            display: 'flex', flexDirection: 'column', gap: 10,
+          }}>
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <span style={{ fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.extrabold, color: t.text, marginRight: 4 }}>
+                Reels
+              </span>
+              {Object.values(REEL_TRACKS).map(track => (
+                <Pill key={track.id} label={track.label} color="#7E22CE" isActive={music === track.id} isDark={isDark}
+                  onClick={() => setPref('music', track.id)} />
+              ))}
+            </div>
+            <button
+              type="button" onClick={handleReel} disabled={reelProgress !== null}
+              style={{
+                position: 'relative', overflow: 'hidden',
+                width: '100%', minHeight: 48, borderRadius: 14, border: 'none',
+                background: 'linear-gradient(135deg, #7E22CE, #EA580C)', color: '#FFFFFF',
+                cursor: reelProgress !== null ? 'default' : 'pointer',
+                fontFamily: 'inherit', fontSize: FONT_SIZE.sm, fontWeight: FONT_WEIGHT.bold,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              {reelProgress !== null && (
+                <span aria-hidden="true" style={{
+                  position: 'absolute', left: 0, top: 0, bottom: 0,
+                  width: `${Math.round(reelProgress * 100)}%`, background: 'rgba(255,255,255,0.28)',
+                }} />
+              )}
+              <IconDownload size={17} color="#FFFFFF" />
+              <span style={{ position: 'relative' }}>
+                {reelProgress !== null
+                  ? `${Math.round(reelProgress * 100)}%`
+                  : `Reels daxîne (.${reelExtension})`}
+              </span>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
