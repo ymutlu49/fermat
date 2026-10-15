@@ -19,7 +19,9 @@ function cloudflarePagesPlugin() {
       );
       writeFileSync(
         resolve(__dirname, 'dist', '_headers'),
-        '/dl/*.apk\n'
+        '/sw.js\n'
+        + '  Cache-Control: no-cache\n'
+        + '/dl/*.apk\n'
         + '  Content-Type: application/vnd.android.package-archive\n'
         + '  Content-Disposition: attachment\n'
         + '  Cache-Control: no-cache\n'

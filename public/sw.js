@@ -1,6 +1,9 @@
-// ─── FerMat — Service Worker v6 ───────────────────────────────────────────────
+// ─── FerMat — Service Worker v7 ───────────────────────────────────────────────
 // v6: the website lives at /, the app at /app/.
-const CACHE_NAME = 'ferhenga-v6';
+// v7 (2026-10-15): seslendirme önceden üretilmiş Kurmancî seslere geçti. Eski sürüm
+// Türkçe tarayıcı sesiyle harf harf okuyordu; etkinleşince bütün eski önbellekler
+// silinir ve açık sayfalar bir kez yeniden yüklenir — eski kod hiçbir cihazda kalmaz.
+const CACHE_NAME = 'ferhenga-v7';
 const PRECACHE_URLS = [
   './',
   './index.html',
@@ -20,14 +23,20 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activate: clean old caches
+// Activate: clean old caches, then reload open pages once so they run the new code
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k)))
-    )
-  );
-  self.clients.claim();
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    const eski = keys.filter(k => k !== CACHE_NAME);
+    await Promise.all(eski.map(k => caches.delete(k)));
+    await self.clients.claim();
+    if (eski.length) {
+      const pencereler = await self.clients.matchAll({ type: 'window' });
+      for (const p of pencereler) {
+        try { await p.navigate(p.url); } catch (e) { /* yeniden yüklenemeyen pencere: sonraki açılışta yenisi gelir */ }
+      }
+    }
+  })());
 });
 
 // Fetch: network-first for navigation, stale-while-revalidate for assets
