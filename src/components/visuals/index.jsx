@@ -2251,7 +2251,7 @@ export function PatternVisual({ params = {}, theme, size = 160 }) {
           <rect x={-66} y={-9} width={132} height={18} rx={9} fill={c.fill2} opacity="0.10" />
           <text x={0} y={1} textAnchor="middle" dominantBaseline="middle"
             fontSize={9} fontWeight={700} fill={c.fill2}>
-            Şêweyê berdewam bike…
+            Şêwe berdewam bike…
           </text>
         </g>
       )}
@@ -2679,7 +2679,7 @@ export function RegroupingVisual({ params = {}, theme, size = 160 }) {
       {/* Label */}
       <text x={cx} y={size * 0.92} textAnchor="middle"
         fontSize={fsSmall} fontWeight={600} fill={c.dim}>
-        {carry ? (op === 'add' ? 'didestdemayî' : 'bi standinê') : (op === 'add' ? 'bêdestdemayî' : 'bê standinê')}
+        {carry ? (op === 'add' ? 'didestdemayî' : 'bi hûrkirinê') : (op === 'add' ? 'bêdestdemayî' : 'bê hûrkirin')}
       </text>
     </svg>
   );

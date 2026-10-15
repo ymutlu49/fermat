@@ -2,6 +2,11 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { ErrorBoundary } from './components/ErrorBoundary.jsx';
 import App from './App.jsx';
+import { migrateRenamedConcepts } from './utils/renamedConcepts.js';
+
+// Carry saved favourites / flashcard progress over to renamed headwords
+// before the first render reads localStorage.
+migrateRenamedConcepts();
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -51,7 +51,7 @@ export default function AboutView({ theme, isDark }) {
             </span>
             <br /><br />
             Ev ferheng ji bo perwerdehiya matematîkê ya bi zimanê Kurmancî hatiye amadekirin.
-            Armanca wê ew e ku têgehên matematîkê yên bingehîn bi awayekî zelal, zanistî û fêmker
+            Armanca wê ew e ku têgehên matematîkê yên bingehîn bi awayekî zelal, zanistî û famker
             bi zarokên me re bên parve kirin. Di vê çarçoveyê de, ev ferheng hem ji mamosteyên ku
             bi Kurmancî dersên matematîkê didin re, hem jî ji dêûbavên ku dixwazin zarokên xwe bi
             zimanê xwe bi têgehên matematîkê re nas bikin re amûreke bingehîn e. Digel vê, ev ferheng

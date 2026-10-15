@@ -187,7 +187,7 @@ export default function App() {
                   : <IconVolumeMute size={20} color="rgba(255,255,255,0.6)" />
                 }
               </IconBtn>
-              <IconBtn onClick={toggleTheme} label={isDark ? 'Ronahîyê veke' : 'Tarîyê veke'} theme={t}>
+              <IconBtn onClick={toggleTheme} label={isDark ? 'Ronahiyê veke' : 'Tariyê veke'} theme={t}>
                 {isDark
                   ? <IconSun size={20} color="rgba(255,255,255,0.85)" />
                   : <IconMoon size={20} color="rgba(255,255,255,0.85)" />

@@ -38,7 +38,7 @@ export class ErrorBoundary extends Component {
             π
           </div>
           <h1 style={{ fontSize: 20, fontWeight: 700, color: '#0F4C5C', marginBottom: 8 }}>
-            Xeletîyek çêbû
+            Xeletiyek çêbû
           </h1>
           <p style={{ fontSize: 14, color: '#64748B', marginBottom: 24, maxWidth: 360, lineHeight: 1.6 }}>
             Bibore, pirsgirêkek çêbû. Ji kerema xwe dîsa biceribîne.

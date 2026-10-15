@@ -41,7 +41,7 @@ export function slugify(text) {
     .replace(/^-+|-+$/g, '');
 }
 
-/** "#KIRARÎYA DANEYAN" is not a valid hashtag — strip spaces, keep Hawar letters. */
+/** "#KIRARIYA DANEYAN" is not a valid hashtag — strip spaces, keep Hawar letters. */
 export function toHashtag(text) {
   const tag = String(text).toLocaleLowerCase('ku').replace(/[^\p{L}\p{N}]+/gu, '');
   return tag ? '#' + tag : '';

@@ -101,7 +101,7 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
         url = URL.createObjectURL(blob);
         setPreview({ url, blob });
       })
-      .catch(() => { if (!isStale) setStatus('Xeletîyek çêbû'); });
+      .catch(() => { if (!isStale) setStatus('Xeletiyek çêbû'); });
     return () => {
       isStale = true;
       if (url) URL.revokeObjectURL(url);
@@ -139,7 +139,7 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
   const handleShare = async () => {
     if (!isReady) return;
     try { await shareImage(preview.blob, fileName, caption); }
-    catch { flash('Xeletîyek çêbû'); }
+    catch { flash('Xeletiyek çêbû'); }
   };
   // Reels: question → answer → links, always 9:16 whatever the image format is.
   const reelExtension = reelFormat(music !== 'none')?.extension;
@@ -161,7 +161,7 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
       const base = exercise ? `fermat-hindari-${exerciseSlug(exercise.question)}` : `fermat-${slugify(concept.ku)}`;
       downloadBlob(blob, `${base}-reels.${extension}`);
     } catch {
-      flash('Xeletîyek çêbû');
+      flash('Xeletiyek çêbû');
     } finally {
       setReelProgress(null);
     }
@@ -172,7 +172,7 @@ export default function ShareSheet({ concept, exercise = null, theme: t, isDark,
       await navigator.clipboard.writeText(caption);
       flash('Jêyek hat girtin ✓');
     } catch {
-      flash('Xeletîyek çêbû');
+      flash('Xeletiyek çêbû');
     }
   };
 

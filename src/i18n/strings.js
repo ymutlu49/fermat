@@ -70,7 +70,7 @@ export const STRINGS = {
     // Error / Empty states
     'empty.noResults':           'Têgehek nehat dîtin',
     'empty.adjustFilters':       'Parzûnê biguherîne an lêgerînê paqij bike',
-    'error.title':               'Xeletîyek çêbû',
+    'error.title':               'Xeletiyek çêbû',
     'error.body':                'Bibore, pirsgirêkek çêbû. Ji kerema xwe dîsa biceribîne.',
 
     // Feedback

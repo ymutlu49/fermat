@@ -167,7 +167,7 @@ export default function ShareStudioView({ theme, isDark, concepts }) {
         minHeight: 20, marginBottom: SPACING.sm, textAlign: 'center',
         fontSize: FONT_SIZE.sm, color: t.error, fontWeight: FONT_WEIGHT.semibold,
       }}>
-        {hasError ? 'Xeletîyek çêbû' : ''}
+        {hasError ? 'Xeletiyek çêbû' : ''}
       </div>
 
       <ListSection theme={t}>

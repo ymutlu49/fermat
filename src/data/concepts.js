@@ -45,7 +45,7 @@ export const ALL_CONCEPTS = [
     "tr": "doğal sayı",
     "en": "natural number",
     "lv": "1-2",
-    "df": "Hejmarên 0, 1, 2, 3, 4... ku ji bo jimartinê tên bikar anîn.",
+    "df": "Hejmarên 0, 1, 2, 3, 4... ku ji bo jimartinê tên bi kar anîn.",
     "ex": "Hejmarên xwezayî: 0, 1, 2, 3, 4, 5...",
     "s": 1,
     "visual": {
@@ -151,7 +151,7 @@ export const ALL_CONCEPTS = [
     "tr": "aynı / farklı",
     "en": "same / different",
     "lv": "P-1",
-    "df": "Berhevdana du tiştan li gor wekhevî an cudahîyê.",
+    "df": "Berhevdana du tiştan li gor wekhevî an cudahiyê.",
     "ex": "Du sêvên sor wek hev in.",
     "s": 1,
     "visual": {
@@ -203,7 +203,7 @@ export const ALL_CONCEPTS = [
     "en": "base-10 system",
     "lv": "1-2",
     "df": "Pergala hejmaran ku li ser bingeha dehê hatiye avakirin.",
-    "ex": "10 yekan dibin 1 dehane, 10 dehane dibin 1 sedane.",
+    "ex": "10 yekane dibin 1 dehane, 10 dehane dibin 1 sedane.",
     "s": 1,
     "visual": {
       "type": "blocks",
@@ -220,7 +220,7 @@ export const ALL_CONCEPTS = [
     "en": "place",
     "lv": "2-3",
     "df": "Cihê jimareyê di hejmarekê de.",
-    "ex": "Di hejmara 45 de, 4 li xaneya dehan e.",
+    "ex": "Di hejmara 45 de, 4 li dehaneyê ye.",
     "s": 1,
     "visual": {
       "type": "blocks",
@@ -236,8 +236,8 @@ export const ALL_CONCEPTS = [
     "tr": "basamak değeri",
     "en": "place value",
     "lv": "2-3",
-    "df": "Nirxa jimarekiyê li gor xaneya wê.",
-    "ex": "Di 45 de, nirxaneya 4ê 40 ye.",
+    "df": "Nirxê jimarekiyê li gor xaneya wê.",
+    "ex": "Di 45 de, nirxaneya 4an 40 ye.",
     "s": 1,
     "visual": {
       "type": "blocks",
@@ -250,11 +250,11 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "YEKANE",
-    "tr": "birlik",
-    "en": "ones place",
+    "tr": "birlik; birler basamağı",
+    "en": "one; ones place",
     "lv": "1-2",
-    "df": "Xaneya yekanan di hejmarekê de.",
-    "ex": "Di 23 de, 3 li yekane ye.",
+    "df": "Yek tişt; her wiha xaneya herî rastê ya hejmarê. Ew diyar dike çend yekane hene.",
+    "ex": "Di 23 de, 3 li yekaneyê ye = 3 yekane.",
     "s": 1,
     "visual": {
       "type": "blocks",
@@ -267,11 +267,11 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "DEHANE",
-    "tr": "onluk",
-    "en": "tens place",
+    "tr": "onluk; onlar basamağı",
+    "en": "ten; tens place",
     "lv": "1-2",
-    "df": "Xaneya dehanan di hejmarekê de.",
-    "ex": "Di 23 de, 2 li dehane ye = 20.",
+    "df": "Koma ku ji deh yekaneyan pêk tê; her wiha xaneya wê: ji rastê xaneya duyem. Heman peyv hem ji komê re hem ji xaneyê re tê gotin.",
+    "ex": "10 yekane = 1 dehane. Di 53 de 5 dehane û 3 yekane hene: 5 li dehaneyê ye = 50.",
     "s": 1,
     "visual": {
       "type": "blocks",
@@ -284,11 +284,11 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "SEDANE",
-    "tr": "yüzlük",
-    "en": "hundreds place",
+    "tr": "yüzlük; yüzler basamağı",
+    "en": "hundred; hundreds place",
     "lv": "2-3",
-    "df": "Xaneya sedanê di hejmarekê de.",
-    "ex": "Di 352 de, 3 li sedane ye = 300.",
+    "df": "Koma ku ji deh dehaneyan pêk tê; her wiha xaneya wê: ji rastê xaneya sêyem.",
+    "ex": "Di 352 de, 3 li sedaneyê ye = 300.",
     "s": 1,
     "visual": {
       "type": "blocks",
@@ -301,11 +301,11 @@ export const ALL_CONCEPTS = [
   },
   {
     "ku": "HEZARANE",
-    "tr": "binlik",
-    "en": "thousands place",
+    "tr": "binlik; binler basamağı",
+    "en": "thousand; thousands place",
     "lv": "3-4",
-    "df": "Xaneya hezaranê di hejmarekê de.",
-    "ex": "Di 2345 de, 2 li hezaranê ye = 2000.",
+    "df": "Koma ku ji deh sedaneyan pêk tê; her wiha xaneya wê: ji rastê xaneya çarem.",
+    "ex": "Di 2345 de, 2 li hezaraneyê ye = 2000.",
     "s": 1,
     "visual": {
       "type": "custom",
@@ -371,7 +371,7 @@ export const ALL_CONCEPTS = [
     "tr": "geriye sayma",
     "en": "counting backward",
     "lv": "1",
-    "df": "Ji hejmara mezîn ber bi hejmara piçûk ve jimartin.",
+    "df": "Ji hejmara mezin ber bi hejmara piçûk ve jimartin.",
     "ex": "10, 9, 8, 7, 6, 5, 4, 3, 2, 1!",
     "s": 1,
     "visual": {
@@ -388,7 +388,7 @@ export const ALL_CONCEPTS = [
     "tr": "sıralama",
     "en": "ordering",
     "lv": "1-2",
-    "df": "Tiştan li gor mezinahîyê an taybetmendîyên wan rêzkirin.",
+    "df": "Tiştan li gor mezinahiyê an taybetmendiyên wan rêzkirin.",
     "ex": "2, 5, 8, 11 — ji biçûk ber bi mezin.",
     "s": 1,
     "visual": {
@@ -422,7 +422,7 @@ export const ALL_CONCEPTS = [
     "tr": "karşılaştırma",
     "en": "comparison",
     "lv": "1-2",
-    "df": "Hevberkirina du hejmaran ji bo dîtina ya mezîn an ya biçûk.",
+    "df": "Hevberkirina du hejmaran ji bo dîtina ya mezin an ya biçûk.",
     "ex": "5 ji 3 mezintir e: 5 > 3.",
     "s": 1,
     "visual": {
@@ -439,7 +439,7 @@ export const ALL_CONCEPTS = [
     "tr": "eşit",
     "en": "equal",
     "lv": "1",
-    "df": "Du hejmar an tişt ku heman nirxê hene.",
+    "df": "Du hejmar an tişt ku heman nirx hene.",
     "ex": "2 + 3 = 5, du alî yeksan in.",
     "s": 1,
     "visual": {
@@ -492,7 +492,7 @@ export const ALL_CONCEPTS = [
     "tr": "gruplama",
     "en": "grouping",
     "lv": "1-2",
-    "df": "Tiştan li gor taybetmendîyên wan berhevkirin.",
+    "df": "Tiştan li gor taybetmendiyên wan berhevkirin.",
     "ex": "23 = 2 dehane + 3 yekane.",
     "s": 1,
     "visual": {
@@ -511,7 +511,7 @@ export const ALL_CONCEPTS = [
     "en": "sharing/distributing",
     "lv": "1-2",
     "df": "Dabeşkirina tiştan bi wekhevî di navbera koman de.",
-    "ex": "12 sêv di navbera 3 zarokan de: her kes 4 digire.",
+    "ex": "12 sêv di navbera 3 zarokan de: her kes 4an digire.",
     "s": 1,
     "visual": {
       "type": "operation",
@@ -542,12 +542,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "ŞÊWEYA HEJMARAN",
+    "ku": "ŞÊWEYÊ HEJMARAN",
     "tr": "sayı örüntüsü",
     "en": "number pattern",
     "lv": "1-2",
     "df": "Rêza hejmaran ku li gor qaîdeyekê diçe.",
-    "ex": "1, 3, 5, 7 — şêweya +2.",
+    "ex": "1, 3, 5, 7 — şêweyê +2.",
     "s": 1,
     "visual": {
       "type": "pattern",
@@ -629,8 +629,8 @@ export const ALL_CONCEPTS = [
     "tr": "tekrar eden",
     "en": "repeating",
     "lv": "1-2",
-    "df": "Şêweya ku dubare dibe.",
-    "ex": "Sor, zer, sor, zer — şêweya dubarebûyî.",
+    "df": "Şêweyê ku dubare dibe.",
+    "ex": "Sor, zer, sor, zer — şêweyê dubarebûyî.",
     "s": 1,
     "visual": {
       "type": "pattern",
@@ -644,7 +644,7 @@ export const ALL_CONCEPTS = [
     "tr": "aralık",
     "en": "interval",
     "lv": "2-3",
-    "df": "Cûdahîya di navbera du hejmaran de.",
+    "df": "Cûdahiya di navbera du hejmaran de.",
     "ex": "Navbera 10 û 15 = 5.",
     "s": 1,
     "visual": {
@@ -724,8 +724,8 @@ export const ALL_CONCEPTS = [
     "tr": "işlem",
     "en": "operation",
     "lv": "1",
-    "df": "Tişta ku em bi hejmaran re dikin: zêdekirin (+), kemkirin (−), carkirin (×) û parkirin (÷).",
-    "ex": "3 + 2 = 5 kirarîyeke zêdekirinê ye; 12 ÷ 3 = 4 kirarîyeke parkirinê ye.",
+    "df": "Tiştê ku em bi hejmaran re dikin: zêdekirin (+), kêmkirin (−), carkirin (×) û parkirin (÷).",
+    "ex": "3 + 2 = 5 kirariyeke zêdekirinê ye; 12 ÷ 3 = 4 kirariyeke parkirinê ye.",
     "s": 2,
     "visual": {
       "type": "custom",
@@ -740,8 +740,8 @@ export const ALL_CONCEPTS = [
     "tr": "dört işlem",
     "en": "four operations",
     "lv": "1-2",
-    "df": "Zêdekirin, kemkirin, carkirin û parkirin.",
-    "ex": "Çar kirarî ev in: zêdekirin (+), kemkirin (−), carkirin (×) û parkirin (÷).",
+    "df": "Zêdekirin, kêmkirin, carkirin û parkirin.",
+    "ex": "Çar kirarî ev in: zêdekirin (+), kêmkirin (−), carkirin (×) û parkirin (÷).",
     "s": 2,
     "visual": {
       "type": "custom",
@@ -756,7 +756,7 @@ export const ALL_CONCEPTS = [
     "tr": "toplama",
     "en": "addition",
     "lv": "1",
-    "df": "Kirarîya ku du an zêdetir hejmaran li hev dike; ji vê kirarîyê re komkirin jî tê gotin.",
+    "df": "Kirariya ku du an zêdetir hejmaran li hev dike; ji vê kirariyê re komkirin jî tê gotin.",
     "ex": "3 + 2 = 5: zêdebar 3 û 2 ne, zêdok 5 e.",
     "s": 2,
     "visual": {
@@ -773,7 +773,7 @@ export const ALL_CONCEPTS = [
     "tr": "artı işareti",
     "en": "plus sign",
     "lv": "1",
-    "df": "Nîşanê kirarîya zêdekirinê.",
+    "df": "Nîşanê kirariya zêdekirinê.",
     "ex": "3 + 2: nîşanê + zêdekirinê dibêje.",
     "s": 2,
     "visual": {
@@ -789,7 +789,7 @@ export const ALL_CONCEPTS = [
     "tr": "toplanan",
     "en": "addend",
     "lv": "1-2",
-    "df": "Hejmara ku di zêdekirinê de tê bikar anîn.",
+    "df": "Hejmara ku di zêdekirinê de tê bi kar anîn.",
     "ex": "Di 3 + 2 = 5 de, 3 û 2 zêdebar in.",
     "s": 2,
     "visual": {
@@ -837,12 +837,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "ZÊDEKIRINA LIREXHEV",
-    "tr": "yatay toplama",
+    "ku": "ZÊDEKIRINA LI KÊLEKA HEV",
+    "tr": "yan yana toplama",
     "en": "horizontal addition",
     "lv": "1",
-    "df": "Zêdekirina ku hejmar li rex hev tên nivîsandin: 3 + 2 = 5.",
-    "ex": "3 + 2 = 5 zêdekirina lirexhev e.",
+    "df": "Zêdekirina ku hejmar li kêleka hev tên nivîsandin: 3 + 2 = 5.",
+    "ex": "3 + 2 = 5 zêdekirina li kêleka hev e.",
     "s": 2,
     "visual": {
       "type": "custom",
@@ -854,11 +854,11 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "ZÊDEKIRINA LIBINHEV",
-    "tr": "dikey toplama",
+    "ku": "ZÊDEKIRINA DI BIN HEV DE",
+    "tr": "alt alta toplama",
     "en": "vertical addition",
     "lv": "1-2",
-    "df": "Zêdekirina ku hejmar li bin hev tên nivîsandin û ji yekaniyê dest pê dike.",
+    "df": "Zêdekirina ku hejmar di bin hev de tên nivîsandin û ji yekaneyê dest pê dike.",
     "ex": "  23\n+ 14\n  37",
     "s": 2,
     "visual": {
@@ -874,9 +874,9 @@ export const ALL_CONCEPTS = [
     "ku": "ZÊDEKIRINA DIDESTDEMAYÎ",
     "tr": "eldeli toplama",
     "en": "addition with regrouping",
-    "lv": "1-2",
-    "df": "Dema ku encama zêdekirina yekaniyan dibe dupêpilk, dehanî di dest de dimîne û li jora dehaniyan tê zêdekirin.",
-    "ex": "18 + 24 = 42: 8+4=12, em 2 dinivîsin û 1 di dest de dimîne.",
+    "lv": "2-3",
+    "df": "Dema ku encama zêdekirina yekaneyan dibe dupêpilk, dehane di dest de dimîne û li jora dehaneyan tê zêdekirin.",
+    "ex": "18 + 24 = 42: 8+4=12, em 2yan dinivîsin û 1 di dest de dimîne.",
     "s": 2,
     "visual": {
       "type": "regrouping",
@@ -893,7 +893,7 @@ export const ALL_CONCEPTS = [
     "tr": "eldesiz toplama",
     "en": "addition without regrouping",
     "lv": "1",
-    "df": "Zêdekirina ku encama yekaniyan ji 9 mezintir nabe û tiştek di dest de namîne.",
+    "df": "Zêdekirina ku encama yekaneyan ji 9 mezintir nabe û tiştek di dest de namîne.",
     "ex": "23 + 14 = 37: 3+4=7, 2+1=3, tiştek di dest de namîne.",
     "s": 2,
     "visual": {
@@ -907,12 +907,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMKIRIN",
+    "ku": "KÊMKIRIN",
     "tr": "çıkarma",
     "en": "subtraction",
     "lv": "1",
-    "df": "Kirarîya ku hejmarekî ji hejmarekî din derdixe; ji vê kirarîyê re derxistin jî tê gotin.",
-    "ex": "5 − 2 = 3: kembar 5 e, kemker 2 e, kemok 3 e.",
+    "df": "Kirariya ku hejmarekê ji hejmareke din derdixe; ji vê kirariyê re derxistin jî tê gotin.",
+    "ex": "5 − 2 = 3: kêmebar 5 e, kêmker 2 e, kêmok 3 e.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -924,12 +924,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMEK (−)",
+    "ku": "KÊMEK (−)",
     "tr": "eksi işareti",
     "en": "minus sign",
     "lv": "1",
-    "df": "Nîşanê kirarîya kemkirinê.",
-    "ex": "5 − 2: nîşanê − kemkirinê dibêje.",
+    "df": "Nîşanê kirariya kêmkirinê.",
+    "ex": "5 − 2: nîşanê − kêmkirinê dibêje.",
     "s": 2,
     "visual": {
       "type": "custom",
@@ -940,12 +940,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMBAR",
+    "ku": "KÊMEBAR",
     "tr": "eksilen",
     "en": "minuend",
-    "lv": "1-2",
-    "df": "Hejmara ku jê tê kemkirin; hejmara mezin di kemkirinê de.",
-    "ex": "Di 5 − 2 de, 5 kembar e.",
+    "lv": "1",
+    "df": "Di kêmkirinê de hejmara ku jê tê kêmkirin; kêmker dibêje çiqas jê kêm dibe.",
+    "ex": "Di 5 − 2 de, 5 kêmebar e.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -957,12 +957,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMKER",
-    "tr": "çıkarılan",
+    "ku": "KÊMKER",
+    "tr": "çıkan",
     "en": "subtrahend",
-    "lv": "1-2",
-    "df": "Hejmara ku tê derxistin; hejmara biçûk di kemkirinê de.",
-    "ex": "Di 5 − 2 de, 2 kemker e.",
+    "lv": "1",
+    "df": "Di kêmkirinê de hejmara ku dibêje çiqas jê kêm bike.",
+    "ex": "Di 5 − 2 de, 2 kêmker e.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -974,12 +974,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMOK",
+    "ku": "KÊMOK",
     "tr": "fark",
     "en": "difference",
-    "lv": "1-2",
-    "df": "Encama kemkirinê; cûdahîya du hejmaran.",
-    "ex": "Kemoka 5 û 2 = 3.",
+    "lv": "1",
+    "df": "Encama kêmkirinê; cûdahiya du hejmaran.",
+    "ex": "Kêmoka 5 û 2yan 3 e.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -1008,12 +1008,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMKIRINA LIREXHEV",
-    "tr": "yatay çıkarma",
+    "ku": "KÊMKIRINA LI KÊLEKA HEV",
+    "tr": "yan yana çıkarma",
     "en": "horizontal subtraction",
     "lv": "1",
-    "df": "Kemkirina ku hejmar li rex hev tên nivîsandin: 5 − 2 = 3.",
-    "ex": "5 − 2 = 3 kemkirina lirexhev e.",
+    "df": "Kêmkirina ku hejmar li kêleka hev tên nivîsandin: 5 − 2 = 3.",
+    "ex": "5 − 2 = 3 kêmkirina li kêleka hev e.",
     "s": 2,
     "visual": {
       "type": "custom",
@@ -1025,11 +1025,11 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMKIRINA LIBINHEV",
-    "tr": "dikey çıkarma",
+    "ku": "KÊMKIRINA DI BIN HEV DE",
+    "tr": "alt alta çıkarma",
     "en": "vertical subtraction",
     "lv": "1-2",
-    "df": "Kemkirina ku hejmar li bin hev tên nivîsandin û ji yekaniyê dest pê dike.",
+    "df": "Kêmkirina ku hejmar di bin hev de tên nivîsandin û ji yekaneyê dest pê dike.",
     "ex": "  45\n− 23\n  22",
     "s": 2,
     "visual": {
@@ -1042,12 +1042,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMKIRINA BI STANDINÊ",
+    "ku": "KÊMKIRINA BI HÛRKIRINÊ",
     "tr": "onluk bozarak çıkarma",
-    "en": "subtraction with regrouping",
-    "lv": "1-2",
-    "df": "Dema ku yekaniya hejmara duyem ji yekaniya hejmara yekem mezintir be, 1 dehanî ji dehaniyan tê standin û li yekaniyê tê zêdekirin.",
-    "ex": "42 − 27 = 15: ji 2 yekaniyan 7 dernakeve, em 1 dehanî distînin û dibe 12; 12−7=5.",
+    "en": "subtraction with decomposition",
+    "lv": "2-3",
+    "df": "Dema ku yekaneya hejmara duyem ji yekaneya hejmara yekem mezintir be, dehaneyek tê hûrkirin û dibe 10 yekane, û ew li yekaneyan tên zêdekirin.",
+    "ex": "42 − 27 = 15: ji 2 yekaneyan 7 dernakeve; em dehaneyekê hûr dikin û dibe 12; 12−7=5.",
     "s": 2,
     "visual": {
       "type": "regrouping",
@@ -1060,12 +1060,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "KEMKIRINA BÊ STANDINÊ",
+    "ku": "KÊMKIRINA BÊ HÛRKIRIN",
     "tr": "onluk bozmadan çıkarma",
-    "en": "subtraction without regrouping",
+    "en": "subtraction without decomposition",
     "lv": "1",
-    "df": "Kemkirina ku her pêpilka hejmara yekem ji pêpilka hejmara duyem mezintir e û standin ne hewce ye.",
-    "ex": "48 − 23 = 25: 8−3=5, 4−2=2, standin ne hewce ye.",
+    "df": "Kêmkirina ku her pêpilka hejmara yekem ji pêpilka hejmara duyem mezintir e û hûrkirin ne hewce ye.",
+    "ex": "48 − 23 = 25: 8−3=5, 4−2=2, hûrkirin ne hewce ye.",
     "s": 2,
     "visual": {
       "type": "regrouping",
@@ -1082,7 +1082,7 @@ export const ALL_CONCEPTS = [
     "tr": "çarpma",
     "en": "multiplication",
     "lv": "2-3",
-    "df": "Kirarîya zêdekirina dubare.",
+    "df": "Kirariya zêdekirina dubare.",
     "ex": "3 × 4 = 12: carker 3 e, carbar 4 e, carandok 12 e.",
     "s": 2,
     "visual": {
@@ -1095,11 +1095,11 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "CAREK (×)",
+    "ku": "CARÎNEK (×)",
     "tr": "çarpı işareti",
     "en": "multiplication sign",
     "lv": "2-3",
-    "df": "Nîşanê kirarîya carkirinê.",
+    "df": "Nîşanê kirariya carkirinê.",
     "ex": "3 × 4: nîşanê × carkirinê dibêje.",
     "s": 2,
     "visual": {
@@ -1132,8 +1132,8 @@ export const ALL_CONCEPTS = [
     "tr": "çarpılan",
     "en": "multiplicand",
     "lv": "2-3",
-    "df": "Hejmara ku tê carkirin.",
-    "ex": "Di 3 × 4 de, 4 carbar e.",
+    "df": "Di carkirinê de hejmara ku tê dubarekirin; carker dibêje ew çend caran tê dubarekirin.",
+    "ex": "Di 3 × 4 = 12 de 4 carbar e, 3 carker e: 4 + 4 + 4 = 12.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -1165,9 +1165,9 @@ export const ALL_CONCEPTS = [
     "ku": "PARKIRIN",
     "tr": "bölme",
     "en": "division",
-    "lv": "3-4",
-    "df": "Kirarîya dabeşkirina wekhev.",
-    "ex": "12 ÷ 3 = 4: parbar 12 e, parker 3 e, paran 4 e.",
+    "lv": "2-3",
+    "df": "Kirariya dabeşkirina wekhev.",
+    "ex": "12 ÷ 3 = 4: parbar 12 e, parker 3 e, parok 4 e.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -1179,12 +1179,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "PARÎNEK (÷)",
+    "ku": "PAREK (÷)",
     "tr": "bölü işareti",
     "en": "division sign",
-    "lv": "3-4",
-    "df": "Nîşanê kirarîya parînê.",
-    "ex": "12 ÷ 3: nîşanê ÷ parînê dibêje.",
+    "lv": "2-3",
+    "df": "Nîşanê kirariya parkirinê.",
+    "ex": "12 ÷ 3: nîşanê ÷ parkirinê dibêje. 12 ÷ 3 = 4 tê xwendin: \"12 parek 3 dike 4\".",
     "s": 2,
     "visual": {
       "type": "custom",
@@ -1198,9 +1198,9 @@ export const ALL_CONCEPTS = [
     "ku": "DABEŞÎN",
     "tr": "bölme (okunurken)",
     "en": "divided by",
-    "lv": "3-4",
-    "df": "Gava tê parîn, wusa tê xwendin.",
-    "ex": "Bibêje: duwazde par sê.",
+    "lv": "2-3",
+    "df": "Gava tê parkirin, wusa tê xwendin.",
+    "ex": "Bibêje: duwazde parek sê.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -1215,8 +1215,8 @@ export const ALL_CONCEPTS = [
     "ku": "PARKER",
     "tr": "bölen",
     "en": "divisor",
-    "lv": "3-4",
-    "df": "Hejmara ku pê tê parîn.",
+    "lv": "2-3",
+    "df": "Hejmara ku pê tê parkirin.",
     "ex": "Di 12 ÷ 3 de, 3 parker e.",
     "s": 2,
     "visual": {
@@ -1232,8 +1232,8 @@ export const ALL_CONCEPTS = [
     "ku": "PARBAR / BERPAR",
     "tr": "bölünen",
     "en": "dividend",
-    "lv": "3-4",
-    "df": "Hejmara ku tê parîn.",
+    "lv": "2-3",
+    "df": "Hejmara ku tê parkirin.",
     "ex": "Di 12 ÷ 3 de, 12 parbar e.",
     "s": 2,
     "visual": {
@@ -1246,12 +1246,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "PARAN",
-    "tr": "bölüm (sonuç)",
+    "ku": "PAROK",
+    "tr": "bölüm",
     "en": "quotient",
-    "lv": "3-4",
-    "df": "Encama parînê.",
-    "ex": "Paranê 12 ÷ 3 dike 4.",
+    "lv": "2-3",
+    "df": "Encama parkirinê.",
+    "ex": "Di 12 ÷ 3 = 4 de, 4 parok e.",
     "s": 2,
     "visual": {
       "type": "operation",
@@ -1266,8 +1266,8 @@ export const ALL_CONCEPTS = [
     "ku": "JÊMA",
     "tr": "kalan",
     "en": "remainder",
-    "lv": "3-4",
-    "df": "Tiştê ku piştî parîna tam dimîne.",
+    "lv": "2-3",
+    "df": "Hejmara ku piştî parkirinê dimîne.",
     "ex": "13 ÷ 4 = 3, jêma 1.",
     "s": 2,
     "visual": {
@@ -1279,11 +1279,11 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "PARÎNA BI JÊMA",
+    "ku": "PARKIRINA BI JÊMA",
     "tr": "kalanlı bölme",
     "en": "division with remainder",
     "lv": "3-4",
-    "df": "Parîna ku jêma lê dimîne.",
+    "df": "Parkirina ku jêma lê dimîne.",
     "ex": "13 ÷ 4 = 3, jêma 1 e.",
     "s": 2,
     "visual": {
@@ -1365,7 +1365,7 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "YEKSANÎYA TEVPARAN",
+    "ku": "YEKSANIYA TEVPARAN",
     "tr": "payda eşitleme",
     "en": "finding common denominator",
     "lv": "3-4",
@@ -1416,12 +1416,12 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "ÇAREK",
+    "ku": "ÇARYEK",
     "tr": "çeyrek",
     "en": "quarter",
     "lv": "2-3",
     "df": "Yek ji çar parên wekhev.",
-    "ex": "Çarekê pîzzayê bixwe.",
+    "ex": "Çaryeka pîzzayê bixwe.",
     "s": 3,
     "visual": {
       "type": "fraction",
@@ -1437,7 +1437,7 @@ export const ALL_CONCEPTS = [
     "tr": "denk kesir",
     "en": "equivalent fraction",
     "lv": "4",
-    "df": "Du parjimar ku heman nirxê ne.",
+    "df": "Du parjimar ku heman nirx in.",
     "ex": "1/2 bi 2/4 re hevkêş e.",
     "s": 3,
     "visual": {
@@ -1454,7 +1454,7 @@ export const ALL_CONCEPTS = [
     "tr": "nokta",
     "en": "point",
     "lv": "1-2",
-    "df": "Cihê ku mezinahîya wê tune ye, tenê cih nîşan dide.",
+    "df": "Cihê ku mezinahiya wê tune ye, tenê cih nîşan dide.",
     "ex": "Xalê li ser nexşeyê nîşan bide.",
     "s": 4,
     "visual": {
@@ -1483,7 +1483,7 @@ export const ALL_CONCEPTS = [
     "en": "line segment",
     "lv": "2-3",
     "df": "Parçeya xêzê ku di navbera du xalan de ye.",
-    "ex": "Xêzika AB dirêjahîya 5 cm ye.",
+    "ex": "Xêzika AB dirêjahiya 5 cm ye.",
     "s": 4,
     "visual": {
       "type": "line",
@@ -1513,7 +1513,7 @@ export const ALL_CONCEPTS = [
     "en": "angle",
     "lv": "4",
     "df": "Vekirina di navbera du tîran de; xaleke destpêkê ya hevbeş heye.",
-    "ex": "Goşeya maseyê kujîyeke rast e.",
+    "ex": "Goşeyê maseyê kujiyeke rast e.",
     "s": 4,
     "visual": {
       "type": "angle",
@@ -1527,8 +1527,8 @@ export const ALL_CONCEPTS = [
     "tr": "derece",
     "en": "degree",
     "lv": "4",
-    "df": "Yekeya pîvandina kujîyan.",
-    "ex": "Kujîya rast 90 pîle ye.",
+    "df": "Yekeya pîvandina kujiyan.",
+    "ex": "Kujiya rast 90 pîle ye.",
     "s": 4,
     "visual": {
       "type": "angle",
@@ -1717,7 +1717,7 @@ export const ALL_CONCEPTS = [
     "tr": "alan",
     "en": "area",
     "lv": "4",
-    "df": "Mezinahîya rûyê teşeyê.",
+    "df": "Mezinahiya rûyê teşeyê.",
     "ex": "Rûberê kareyê = 4 × 4 = 16 cm².",
     "s": 4,
     "visual": {
@@ -1732,7 +1732,7 @@ export const ALL_CONCEPTS = [
     "tr": "çevre uzunluğu (perimeter)",
     "en": "perimeter",
     "lv": "3-4",
-    "df": "Dirêjahîya derdora teşeyê.",
+    "df": "Dirêjahiya derdora teşeyê.",
     "ex": "Rûdorê çarçikê = 2(5+3) = 16 cm.",
     "s": 4,
     "visual": {
@@ -1762,7 +1762,7 @@ export const ALL_CONCEPTS = [
     "tr": "çember uzunluğu",
     "en": "circumference",
     "lv": "4+",
-    "df": "Dirêjahîya derdora gilovêrê.",
+    "df": "Dirêjahiya derdora gilovêrê.",
     "ex": "Dorpêça gilovêrê = 2 × 3.14 × 5 = 31.4 cm.",
     "s": 4,
     "visual": {
@@ -1777,7 +1777,7 @@ export const ALL_CONCEPTS = [
     "tr": "paralel",
     "en": "parallel",
     "lv": "3-4",
-    "df": "Du xêzên ku qet hev napirin, dûrahîya wan her wekhev e.",
+    "df": "Du xêzên ku qet hev napirin, dûrahiya wan her wekhev e.",
     "ex": "Du hêlên maseyê paralel in.",
     "s": 4,
     "visual": {
@@ -1792,8 +1792,8 @@ export const ALL_CONCEPTS = [
     "tr": "hacim",
     "en": "volume",
     "lv": "4+",
-    "df": "Mezinahîya cihê ku cisimek dagir dike.",
-    "ex": "Qebareya qutîyê = 3 × 4 × 5 = 60 cm³.",
+    "df": "Mezinahiya cihê ku cisimek dagir dike.",
+    "ex": "Qebareya qutiyê = 3 × 4 × 5 = 60 cm³.",
     "s": 4,
     "visual": {
       "type": "geometry_3d",
@@ -1838,7 +1838,7 @@ export const ALL_CONCEPTS = [
     "en": "cylinder",
     "lv": "2-3",
     "df": "Cisimê ku du rûyên gilover û rûyekî peyt hene.",
-    "ex": "Qutîya nûşabeyê balor e.",
+    "ex": "Qutiya nûşabeyê balor e.",
     "s": 4,
     "visual": {
       "type": "geometry_3d",
@@ -1853,7 +1853,7 @@ export const ALL_CONCEPTS = [
     "en": "prism",
     "lv": "3-4",
     "df": "Cisimê ku du rûyên wekhev û rûyên çarçik hene.",
-    "ex": "Qutîya pêlavê prîzma ye.",
+    "ex": "Qutiya pêlavê prîzma ye.",
     "s": 4,
     "visual": {
       "type": "geometry_3d",
@@ -1867,7 +1867,7 @@ export const ALL_CONCEPTS = [
     "tr": "koni",
     "en": "cone",
     "lv": "3-4",
-    "df": "Cisimê ku bingehek gilover û nûkek heye.",
+    "df": "Cisimê ku bingeheke gilover û nûkek heye.",
     "ex": "Qedehê dondirmê konî ye.",
     "s": 4,
     "visual": {
@@ -1913,7 +1913,7 @@ export const ALL_CONCEPTS = [
     "en": "rotation",
     "lv": "3-4",
     "df": "Zivirîna li dora xalekê.",
-    "ex": "Saet li dora navenda xwe gerîn dike; sêgoşe jî li dora xalekê digerîne.",
+    "ex": "Demjimêr li dora navenda xwe gerîn dike; sêgoşe jî li dora xalekê digerîne.",
     "s": 4,
     "visual": {
       "type": "custom",
@@ -1941,7 +1941,7 @@ export const ALL_CONCEPTS = [
     "tr": "öteleme",
     "en": "translation",
     "lv": "3-4",
-    "df": "Guheztina teşeyê bêyî guhertina form û mezinahîyê.",
+    "df": "Guheztina teşeyê bêyî guhertina form û mezinahiyê.",
     "ex": "Pirtûkê veguhêze: heman teşe dimîne.",
     "s": 4,
     "visual": {
@@ -1957,8 +1957,8 @@ export const ALL_CONCEPTS = [
     "tr": "ölçme",
     "en": "measurement",
     "lv": "1",
-    "df": "Dîtina mezinahîya tiştekî bi yekeyekê.",
-    "ex": "Bi xêzkeşê dirêjahîya pênûsê bipive; 15 santîmetre ye.",
+    "df": "Dîtina mezinahiya tiştekî bi yekeyekê.",
+    "ex": "Bi xêzkeşê dirêjahiya pênûsê bipive; 15 santîmetre ye.",
     "s": 5,
     "visual": {
       "type": "ruler",
@@ -1974,7 +1974,7 @@ export const ALL_CONCEPTS = [
     "en": "unit",
     "lv": "1-2",
     "df": "Pîveka ku pê re pîvandin tê kirin.",
-    "ex": "Santîmetre yekeya dirêjahîyê ye.",
+    "ex": "Santîmetre yekeya dirêjahiyê ye.",
     "s": 5,
     "visual": {
       "type": "ruler",
@@ -1989,8 +1989,8 @@ export const ALL_CONCEPTS = [
     "tr": "uzunluk",
     "en": "length",
     "lv": "1",
-    "df": "Dûrahîya ji serê heta dawîya tiştekî.",
-    "ex": "Dirêjahîya pirtûkê 30 santîmetre ye; bi xêzkeşê tê pîvandin.",
+    "df": "Dûrahiya ji serê heta dawiya tiştekî.",
+    "ex": "Dirêjahiya pirtûkê 30 santîmetre ye; bi xêzkeşê tê pîvandin.",
     "s": 5,
     "visual": {
       "type": "ruler",
@@ -2006,7 +2006,7 @@ export const ALL_CONCEPTS = [
     "en": "width",
     "lv": "1-2",
     "df": "Pîvandina ji hêlê rast heta çep.",
-    "ex": "Firehîya maseyê 60 cm ye.",
+    "ex": "Firehiya maseyê 60 cm ye.",
     "s": 5,
     "visual": {
       "type": "ruler",
@@ -2022,7 +2022,7 @@ export const ALL_CONCEPTS = [
     "en": "height",
     "lv": "1-2",
     "df": "Pîvandina ji binî heta serî.",
-    "ex": "Bilindahîya dîwêr 3 metre ye.",
+    "ex": "Bilindahiya dîwêr 3 metre ye.",
     "s": 5,
     "visual": {
       "type": "ruler",
@@ -2037,8 +2037,8 @@ export const ALL_CONCEPTS = [
     "tr": "ağırlık",
     "en": "weight/mass",
     "lv": "1-2",
-    "df": "Mîqdara ku giranîya tiştekî diyar dike.",
-    "ex": "Giranîya sêvê 200 gram e; giranîya torbê 2 kîlogram e.",
+    "df": "Mîqdara ku giraniya tiştekî diyar dike.",
+    "ex": "Giraniya sêvê 200 gram e; giraniya torbê 2 kîlogram e.",
     "s": 5,
     "visual": {
       "type": "scale",
@@ -2052,8 +2052,8 @@ export const ALL_CONCEPTS = [
     "tr": "zaman",
     "en": "time",
     "lv": "2",
-    "df": "Dirêjahîya bûyerekê di navbera destpêk û dawîyê de; demjimêr, deqe û saniye yekeyên demê ne.",
-    "ex": "Ji destpêka dersê heta dawîya wê, 40 deqe dem derbas bû.",
+    "df": "Dirêjahiya bûyerekê di navbera destpêk û dawiyê de; demjimêr, deqe û saniye yekeyên demê ne.",
+    "ex": "Ji destpêka dersê heta dawiya wê, 40 deqe dem derbas bû.",
     "s": 5,
     "visual": {
       "type": "clock",
@@ -2100,7 +2100,7 @@ export const ALL_CONCEPTS = [
     "tr": "akrep (kısa ibre)",
     "en": "hour hand",
     "lv": "2",
-    "df": "Milê demjimêrê yê kurt ku demjimêran nîşan dide.",
+    "df": "Milê demjimêrê yê kin ku demjimêran nîşan dide.",
     "ex": "Şanîdera demjimêrê li ser 6 ye, demjimêr 6 e.",
     "s": 5,
     "visual": {
@@ -2148,7 +2148,7 @@ export const ALL_CONCEPTS = [
     "tr": "standart olmayan ölçme",
     "en": "non-standard measurement",
     "lv": "1",
-    "df": "Bi amûrên ne-standart (gav, lik, pênûs) dirêjahî û giranîyê pîvandin.",
+    "df": "Bi amûrên ne-standart (gav, bihost, pênûs) dirêjahî û giraniyê pîvandin.",
     "ex": "Mase 8 pênûs dirêj e.",
     "s": 5,
     "visual": {
@@ -2180,7 +2180,7 @@ export const ALL_CONCEPTS = [
     "tr": "santimetre",
     "en": "centimeter",
     "lv": "2-3",
-    "df": "Yekeya dirêjahîyê, 1/100 ê metreyê.",
+    "df": "Yekeya dirêjahiyê, 1/100 ê metreyê.",
     "ex": "Qelema min 15 santîmetre dirêj e.",
     "s": 5,
     "visual": {
@@ -2196,7 +2196,7 @@ export const ALL_CONCEPTS = [
     "tr": "metre",
     "en": "meter",
     "lv": "2-3",
-    "df": "Yekeya bingehîn a dirêjahîyê.",
+    "df": "Yekeya bingehîn a dirêjahiyê.",
     "ex": "Odeyê 5 metre dirêj e.",
     "s": 5,
     "visual": {
@@ -2212,7 +2212,7 @@ export const ALL_CONCEPTS = [
     "tr": "kilogram",
     "en": "kilogram",
     "lv": "3",
-    "df": "Yekeya bingehîn a giranîyê.",
+    "df": "Yekeya bingehîn a giraniyê.",
     "ex": "Torbê 3 kîlogram e.",
     "s": 5,
     "visual": {
@@ -2227,7 +2227,7 @@ export const ALL_CONCEPTS = [
     "tr": "litre",
     "en": "liter",
     "lv": "3-4",
-    "df": "Yekeya qebareyê ji bo şlemîyan.",
+    "df": "Yekeya qebareyê ji bo şlemiyan.",
     "ex": "Şûşeya avê 2 lître ye.",
     "s": 5,
     "visual": {
@@ -2302,7 +2302,7 @@ export const ALL_CONCEPTS = [
     "en": "tally marks",
     "lv": "1-2",
     "df": "Nîşaneyên xêzkirî yên ji bo jimartinê.",
-    "ex": "Kertîk bikar bîne: |||| ||| = 8.",
+    "ex": "Kertîk bi kar bîne: |||| ||| = 8.",
     "s": 6,
     "visual": {
       "type": "custom",
@@ -2334,11 +2334,35 @@ export const ALL_CONCEPTS = [
     }
   },
   {
+    "ku": "NÎGARA XALAN",
+    "tr": "nokta grafiği",
+    "en": "dot plot",
+    "lv": "3-4",
+    "df": "Nîgara ku her daneyekê bi xalekê nîşan dide; xalên her komê li ser hev tên danîn.",
+    "ex": "Li polê her zarok li ser rengê xwe yê bijare xalekê datîne: rêza herî bilind rengê herî bijare ye!",
+    "s": 6,
+    "visual": {
+      "type": "bar_chart",
+      "params": {
+        "values": [
+          3,
+          2,
+          1
+        ],
+        "labels": [
+          "sor",
+          "şîn",
+          "kesk"
+        ]
+      }
+    }
+  },
+  {
     "ku": "NEXŞEYA STÛNÎ",
     "tr": "sütun grafiği",
     "en": "bar graph",
     "lv": "2-3",
-    "df": "Nexşeya ku daneyan bi stûnên vertîkal nîşan dide; bilindahîya her stûnê mîqdara daneyê nîşan dide.",
+    "df": "Nexşeya ku daneyan bi stûnên vertîkal nîşan dide; bilindahiya her stûnê mîqdara daneyê nîşan dide.",
     "ex": "Nexşeya stûnî ya rengên çavên polê: stûna herî dirêj rengê herî zêde nîşan dide.",
     "s": 6,
     "visual": {
@@ -2387,7 +2411,7 @@ export const ALL_CONCEPTS = [
     "tr": "aritmetik",
     "en": "arithmetic",
     "lv": "1-4",
-    "df": "Beşa matematîkê ya ku bi hejmaran û çar kirarîyan re têkildar e.",
+    "df": "Beşa matematîkê ya ku bi hejmaran û çar kirariyan re têkildar e.",
     "ex": "Jimaryarî, bingeha matematîkê ye.",
     "s": 0,
     "visual": {
@@ -2422,7 +2446,7 @@ export const ALL_CONCEPTS = [
     "en": "subitizing",
     "lv": "P-1",
     "df": "Bêyî jimartinê, bi dîtinê tavilê zanîna hejmara tiştan.",
-    "ex": "Bêyî jimartinê, 3 xalên li ser zarê nas kir.",
+    "ex": "Bêyî jimartinê, 3 xalên li ser zarê nas kirin.",
     "s": 0,
     "visual": {
       "type": "counting",
@@ -2454,8 +2478,8 @@ export const ALL_CONCEPTS = [
     "tr": "işlemsel akıcılık",
     "en": "procedural fluency",
     "lv": "2-4",
-    "df": "Kirarîyan bi lez û bi rast kirin.",
-    "ex": "Bi herikbarîya kirarî, şagird 8+5=13 tavilê bersiv dide.",
+    "df": "Kirariyan bi lez û bi rast kirin.",
+    "ex": "Bi herikbariya kirarî, şagird 8+5=13 tavilê bersiv dide.",
     "s": 0,
     "visual": {
       "type": "operation",
@@ -2546,7 +2570,7 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "DÎYARKIRINA RÊBAZÊ",
+    "ku": "DIYARKIRINA RÊBAZÊ",
     "tr": "yöntem/strateji belirleme",
     "en": "strategy determination",
     "lv": "1-2",
@@ -2557,7 +2581,7 @@ export const ALL_CONCEPTS = [
       "type": "custom",
       "params": {
         "icon": "🎯",
-        "label": "Dîyarkirin"
+        "label": "Diyarkirin"
       }
     }
   },
@@ -2678,7 +2702,7 @@ export const ALL_CONCEPTS = [
     "en": "criterion",
     "lv": "2-3",
     "df": "Pîveka ku pê nirxandin tê kirin.",
-    "ex": "Pivanga rastîyê bikar bîne.",
+    "ex": "Pivanga rastiyê bi kar bîne.",
     "s": 0,
     "visual": {
       "type": "scale",
@@ -2740,8 +2764,8 @@ export const ALL_CONCEPTS = [
     "tr": "değerlendirme",
     "en": "evaluation",
     "lv": "2-4",
-    "df": "Dîtina qalîteyê yan rastîya tiştekî.",
-    "ex": "Mamoste bersivên şagirtan nirxand: 8 ji 10 rast bûn.",
+    "df": "Dîtina qalîteyê yan rastiya tiştekî.",
+    "ex": "Mamoste bersivên şagirtan nirxandin: 8 ji 10 rast bûn.",
     "s": 0,
     "visual": {
       "type": "custom",
@@ -2757,7 +2781,7 @@ export const ALL_CONCEPTS = [
     "en": "exercise",
     "lv": "P-4",
     "df": "Kirina pirsgirêkan ji bo rahênandinê.",
-    "ex": "Hîndarîyên zêdekirinê bike.",
+    "ex": "Hîndariyên zêdekirinê bike.",
     "s": 0,
     "visual": {
       "type": "custom",
@@ -2866,7 +2890,7 @@ export const ALL_CONCEPTS = [
     "tr": "yakın / uzak",
     "en": "near / far",
     "lv": "P-1",
-    "df": "Bi dûrahîya kêm an zêde ji hev.",
+    "df": "Bi dûrahiya kêm an zêde ji hev.",
     "ex": "Mal nêzîkî dibistanê ye.",
     "s": 9,
     "visual": {
@@ -3036,7 +3060,7 @@ export const ALL_CONCEPTS = [
     "tr": "denk",
     "en": "equivalent",
     "lv": "3-4",
-    "df": "Du tişt ku heman nirx an mezinahîyê ne.",
+    "df": "Du tişt ku heman nirx an mezinahiyê ne.",
     "ex": "1/2 hevkêşê 2/4 e.",
     "s": 10,
     "visual": {
@@ -3048,11 +3072,11 @@ export const ALL_CONCEPTS = [
     }
   },
   {
-    "ku": "NEDÎYAR",
+    "ku": "NEDIYAR",
     "tr": "bilinmeyen",
     "en": "unknown",
     "lv": "1-2",
-    "df": "Tiştê ku nirxa wê ne diyar e.",
+    "df": "Tiştê ku nirxê wê ne diyar e.",
     "ex": "Di □ + 3 = 7 de, □ = 4.",
     "s": 10,
     "visual": {
@@ -3085,7 +3109,7 @@ export const ALL_CONCEPTS = [
     "en": "congruent",
     "lv": "2-3",
     "df": "Du teşe ku bi form û mezinahî wekhev in.",
-    "ex": "Ev du sêgoşe hevsan in: forma û mezinahîya wan yek e.",
+    "ex": "Ev du sêgoşe hevsan in: forma û mezinahiya wan yek e.",
     "s": 10,
     "visual": {
       "type": "compare",
@@ -3118,7 +3142,7 @@ export const ALL_CONCEPTS = [
     "tr": "bilinen",
     "en": "known",
     "lv": "2-3",
-    "df": "Hejmara ku nirxa wê diyar e.",
+    "df": "Hejmara ku nirxê wê diyar e.",
     "ex": "3 û 7 hejmarên têzan in.",
     "s": 10,
     "visual": {
@@ -3135,7 +3159,7 @@ export const ALL_CONCEPTS = [
     "tr": "bilinmeyen (değişken)",
     "en": "unknown",
     "lv": "2-3",
-    "df": "Hejmara ku nirxa wê hê ne diyar e.",
+    "df": "Hejmara ku nirxê wê hê ne diyar e.",
     "ex": "□ di hevkêşanê de nayzan e.",
     "s": 10,
     "visual": {
@@ -3169,7 +3193,7 @@ export const ALL_CONCEPTS = [
     "tr": "oran",
     "en": "ratio",
     "lv": "3-4",
-    "df": "Têkilîya du hejmaran bi dabeşkirinê.",
+    "df": "Têkiliya du hejmaran bi dabeşkirinê.",
     "ex": "Rêjeya sêvên sor û zer 3:5 e.",
     "s": 10,
     "visual": {
@@ -3224,7 +3248,7 @@ export const ALL_CONCEPTS = [
     "en": "whole/complete",
     "lv": "1-2",
     "df": "Tiştê ku tam û bêkêmasî ye.",
-    "ex": "Çar çareka pîzzayê tev (tam) dikin: 4/4 = 1.",
+    "ex": "Çar çaryeka pîzzayê tev (tam) dikin: 4/4 = 1.",
     "s": 10,
     "visual": {
       "type": "fraction",
@@ -3241,7 +3265,7 @@ export const ALL_CONCEPTS = [
     "en": "same",
     "lv": "P-1",
     "df": "Tiştên ku wek hev in.",
-    "ex": "Du sêvên sor heman in.",
+    "ex": "Du sêvên sor heman reng in.",
     "s": 10,
     "visual": {
       "type": "compare",
@@ -3274,7 +3298,7 @@ export const ALL_CONCEPTS = [
     "tr": "çeşit/tür",
     "en": "type/kind",
     "lv": "P-1",
-    "df": "Kategorîya tiştekî.",
+    "df": "Kategoriya tiştekî.",
     "ex": "Sêgoşe û çarçik cureyên teşeyan in.",
     "s": 10,
     "visual": {
@@ -3360,7 +3384,7 @@ export const ALL_CONCEPTS = [
     "tr": "küme",
     "en": "set",
     "lv": "2-3",
-    "df": "Berhevoka tiştên ku taybetmendîyeke hevpar heye.",
+    "df": "Berhevoka tiştên ku taybetmendiyeke hevpar heye.",
     "ex": "Komika hejmaran: {1, 2, 3, 4, 5}.",
     "s": 10,
     "visual": {
@@ -3378,7 +3402,7 @@ export const ALL_CONCEPTS = [
     "tr": "sınıflandırma",
     "en": "classification",
     "lv": "P-1",
-    "df": "Li gorî taybetmendîyekê dabeşkirina tiştan di pol û koman de.",
+    "df": "Li gorî taybetmendiyekê dabeşkirina tiştan di pol û koman de.",
     "ex": "Teşeyan li gorî reng û mezinahî pol kirin.",
     "s": 10,
     "visual": {
@@ -3431,7 +3455,7 @@ export const ALL_CONCEPTS = [
     "tr": "gözlem",
     "en": "observation",
     "lv": "P-1",
-    "df": "Bi baldarî li tiştekî mêzekirin û agahdarîyan berhevkirin.",
+    "df": "Bi baldarî li tiştekî mêzekirin û agahdariyan berhevkirin.",
     "ex": "Nêrîn: di sînifê de 5 keçik û 7 kur hene.",
     "s": 10,
     "visual": {

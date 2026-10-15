@@ -55,7 +55,7 @@ export const EXERCISES = [
   },
   {
     id: 'h08', s: 1, lv: '2-3',
-    q: 'Hejmarekê bi 6 zêde kirin, encam 15 bû. Ev hejmar çi ye?',
+    q: 'Hejmarek bi 6 hat zêdekirin, encam 15 bû. Ev hejmar çi ye?',
     opts: ['8', '9', '10', '7'],
     ans: 1,
     explain: 'x + 6 = 15 → x = 15 − 6 = 9.',
@@ -88,7 +88,7 @@ export const EXERCISES = [
     q: '9 − 4 = ?',
     opts: ['4', '6', '5', '3'],
     ans: 2,
-    explain: '4 ji 9 kem kirin, encam 5 e.',
+    explain: '4 ji 9 kêm kirin, encam 5 e.',
   },
   {
     id: 'k03', s: 2, lv: '1-2',
@@ -236,17 +236,17 @@ export const EXERCISES = [
   },
   {
     id: 'c03', s: 4, lv: '1-2',
-    q: 'Kujîya rast çend pîle ye?',
+    q: 'Kujiya rast çend pîle ye?',
     opts: ['45°', '180°', '90°', '60°'],
     ans: 2,
-    explain: 'Kujîya rast tam 90 pîle ye.',
+    explain: 'Kujiya rast tam 90 pîle ye.',
   },
   {
     id: 'c04', s: 4, lv: '1-2',
-    q: 'Di her sêgoşeyekê de koma sê kujîyan çend pîle ye?',
+    q: 'Di her sêgoşeyekê de koma sê kujiyan çend pîle ye?',
     opts: ['90°', '270°', '360°', '180°'],
     ans: 3,
-    explain: 'Di her sêgoşeyekê de koma sê kujîyan her tim 180 pîle ye.',
+    explain: 'Di her sêgoşeyekê de koma sê kujiyan her tim 180 pîle ye.',
   },
   {
     id: 'c05', s: 4, lv: '2-3',
@@ -363,7 +363,7 @@ export const EXERCISES = [
     explain: '1.5 lître = 1500 mL. Nîvê wê = 1500 ÷ 2 = 750 mL.',
   },
 
-  // ── Beş 6: KIRARÎYA DANEYAN ──────────────────────────────────────────────
+  // ── Beş 6: KIRARIYA DANEYAN ──────────────────────────────────────────────
   {
     id: 'd01', s: 6, lv: '1-2',
     q: 'Notên 5 xwendekaran: 6, 8, 7, 9, 5. Navgîn çi ye?',
@@ -418,7 +418,7 @@ export const EXERCISES = [
     q: 'Belavbûn çawa tê hesabkirin?',
     opts: ['Navgîn − Kêmtirîn', 'Mezintirîn − Kêmtirîn', 'Navgîn × 2', 'Hemû bi hev zêde bike'],
     ans: 1,
-    explain: 'Belavbûn = nirxa herî mezin − nirxa herî kêm.',
+    explain: 'Belavbûn = nirxê herî mezin − nirxê herî kêm.',
   },
 
   // ── Beş 8: TÊGEHÊN PERWERDEYÎ ────────────────────────────────────────────
@@ -432,9 +432,9 @@ export const EXERCISES = [
   {
     id: 'pw02', s: 8, lv: '1-2',
     q: 'Mînak di fêrkirinê de çima girîng e?',
-    opts: ['Bêmane ye', 'Têgehê bi jiyanê ve girê dide, fêmkirinê hêsan dike', 'Tenê ji bo ceribandinê ye', 'Xwendekaran ditirsîne'],
+    opts: ['Bêmane ye', 'Têgehê bi jiyanê ve girê dide, famkirinê hêsan dike', 'Tenê ji bo ceribandinê ye', 'Xwendekaran ditirsîne'],
     ans: 1,
-    explain: 'Mînak têgehên razber bi rewşên rojane ve girê dide û fêmkirinê kûr dike.',
+    explain: 'Mînak têgehên razber bi rewşên rojane ve girê dide û famkirinê kûr dike.',
   },
   {
     id: 'pw03', s: 8, lv: '2-3',

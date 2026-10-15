@@ -23,7 +23,7 @@ describe('shareText', () => {
   });
 
   it('builds hashtags without spaces', () => {
-    expect(toHashtag('KIRARÎYA DANEYAN')).toBe('#kirarîyadaneyan');
+    expect(toHashtag('KIRARIYA DANEYAN')).toBe('#kirariyadaneyan');
     expect(toHashtag('  ')).toBe('');
   });
 
