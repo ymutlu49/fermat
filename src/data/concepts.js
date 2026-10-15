@@ -98,7 +98,7 @@ export const ALL_CONCEPTS = [
     "tr": "tek sayı",
     "en": "odd number",
     "lv": "2-3",
-    "df": "Hejmarên ku bi 2 tên dabeşkirin û bermayî dimîne.",
+    "df": "Hejmarên ku bi 2 tên dabeşkirin û bermayî dimîne; ji van hejmaran re hejmarên kit jî tê gotin.",
     "ex": "Hejmarên fer: 1, 3, 5, 7, 9...",
     "s": 1,
     "visual": {
