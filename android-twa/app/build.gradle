@@ -10,16 +10,16 @@ android {
         applicationId "com.yilmazmutlu.ferhengamatematike"
         minSdk 21
         targetSdk 35
-        versionCode 3
-        versionName "1.0.0"
+        versionCode 4
+        versionName "3.1.0"
 
         // TWA host and path configuration
         manifestPlaceholders = [
-            hostName      : "ymutlu49.github.io",
-            defaultUrl    : "https://ymutlu49.github.io/fermat/",
-            launcherName  : "Ferhenga Mat.",
+            hostName      : "jimaro.app",
+            defaultUrl    : "https://jimaro.app/app/",
+            launcherName  : "FerMat",
             assetStatements: '[{ "relation": ["delegate_permission/common.handle_all_urls"], ' +
-                             '"target": { "namespace": "web", "site": "https://ymutlu49.github.io" } }]'
+                             '"target": { "namespace": "web", "site": "https://jimaro.app" } }]'
         ]
     }
 

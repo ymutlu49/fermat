@@ -13,7 +13,7 @@ public class LauncherActivity
         extends com.google.androidbrowserhelper.trusted.LauncherActivity {
 
     private static final String TAG = "FerhengaTWA";
-    private static final String DEFAULT_URL = "https://ymutlu49.github.io/fermat/";
+    private static final String DEFAULT_URL = "https://jimaro.app/app/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

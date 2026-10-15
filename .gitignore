@@ -42,3 +42,6 @@ ferhenga-matematike-aab*.zip
 coverage/
 *.lcov
 
+
+# The website serves the signed release APK for download
+!public/dl/*.apk

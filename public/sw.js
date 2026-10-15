@@ -1,8 +1,11 @@
-// ─── FerMat — Service Worker v5 ───────────────────────────────────────────────
-const CACHE_NAME = 'ferhenga-v5';
+// ─── FerMat — Service Worker v6 ───────────────────────────────────────────────
+// v6: the website lives at /, the app at /app/.
+const CACHE_NAME = 'ferhenga-v6';
 const PRECACHE_URLS = [
   './',
   './index.html',
+  './app/',
+  './app/index.html',
   './manifest.json',
   './favicon.svg',
   './icon-192.png',
@@ -34,6 +37,9 @@ self.addEventListener('fetch', (event) => {
   // Skip non-GET requests
   if (request.method !== 'GET') return;
 
+  // Downloads (the APK) always come from the network and are never cached
+  if (new URL(request.url).pathname.startsWith('/dl/')) return;
+
   // Navigation requests: network first, fallback to cache
   if (request.mode === 'navigate') {
     event.respondWith(
@@ -43,7 +49,13 @@ self.addEventListener('fetch', (event) => {
           caches.open(CACHE_NAME).then(cache => cache.put(request, clone));
           return response;
         })
-        .catch(() => caches.match('./index.html'))
+        .catch(async () => {
+          // Offline: the page itself if cached, otherwise the matching shell
+          const cached = await caches.match(request);
+          if (cached) return cached;
+          const isApp = new URL(request.url).pathname.startsWith('/app');
+          return caches.match(isApp ? './app/index.html' : './index.html');
+        })
     );
     return;
   }

@@ -1,11 +1,13 @@
 [
   {
-    "relation": ["delegate_permission/common.handle_all_urls"],
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
     "target": {
       "namespace": "android_app",
       "package_name": "com.yilmazmutlu.ferhengamatematike",
       "sha256_cert_fingerprints": [
-        "C2:ED:A7:ED:14:65:CE:8F:1A:1F:85:CF:66:37:DD:77:80:8D:D7:83:05:9F:7E:E9:97:EE:66:86:94:D0:E1:3E"
+        "C6:2E:35:55:83:4D:E9:20:2C:63:38:57:BC:F2:10:97:C3:2E:A0:9D:36:AE:46:39:1A:FD:2B:77:B1:14:C2:B6"
       ]
     }
   }

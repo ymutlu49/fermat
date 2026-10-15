@@ -66,7 +66,7 @@
                 <data
                     android:scheme="https"
                     android:host="${hostName}"
-                    android:pathPrefix="/fermat/" />
+                    android:pathPrefix="/app/" />
             </intent-filter>
         </activity>
 
